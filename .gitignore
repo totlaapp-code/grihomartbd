@@ -3,6 +3,12 @@
 /public/storage
 /storage/*.key
 /vendor
+storage/logs
+storage/debugbar
+storage/framework/views
+storage/framework/cache
+storage/framework/sessions
+public/images/uploads
 .env
 .env.backup
 .env.bak
