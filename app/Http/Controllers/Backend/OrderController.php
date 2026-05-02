@@ -2449,7 +2449,7 @@ class OrderController extends Controller
                 if (isset($res->consignment)) {
                     if ($res->consignment->status == 'in_review') {
                         $order = Order::find($id);
-                        $order->courier_tracking_link = 'https://steadfast.com.bd/t' . '/' . $res->consignment->tracking_code;
+                        $order->courier_tracking_link = $res->consignment->tracking_link ?? ('https://steadfast.com.bd/t' . '/' . $res->consignment->tracking_code);
                         $order->consigment_id = $res->consignment->consignment_id;
                         $order->update();
                         $comment = new Comment();
