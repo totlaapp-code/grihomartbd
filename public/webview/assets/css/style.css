@@ -655,7 +655,7 @@ button #purcheseBtn {
 .side-menu-header {
     position: relative;
     color: #fff;
-    background: black;
+    background: #120d3f;
 }
 
 .side-menu-close {
@@ -2126,4 +2126,40 @@ button.owl-prev {
 
 #subcategory:hover {
     background: #ededed;
+}
+
+/* Global Product Grid Equal Height Fix */
+.product_item_inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #eee;
+    padding-bottom: 10px;
+    position: relative;
+}
+.product-text {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px !important;
+}
+.pro_name {
+    height: 50px; /* Increased for mobile safely */
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+.pro_name a, .pro_name a p {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 25px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 !important;
+}
+.pro_btn {
+    margin-top: auto;
+    padding: 0 10px;
 }

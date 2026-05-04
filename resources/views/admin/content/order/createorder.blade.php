@@ -102,31 +102,33 @@
                         <strong>Product Info</strong>
                     </div>
                     <div class="card-body">
-                        <table id="productTable" style="width: 100% !important;" class="table table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>Color</th>
-                                <th>Size</th>
-                                <th>Code</th>
-                                <th>Product Name</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td colspan="7">
-                                    <select id="productID" style="width: 100%;">
-                                        <option value="">Select Product</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            </tfoot>
+                        <div class="table-responsive">
+                            <table id="productTable" style="width: 100% !important;" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Color</th>
+                                    <th>Size</th>
+                                    <th>Code</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="7">
+                                        <select id="productID" style="width: 100%;">
+                                            <option value="">Select Product</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                </tfoot>
 
-                        </table>
+                            </table>
+                        </div>
                         <br>
                         <br>
                         <div class="row">
@@ -373,14 +375,18 @@
 
             $("#productID").select2({
                 placeholder: "Select a Product",
-                dropdownParent: $('#productTable'),
                 allowClear: true,
                 templateResult: function (state) {
                     if (!state.id) {
                         return state.text;
                     }
                     var $state = $(
-                        '<span><img width="60px" src="'+state.image +'" class="img-flag" /> '+state.text+'" (Size: "'+state.size+")</span>"
+                        '<div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">' +
+                        '<img src="' + state.image + '" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; flex-shrink: 0;" />' +
+                        '<div style="flex: 1; min-width: 0;">' +
+                        '<div style="font-weight: 500; font-size: 13px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: normal; line-height: 1.2;">' + state.text + '</div>' +
+                        '<div style="font-size: 11px; color: #666; margin-top: 4px;">Size: <span style="font-weight:bold;">' + state.size + '</span></div>' +
+                        '</div></div>'
                     );
                     return $state;
                 },

@@ -22,6 +22,7 @@ Route::get('/', [WebviewController::class, 'mainview']);
 
 // web view
 Route::get('/datafeed.csv', [WebviewController::class, 'datafeed'])->name('datafeed');
+Route::get('/facebook-catalog.csv', [WebviewController::class, 'facebookCatalog'])->name('facebook.catalog');
 Route::get('ip-block', [CartController::class, 'ipblock']);
 Route::get('empty-cart', [CartController::class, 'emptycart']);
 Route::get('delivery/cities', [CartController::class, 'city']);
@@ -82,6 +83,18 @@ Route::get('get-search-content', [WebviewController::class, 'searchcontent']);
 Route::get('track-order', [WebviewController::class, 'orderTraking']);
 Route::get('order-details/{slug}', [WebviewController::class, 'vieworder']);
 Route::post('track-now', [WebviewController::class, 'orderTrakingNow']);
+
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    return "Cache is cleared";
+});
+
+Route::get('/clear-view', function() {
+    Artisan::call('view:clear');
+    return "View is cleared";
+});
 
 Route::group(['middleware' => ['auth:web']], function () {
     Route::get('user/profile', [WebviewController::class, 'profile']);

@@ -35,6 +35,8 @@ class CartController extends Controller
                     'size' => $request->size,
                     'color' => $request->color,
                     'sigment' => $request->sigment,
+                    'inside_dhaka' => $cartProduct->inside_dhaka,
+                    'outside_dhaka' => $cartProduct->outside_dhaka,
                 ],
 
             ]);
@@ -53,6 +55,8 @@ class CartController extends Controller
                     'size' => $size->size,
                     'color' => $request->color,
                     'sigment' => $request->sigment,
+                    'inside_dhaka' => $cartProduct->inside_dhaka,
+                    'outside_dhaka' => $cartProduct->outside_dhaka,
                 ],
 
             ]);
@@ -185,6 +189,13 @@ class CartController extends Controller
     public function checkout()
     {
         $cartProducts = Cart::content();
+        foreach($cartProducts as $cartProduct) {
+            $product = Product::find($cartProduct->id);
+            if($product) {
+                $cartProduct->inside_dhaka = $product->inside_dhaka;
+                $cartProduct->outside_dhaka = $product->outside_dhaka;
+            }
+        }
         return view('webview.content.cart.checkout')->with('cartProducts', $cartProducts);
     }
     public function payment()

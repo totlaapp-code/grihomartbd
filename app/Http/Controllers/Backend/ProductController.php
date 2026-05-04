@@ -382,6 +382,8 @@ class ProductController extends Controller
             $product->ViewProductImage = $new_webp;
         }
 
+        $product->inside_dhaka = $request->inside_dhaka ? intval($request->inside_dhaka) : null;
+        $product->outside_dhaka = $request->outside_dhaka ? intval($request->outside_dhaka) : null;
         $result = $product->save();
 
         if ($result) {
@@ -474,13 +476,8 @@ class ProductController extends Controller
         
         return Datatables::of($products)
             ->addColumn('action', function ($products) {
-                if(Auth::id()==1) {
-                    return '<a href="products/' . $products->id . '/edit" class="btn btn-primary btn-sm" style="margin-bottom:2px;"><i class="bi bi-pencil-square"></i></a>
-                    <a href="#" type="button" style="margin-bottom:2px;" id="deleteProductBtn" data-id="' . $products->id . '" class="btn btn-danger btn-sm" ><i class="bi bi-archive" ></i></a>';
-                }else{
-                    return '<a href="products/' . $products->id . '/edit" class="btn btn-primary btn-sm" style="margin-bottom:2px;"><i class="bi bi-pencil-square"></i></a>';
-                }
-                
+                return '<a href="products/' . $products->id . '/edit" class="btn btn-primary btn-sm" style="margin-bottom:2px;"><i class="bi bi-pencil-square"></i></a>
+                <a href="#" type="button" style="margin-bottom:2px;" id="deleteProductBtn" data-id="' . $products->id . '" class="btn btn-danger btn-sm" ><i class="bi bi-archive" ></i></a>';
             })
             ->addColumn('category', function ($products) {
                  
@@ -576,6 +573,8 @@ class ProductController extends Controller
             $product->PostImage = json_encode($imageData);
         };
 
+        $product->inside_dhaka = $request->inside_dhaka ? intval($request->inside_dhaka) : null;
+        $product->outside_dhaka = $request->outside_dhaka ? intval($request->outside_dhaka) : null;
         $result = $product->update();
 
         if ($result) {

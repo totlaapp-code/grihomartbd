@@ -47,20 +47,16 @@
 <div class="container-fluid pt-4 px-4">
     <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="h-100 bg-secondary rounded p-4 pb-0">
-                <div class="d-flex align-items-center justify-content-between" style="width: 50%;float:left;">
+            <div class="bg-secondary rounded h-100 p-4">
+                <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap">
                     <h6 class="mb-0">Products List</h6>
+                    <a target="_blank" href="{{ route('admin.products.create') }}" class="btn btn-primary"> + Create New Product</a>
                 </div>
-                <div class="" style="width: 50%;float:left;">
-                    <a target="_blank" href="{{ route('admin.products.create') }}" class="btn btn-primary m-2"
-                        style="float: right"> + Create New Product</a>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="mt-4 mb-4">
-                            <lable>Category</lable>
-                            <select name="category_id" id="category_id" class="form-select form-select-lg mb-3"
-                                aria-label=".form-select-lg example">
+                <div class="row mb-4">
+                    <div class="col-6 col-lg-3">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category_id" id="category_id" class="form-select mb-0">
                                 <option value="all">All</option>
                                 @forelse (App\Models\Category::all() as $category)
                                     <option value="{{ $category->id }}" @if(Session::get('category_id')==$category->id) selected @endif>{{ $category->category_name }}</option>
@@ -69,21 +65,14 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="mt-4 mb-4">
-                            <lable>Search By Code</lable>
-                            <input type="text" name="code" id="code" class="form-control">
+                    <div class="col-6 col-lg-3">
+                        <div class="form-group">
+                            <label>Search By Code</label>
+                            <input type="text" name="code" id="code" class="form-control" placeholder="Code...">
                         </div>
                     </div>
-                    
                 </div>
-            </div>
-        </div>
-     
-
-        <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="bg-secondary rounded h-100 p-4">
-                <div class="data-tables">
+                <div class="data-tables table-responsive">
                     <table class="table table-dark" id="productinfo" width="100%" style="text-align: center;">
                         <thead class="thead-light">
                             <tr>

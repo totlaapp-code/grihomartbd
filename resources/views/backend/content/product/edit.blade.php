@@ -377,6 +377,38 @@
                                 </div>
 
                                 <div class="col-lg-12 mb-4">
+                                    <div class="card border-warning">
+                                        <div class="card-header p-0" id="headingDelivery">
+                                          <h5 class="mb-0">
+                                            <button type="button" id="collupshead" class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseDelivery" aria-expanded="true" aria-controls="collapseDelivery">
+                                                <h5 class="text-uppercase m-0" style="color:#ffc107;">🚚 Custom Delivery Charge (Optional)</h5>
+                                                <h5 class="text-uppercase m-0">+</h5>
+                                            </button>
+                                          </h5>
+                                        </div>
+                                        <div id="collapseDelivery" class="collapse show" aria-labelledby="headingDelivery">
+                                          <div class="card-body">
+                                                <p class="text-muted small">ফাঁকা রাখলে গ্লোবাল ডেলিভারি চার্জ প্রযোজ্য হবে। শুধুমাত্র এই প্রোডাক্টের জন্য আলাদা চার্জ চাইলে এখানে লিখুন।</p>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="form-group mb-3">
+                                                            <label for="inside_dhaka">🏙️ ঢাকার ভেতরে ডেলিভারি চার্জ (টাকা)</label>
+                                                            <input type="number" name="inside_dhaka" id="inside_dhaka" value="{{ $product->inside_dhaka }}" class="form-control" placeholder="যেমন: 60">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="form-group mb-3">
+                                                            <label for="outside_dhaka">🗺️ ঢাকার বাইরে ডেলিভারি চার্জ (টাকা)</label>
+                                                            <input type="number" name="outside_dhaka" id="outside_dhaka" value="{{ $product->outside_dhaka }}" class="form-control" placeholder="যেমন: 110">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 mb-4">
                                     <div class="card">
                                         <div class="card-header p-0" id="headingOne">
                                           <h5 class="mb-0">
@@ -534,6 +566,8 @@
             formData.append('MetaDescription', MetaDescription.val());
             formData.append('youtube_embade', youtube_embade.val());
             formData.append('position', position.val());
+            formData.append('inside_dhaka', $('#inside_dhaka').val());
+            formData.append('outside_dhaka', $('#outside_dhaka').val());
             if($("#ProductImage").val()==''){
                 formData.append('ProductImage', '');
             }else{

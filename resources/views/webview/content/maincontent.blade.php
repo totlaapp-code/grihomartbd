@@ -30,7 +30,37 @@
 <style>
     .product{
             margin-top: 4px !important;
+    }
 
+    /* Product Grid Equal Height Fix */
+    .product_item_inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border: 1px solid #eee;
+        padding-bottom: 10px;
+        position: relative;
+    }
+    .product-text {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 10px !important;
+    }
+    .pro_name {
+        height: 44px; /* Fixed height for 2 lines */
+        overflow: hidden;
+        margin-bottom: 5px;
+    }
+    .pro_name a {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 22px;
+        font-weight: 500;
+        color: #333;
     }
 
     #featureimagess{
@@ -42,15 +72,37 @@
     #checked {
         color: orange;
     }
-    .star{
-        font-size: 10px !important;
+    .side-menu .nav > li > a::after {
+        right: 15px !important;
+    }
+
+    /* Equal height fix for category boxes */
+    .cat-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+    .cat-row > div {
+        display: flex;
+    }
+    .cat_item {
+        width: 100%;
+    }
+
+    /* Mobile: smaller icons */
+    @media (max-width: 768px) {
+        #catimg {
+            width: 55px !important;
+            height: 55px !important;
+            object-fit: contain;
+        }
     }
 </style>
 
-<div class="container-fluid p-0 pt-lg-2">
-    <div class="p-0 row">
+<div class="container-fluid p-0 px-lg-3 pt-lg-2" style="overflow: hidden;">
+    <div class="row m-0">
      <!-- Sidebar -->
-        <div class="col-lg-3 d-none d-lg-block sidebar pe-0 ps-0">
+        <div class="col-lg-3 d-none d-lg-block sidebar pe-lg-2 ps-0">
              <div class="rounded-top text-center my-0" style="background-color:#94DC10;">
                 <h5 class="py-2 text-white my-0">CATEGORIES</h5>
             </div>
@@ -58,56 +110,67 @@
                 <nav class="yamm megamenu-horizontal" role="navigation" style="padding-top: 6px;">
                     <ul class="nav m-0">
                         @forelse ($categories as $maincategory)
-                            @if (count($maincategory->subcategories) > 0)
-                                <li class="dropdown menu-item">
-                                    <a href="{{ url('products/category/' . $maincategory->slug) }}"
-                                        class="dropdown-toggle" data-bs-hover="dropdown"> <img
-                                            src="{{ asset($maincategory->category_icon) }}"
-                                            alt="{{ $maincategory->category_name }}"
-                                            style="width: 22px !important;margin-top: -5px;">
-                                        <span style="margin-left:6px">{{ $maincategory->category_name }}</span></a>
-                                    <ul class="dropdown-menu mega-menu">
-                                        <li class="yamm-content" style="padding-bottom: 5px;padding-top: 5px;">
-                                            <ul class="links list-unstyled">
-                                                <div class="row">
-                                                    @foreach ($maincategory->subcategories as $subcategory)
-                                                        <div class="col-sm-12 col-md-4 pt-1 pb-1" id="subcategoryhover" style="width: 100%;">
-                                                            <li><a href="{{ url('products/sub/category/' . $subcategory->slug) }}"
-                                                                    style="color:#666666">{{ $subcategory->sub_category_name }}</a>
-                                                            </li>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </ul>
-                                            <!-- /.row -->
-                                        </li>
-                                        <!-- /.yamm-content -->
-                                    </ul>
-                                    <!-- /.dropdown-menu -->
-                                </li>
-                            @else
-                                <li class="dropdown menu-item">
-                                    <a href="{{ url('products/category/' . $maincategory->slug) }}"
-                                        class="dropdown-toggle text-truncate" data-bs-hover="dropdown"><img
-                                            src="{{ asset($maincategory->category_icon) }}"
-                                            alt="{{ $maincategory->category_name }}"
-                                            style="width: 22px !important;margin-top: -5px;"><span style="margin-left:6px">{{ $maincategory->category_name }}</span></a>
-                                    <!-- /.dropdown-menu -->
-                                </li>
+                            @if($loop->iteration <= 8)
+                                @if (count($maincategory->subcategories) > 0)
+                                    <li class="dropdown menu-item">
+                                        <a href="{{ url('products/category/' . $maincategory->slug) }}"
+                                            class="dropdown-toggle" data-bs-hover="dropdown"> <img
+                                                src="{{ asset($maincategory->category_icon) }}"
+                                                alt="{{ $maincategory->category_name }}"
+                                                style="width: 22px !important;margin-top: -5px;">
+                                            <span style="margin-left:6px">{{ $maincategory->category_name }}</span></a>
+                                        <ul class="dropdown-menu mega-menu">
+                                            <li class="yamm-content" style="padding-bottom: 5px;padding-top: 5px;">
+                                                <ul class="links list-unstyled">
+                                                    <div class="row">
+                                                        @foreach ($maincategory->subcategories as $subcategory)
+                                                            <div class="col-sm-12 col-md-4 pt-1 pb-1" id="subcategoryhover" style="width: 100%;">
+                                                                <li><a href="{{ url('products/sub/category/' . $subcategory->slug) }}"
+                                                                        style="color:#666666">{{ $subcategory->sub_category_name }}</a>
+                                                                </li>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </ul>
+                                                <!-- /.row -->
+                                            </li>
+                                            <!-- /.yamm-content -->
+                                        </ul>
+                                        <!-- /.dropdown-menu -->
+                                    </li>
+                                @else
+                                    <li class="dropdown menu-item">
+                                        <a href="{{ url('products/category/' . $maincategory->slug) }}"
+                                            class="dropdown-toggle text-truncate" data-bs-hover="dropdown"><img
+                                                src="{{ asset($maincategory->category_icon) }}"
+                                                alt="{{ $maincategory->category_name }}"
+                                                style="width: 22px !important;margin-top: -5px;"><span style="margin-left:6px">{{ $maincategory->category_name }}</span></a>
+                                        <!-- /.dropdown-menu -->
+                                    </li>
+                                @endif
                             @endif
                         @empty
                         @endforelse
+                        
+                        @if(count($categories) > 8)
+                            <li class="dropdown menu-item">
+                                <a href="#" class="dropdown-toggle" style="background: #f9f9f9; font-weight: bold; color: #94DC10 !important;">
+                                    <i class="fa fa-plus-circle" style="margin-right: 6px; font-size: 16px;"></i>
+                                    <span>More Categories</span>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </nav>
             </div>
         </div>
               
-    <div class="col-12 col-lg-9">
+    <div class="col-12 col-lg-9 p-0 ps-lg-3">
         <div class="owl-carousel owl-theme" id="slider">
             @forelse ($sliders as $slider)
                 <div class="item" style="margin:0 !important;">
                     <a href="{{ $slider->slider_btn_link }}">
-                    <img  src="{{ asset($slider->slider_image) }}">
+                    <img  src="{{ asset($slider->slider_image) }}" style="width: 100%; height: auto;">
                     </a>
                 </div>
             @empty
@@ -119,14 +182,14 @@
 </div>
 
 
-<div class="container p-0 my-4 mb-2 mt-lg-4 pt-lg-4">
-    <div class="row"> 
+<div class="container p-0 my-4 mb-2 mt-lg-4 pt-lg-4" style="overflow: hidden;">
+    <div class="row m-0 cat-row"> 
         @forelse ($categories as $category)
             <div class="col-lg-2 col-4 mb-2" data-aos="fade-left" data-aos-duration="10">
                <div class="cat_item">
-                    <a href="{{ url('products/category/' . $category->slug) }}" >
-                    <div class="d-flex justify-content-center" >
-                        <img  src="{{ asset($category->category_icon) }}" id="catimg">
+                    <a href="{{ url('products/category/' . $category->slug) }}">
+                    <div class="d-flex justify-content-center">
+                        <img src="{{ asset($category->category_icon) }}" id="catimg">
                     </div>
                     <p id="catp" style="font-weight:bold;color: black;">{{ \Illuminate\Support\Str::limit($category->category_name, 10) }}</p>
                 </a>
@@ -140,9 +203,9 @@
 
 
 <!-- Promotional Products -->
-<div class="container p-0 pb-2 ">
+<div class="container p-0 pb-2" style="overflow: hidden;">
     @if(count($topproducts)>0) 
-        <div class="pb-2 bg-white row">
+        <div class="pb-2 bg-white row m-0">
             <div class="col-12" style="padding-left: 0;display: flex;justify-content: space-between;">
                 <div class="px-2 pt-0 p-md-3 d-flex justify-content-between" style="padding-bottom:4px !important;padding-top: 8px !important;">
                     <h4 class="m-0"><b>Promotional Offers</b></h4>
@@ -173,9 +236,10 @@
                                         <span style="position: absolute;top: 0;background: green;width: 50px;color: white;border-radius: 4px;font-weight: bold;font-size: 12px;">&nbsp;{{$dis}}% off</span>
                                         <!-- /.product-image -->
                              
-                                        <div class="product-text" style="padding-bottom: 4px !important;background: white;">
+                                        <div class="product-text" style="background: white;">
                                             <div class="pro_name">
-                                             <a href="{{ url('view-product/' . $promotional->ProductSlug) }}" id="f_pro_name">{{ \Illuminate\Support\Str::limit($promotional->ProductName, 35) }}</a>
+                                             <a href="{{ url('view-product/' . $promotional->ProductSlug) }}" id="f_pro_name">{{ \Illuminate\Support\Str::limit($promotional->ProductName, 100) }}</a>
+                                            </div>
                                              
                                             <div class="d-flex my-2" style="justify-content:center">
                                                 <div class="star" style="padding-top: 5px;">
@@ -195,7 +259,6 @@
                                                     class="product-price strong-600" style="color:black">৳ {{ round($firstpro->sizes[0]->SalePrice) }}</span>
                                             </div>
                                             
-                                          </div>
                                         </div>
                                          
                                   </div>
@@ -217,7 +280,7 @@
     @endif 
     
     @if(count($bestSelleingProducts)>0) 
-        <div class="pb-2 bg-white row">
+        <div class="pb-2 bg-white row m-0">
             <div class="col-12" style="padding-left: 0;display: flex;justify-content: space-between;">
                 <div class="px-2 pt-0 p-md-3 d-flex justify-content-between" style="padding-bottom:4px !important;padding-top: 8px !important;">
                     <h4 class="m-0"><b>Best Selling</b></h4>
@@ -249,9 +312,10 @@
                                         <span style="position: absolute;top: 0;background: green;width: 50px;color: white;border-radius: 4px;font-weight: bold;font-size: 12px;">&nbsp;{{$dis}}% off</span>
                                         <!-- /.product-image -->
                              
-                                        <div class="product-text" style="padding-bottom: 4px !important;background: white;">
+                                        <div class="product-text" style="background: white;">
                                             <div class="pro_name">
-                                             <a href="{{ url('view-product/' . $promotional->ProductSlug) }}" id="f_pro_name">{{ \Illuminate\Support\Str::limit($promotional->ProductName, 35) }}</a>
+                                             <a href="{{ url('view-product/' . $promotional->ProductSlug) }}" id="f_pro_name">{{ \Illuminate\Support\Str::limit($promotional->ProductName, 100) }}</a>
+                                            </div>
                                              
                                             <div class="d-flex my-2" style="justify-content:center">
                                                 <div class="star" style="padding-top: 5px;">
@@ -271,7 +335,6 @@
                                                     class="product-price strong-600" style="color:black">৳ {{ round($firstpro->sizes[0]->SalePrice) }}</span>
                                             </div>
                                             
-                                          </div>
                                         </div>
                                          
                                   </div>
@@ -292,7 +355,7 @@
     @else
     @endif 
 
-    <div class="row gutters-10">
+    <div class="row m-0 gutters-10">
         @if (count($adds) == '2')
             @forelse ($adds as $add)
                 <div class="col-lg-6 col-6 ps-lg-0">
@@ -322,7 +385,7 @@
  
     @forelse ($categoryproducts as $key=>$categoryproduct)
         @if (count($categoryproduct->mainproducts) > 0)
-                <div class="pb-0 bg-white row my-2" data-aos="fade-right" data-aos-duration="10">
+                <div class="pb-0 bg-white row m-0 my-2" data-aos="fade-right" data-aos-duration="10" style="overflow: hidden;">
                     <div class="col-12" style="padding-left: 0;display: flex;justify-content: space-between;">
                         <div class="px-2 pt-0 p-md-3 d-flex justify-content-between" style="padding-bottom:4px !important;padding-top: 8px !important;">
                             <h4 class="m-0"><b>{{ $categoryproduct->category_name }}</b></h4>
@@ -352,10 +415,10 @@
                                         </div>
                                         <span style="position: absolute;top: 0;background: green;width: 50px;color: white;border-radius: 4px;font-weight: bold;font-size: 12px;">&nbsp;{{$dis}}% off</span>
                                         <!-- /.product-image -->
-                             
-                                        <div class="product-text" style="padding-bottom: 4px !important;background: white;">
+                                                              <div class="product-text" style="background: white;">
                                             <div class="pro_name">
-                                             <a href="{{ url('view-product/' . $product->ProductSlug) }}" id="f_pro_name">{{ \Illuminate\Support\Str::limit($product->ProductName, 35) }}</a>
+                                             <a href="{{ url('view-product/' . $product->ProductSlug) }}" id="f_pro_name">{{ \Illuminate\Support\Str::limit($product->ProductName, 100) }}</a>
+                                            </div>
                                              
                                             <div class="d-flex my-2" style="justify-content:center">
                                                 <div class="star" style="padding-top: 5px;">
@@ -373,13 +436,9 @@
                                                     {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
                                                 <span  class="product-price strong-600" style="color:black">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
                                             </div>
-                                            
-                                          </div>
                                         </div>
-                                      
-                                 </div>
+                                    </div>
                                 </div>
-                                <!-- /.product-micro-row -->
                             </div>
                         @endif
                     @empty
@@ -397,7 +456,7 @@
     @empty
     @endforelse
 
-    <div class="row gutters-10">
+    <div class="row m-0 gutters-10">
         @if (count($addbottoms) == '2')
             @forelse ($addbottoms as $add)
                 <div class="col-lg-6 col-6 ps-lg-0">

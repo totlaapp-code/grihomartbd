@@ -17,7 +17,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Send Message
         </button>
-        <a style="font-size: 26px;float: left;margin-right: 25px;text-transform: uppercase;font-weight: bold;color: #0c0c70;">Grihomart BD</a>
+        <a id="header-brand-text" style="font-size: 26px;float: left;margin-right: 25px;text-transform: uppercase;font-weight: bold;color: #0c0c70; display: none;">Grihomart BD</a>
     </div>
     <div class="navbar-nav align-items-center ms-auto">
 
@@ -122,5 +122,11 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 }
             });
 
+    });
+
+    $(document).ready(function() {
+        $('.sidebar-toggler').on('click', function() {
+            $('#header-brand-text').fadeToggle(200);
+        });
     });
 </script>

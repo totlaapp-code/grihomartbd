@@ -166,6 +166,40 @@
         color: orange;
     }
 
+    /* Related Products Equal Height Fix */
+    .product_item_inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    .product-text {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 10px !important;
+    }
+    .pro_name {
+        height: 44px; /* Fixed height for 2 lines */
+        overflow: hidden;
+        margin-bottom: 5px;
+    }
+    .pro_name a {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 22px;
+        font-weight: 500;
+        color: #333;
+    }
+    .pro_btn {
+        margin-top: auto;
+        padding: 0 10px;
+    }
+
 </style>
 <!-- Body -->
 
@@ -398,7 +432,7 @@
                                         <input type="hidden" name="qty" value="1" id="qtyoror">
                                         <button type="submit"
                                             class="order_now_btn mb-0 ml-2 btn btn-styled btn-base-1 btn-icon-left strong-700 hov-bounce hov-shaddow buy-now"
-                                            style="background: #ED145B;color:white;width: 100%;font-size: 17px;">
+                                            style="background: #ff8c00;color:white;width: 100%;font-size: 17px;">
                                             অর্ডার করুন
                                         </button>
                                      </form>
@@ -407,7 +441,7 @@
                                   
                                   <div class="col-12">
                                       <div>
-                                          <a class="btn btn-success w-100 call_now_btn" href="tel: {{App\Models\Basicinfo::first()->phone_one}}"><i class="fa-solid fa-phone mx-2"></i> {{App\Models\Basicinfo::first()->phone_one}}</a>
+                                          <a class="btn btn-success w-100 call_now_btn" href="tel: {{App\Models\Basicinfo::first()->phone_one}}"><i class="fa-solid fa-phone mx-2"></i> Call Now</a>
                                       </div>
                                   </div>
                                   <div class="col-12">
@@ -738,9 +772,10 @@
                                         </div>
                                         <!-- /.product-image -->
                              
-                                        <div class="product-text" style="padding-bottom: 4px !important;background: white;">
+                                        <div class="product-text" style="background: white;">
                                             <div class="pro_name">
-                                             <a href="{{ url('view-product/' . $promotional->ProductSlug) }}" id="f_pro_name">{{ \Illuminate\Support\Str::limit($promotional->ProductName, 35) }}</a>
+                                             <a href="{{ url('view-product/' . $promotional->ProductSlug) }}" id="f_pro_name">{{ \Illuminate\Support\Str::limit($promotional->ProductName, 100) }}</a>
+                                            </div>
                                              
                                             <div class="d-flex my-2" style="justify-content:center">
                                                 <div class="star" style="padding-top: 5px;">
@@ -760,7 +795,6 @@
                                                     class="product-price strong-600" style="color:black">৳ {{ round($firstpro->sizes[0]->SalePrice) }}</span>
                                             </div>
                                             
-                                          </div>
                                         </div>
                                         <div class="pro_btn">
                                           <form name="form" action="{{url('add-to-cart')}}" method="POST" enctype="multipart/form-data" style="width: 100%;float: left;text-align: center;">
@@ -770,7 +804,7 @@
                                                 <input type="text" name="size" id="product_sizeold" hidden>
                                                 <input type="text" name="product_id" value="{{ $firstpro->id }}" hidden>
                                                 <input type="text" name="qty" value="1" id="qtyor" hidden>
-                                                <button class="btn  btn-sm mb-0 btn-block"  id="purcheseBtn">অর্ডার করুন</button>
+                                                <button class="btn  btn-sm mb-0 btn-block"  id="purcheseBtn" style="background: #ff4e00; color: white;">অর্ডার করুন</button>
                                             </form>
                                         </div>
                                   </div>

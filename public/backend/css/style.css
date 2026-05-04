@@ -1,6 +1,6 @@
 /********** Template CSS **********/
 :root {
-    --primary: #0000;
+    --primary: #120d3f;
     --secondary: #fff;
     --light: #000;
     --dark: #fff;
@@ -247,8 +247,10 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--dark);
+    background: transparent;
+    color: #120d3f;
     border-radius: 40px;
+    font-size: 20px;
 }
 
 .content .navbar .dropdown-item {

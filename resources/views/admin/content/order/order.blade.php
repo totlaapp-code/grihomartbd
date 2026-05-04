@@ -165,6 +165,7 @@ $users = Admin::whereHas('roles', function ($q) {
           opacity: 1; /* Firefox */
         }
 
+
 </style>
 <div class="px-4 pt-4 container-fluid">
 

@@ -220,7 +220,7 @@
                                 <input type="hidden" name="qty" value="1" id="qtyoror">
                                 <button type="submit"
                                     class="order_now_btn mb-0 ml-2 btn btn-styled btn-base-1 btn-icon-left strong-700 hov-bounce hov-shaddow buy-now"
-                                    style="background: #ED145B;color:white;width: 100%;font-size: 17px;">
+                                    style="background: #ff4e00;color:white;width: 100%;font-size: 17px;">
                                     অর্ডার করুন
                                 </button>
                              </form>
@@ -229,7 +229,7 @@
                           
                           <div class="col-12">
                               <div>
-                                  <a class="btn btn-success w-100 call_now_btn" href="tel: {{App\Models\Basicinfo::first()->phone_one}}"><i class="fa-solid fa-phone mx-2"></i> {{App\Models\Basicinfo::first()->phone_one}}</a>
+                                  <a class="btn btn-success w-100 call_now_btn" href="tel: {{App\Models\Basicinfo::first()->phone_one}}"><i class="fa-solid fa-phone mx-2"></i> Call Now</a>
                               </div>
                           </div>
                           <div class="col-12">

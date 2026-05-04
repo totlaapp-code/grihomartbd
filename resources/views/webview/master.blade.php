@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <title>@yield('title')</title> 
 
     @yield('meta')
@@ -158,45 +158,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     @include('webview.partials.footer')
     <!-- === FOOTER : END === -->
    
-       <div class="bottom-navbar b-block d-lg-none">
-        <div class="container" style="padding: 6px 0px !important;">
+       <div class="bottom-navbar b-block d-lg-none" style="overflow: hidden;">
+        <div class="container">
             <div class="row">
                 <div class="logo-bar-icons col-lg-12 col" style="margin: 0px">
-                    <ul class="inline-links d-flex justify-content-between">
-                        <li class="text-center" >
-                            <a href="javascript:void(0);" onclick="openNav()" class="nav-cart-box">
-                                <img src="{{ asset('public/menu-bottom.png') }}" alt="" style="width: 25px;"><br><span style="color: black;">Category</span>
+                    <ul class="inline-links d-flex justify-content-between align-items-center" style="margin: 0; padding: 0; list-style: none; width: 100%;">
+                        <li class="text-center" style="flex: 1;">
+                            <a href="javascript:void(0);" onclick="openNav()" class="nav-cart-box" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                                <img src="{{ asset('public/menu-bottom.png') }}" alt="" style="width: 25px;">
+                                <span style="color: black; font-size: 11px; margin-top: 2px;">Category</span>
                             </a>
                         </li>
                         
-                        <li class="text-center" >
-                            <a class="nav-cart-box" href="tel:{{$basicinfo->phone_one}}">
-                                <img src="{{ asset('public/phone-call.png') }}" alt="" style="width: 25px;"><br><span style="color: black;">Call</span>
+                        <li class="text-center" style="flex: 1;">
+                            <a class="nav-cart-box" href="tel:{{$basicinfo->phone_one}}" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                                <img src="{{ asset('public/phone-call.png') }}" alt="" style="width: 25px;">
+                                <span style="color: black; font-size: 11px; margin-top: 2px;">Call</span>
                             </a>
                         </li>
                         
-                        @if (Request::url() == env('APP_URL'))
-                            <li class="text-center" >
-                                <a class="nav-cart-box d-flex" id="viewall" href="{{url('/')}}">
-                                    <img src="{{ asset('public/home.png') }}" alt="" width="25px"><br><span>Home</span>
-                                </a>
-                            </li>
-                        @else
-                            <li class="text-center" >
-                                <a class="nav-cart-box" href="{{ url('/') }}">
-                                    <img src="{{ asset('public/home.png') }}" alt="" width="25px"><br><span style="color: black;">Home</span>
-                                </a>
-                            </li>
-                        @endif
-                        
-                        <li class="text-center" >
-                            <a href="{{ url('/checkout') }}" class="nav-cart-box">
-                                <img src="{{ asset('public/shopping.png') }}" alt="" style="width: 28px;"><br><span style="color: black;">Shop</span>
+                        <li class="text-center" style="flex: 1;">
+                            <a class="nav-cart-box" href="{{ url('/') }}" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                                <img src="{{ asset('public/home.png') }}" alt="" width="25px">
+                                <span style="color: black; font-size: 11px; margin-top: 2px;">Home</span>
                             </a>
                         </li>
-                        <li class="text-center" >
-                            <a class="nav-cart-box" href="{{ url('login') }}">
-                                <img src="{{ asset('public/user.png') }}" alt="" style="width: 25px;"><br><span style="color: black;">Login</span>
+                        
+                        <li class="text-center" style="flex: 1;">
+                            <a href="{{ url('/checkout') }}" class="nav-cart-box" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                                <img src="{{ asset('public/shopping.png') }}" alt="" style="width: 28px;">
+                                <span style="color: black; font-size: 11px; margin-top: 2px;">Shop</span>
+                            </a>
+                        </li>
+                        <li class="text-center" style="flex: 1;">
+                            <a class="nav-cart-box" href="{{ url('login') }}" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                                <img src="{{ asset('public/user.png') }}" alt="" style="width: 25px;">
+                                <span style="color: black; font-size: 11px; margin-top: 2px;">Login</span>
                             </a>
                         </li>
 

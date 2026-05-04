@@ -75,9 +75,9 @@
     @else
         <br>
         <section class="section-content padding-y bg slidetop">
-            <div class="container p-0">
+            <div class="container">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <aside class="mb-4 card">
                             <article class="card-body">
                                 <header class="mb-4">
@@ -126,13 +126,26 @@
                                             hidden>{{ Cart::subtotalFloat() }}</textarea>
                                         <div class="form-group col-sm-12">
                                             <label>Select Area </label>
+                                            @php
+                                                $basicInfo = App\Models\Basicinfo::first();
+                                                $max_inside = (int)$basicInfo->inside_dhaka_charge;
+                                                $max_outside = (int)$basicInfo->outside_dhaka_charge;
+
+                                                foreach ($cartProducts as $cp) {
+                                                    if (isset($cp->inside_dhaka) && (int)$cp->inside_dhaka > $max_inside) {
+                                                        $max_inside = (int)$cp->inside_dhaka;
+                                                    }
+                                                    if (isset($cp->outside_dhaka) && (int)$cp->outside_dhaka > $max_outside) {
+                                                        $max_outside = (int)$cp->outside_dhaka;
+                                                    }
+                                                }
+                                            @endphp
                                             <select id="deliveryCharge" name="deliveryCharge" class="form-control"
                                                 onchange="setdeliverychargr()">
-                                                @php $basicInfo = App\Models\Basicinfo::first(); @endphp
-                                                <option value="{{ $basicInfo->outside_dhaka_charge }}">ঢাকার সিটির বাহির
-                                                    ({{ $basicInfo->outside_dhaka_charge }})</option>
-                                                <option value="{{ $basicInfo->inside_dhaka_charge }}">ঢাকা সিটির মধ্যে
-                                                    ({{ $basicInfo->inside_dhaka_charge }})</option>
+                                                <option value="{{ $max_outside }}">ঢাকার সিটির বাহির
+                                                    ({{ $max_outside }})</option>
+                                                <option value="{{ $max_inside }}">ঢাকা সিটির মধ্যে
+                                                    ({{ $max_inside }})</option>
                                             </select>
                                         </div>
                                         <div class="form-group col-12">
@@ -221,7 +234,7 @@
                             </article> <!-- card-body.// -->
                         </aside>
                     </div>
-                    <div class="col-md-6 orderDetails">
+                    <div class="col-12 col-md-6 orderDetails mt-3 mt-md-0">
                         <aside class="card">
                             <article class="card-body">
                                 <header class="mb-2">
@@ -229,13 +242,14 @@
                                         Summary </h4>
                                 </header>
                                 <div class="row">
+                                <div class="table-responsive">
                                     <table class="table border-bottom" style="border: none;">
                                         @forelse ($cartProducts as $cartProduct)
                                             <tr class="cart-item" id="productcart{{ $cartProduct->rowId }}">
-                                                <td class="product-image" id="proImgDiv">
+                                                <td class="product-image" id="proImgDiv" style="width: 80px; vertical-align: top;">
                                                     <a href="#" class="mr-3">
                                                         <img class=" ls-is-cached lazyloaded" src="{{ asset($cartProduct->image) }}"
-                                                            id="proImg">
+                                                            id="proImg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 5px;">
                                                     </a>
                                                 </td>
 
@@ -263,34 +277,33 @@
                                                                     @endif
                                                                 </small></span>
                                                         </div>
-                                                        <div class="qtyinfo">
-                                                            <div class="pr-4 input-group input-group--style-2"
-                                                                style="width: 130px;float:left">
+                                                        <div class="qtyinfo d-flex align-items-center flex-nowrap mt-2">
+                                                             <div class="input-group input-group--style-2 mb-0"
+                                                                 style="width: 130px; flex-shrink: 0;">
                                                                 <span class="input-group-btn">
                                                                     <button class="btn btn-number"
                                                                         onclick="remnum('{{ $cartProduct->rowId }}')" id="remqty"
-                                                                        type="button">
+                                                                        type="button" style="height: 30px; width: 30px; display: flex; align-items: center; justify-content: center; padding: 0;">
                                                                         <i class="fas fa-minus"></i>
                                                                     </button>
                                                                 </span>
                                                                 <input type="text" name="quantity[{{ $cartProduct->id }}]"
                                                                     id="QuantityPeo{{ $cartProduct->rowId }}"
-                                                                    class="form-control input-number" placeholder="1"
+                                                                    class="form-control input-number text-center" placeholder="1"
                                                                     value="{{ $cartProduct->qty }}" min="1" max="10"
-                                                                    style="margin: 0;height: 27px;"
+                                                                    style="margin: 0; height: 30px; padding: 0;"
                                                                     onchange="updateQuantity('{{ $cartProduct->rowId }}', this)">
                                                                 <span class="input-group-btn">
                                                                     <button class="btn btn-number"
                                                                         onclick="updatenum('{{ $cartProduct->rowId }}')" id="addqty"
-                                                                        type="button">
+                                                                        type="button" style="height: 30px; width: 30px; display: flex; align-items: center; justify-content: center; padding: 0;">
                                                                         <i class="fas fa-plus"></i>
                                                                     </button>
                                                                 </span>
                                                             </div>
                                                             <a type="button" id="proDelCart"
-                                                                style="width: 30px;font-size: 18px;color:black;margin-top: 2px;"
-                                                                onclick="removeFromCart('{{ $cartProduct->rowId }}')"
-                                                                class="pl-4 text-right">
+                                                                style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #ff0000; margin-left: 10px; cursor: pointer; transform: translateY(-10px);"
+                                                                onclick="removeFromCart('{{ $cartProduct->rowId }}')">
                                                                 <i class="fas fa-trash"></i>
                                                             </a>
                                                         </div>
@@ -303,6 +316,7 @@
                                         @empty
                                         @endforelse
                                     </table>
+                                </div>
 
                                     {{-- @if (Auth::id() && isset($availablecoup)) --}}
                                     <div class="d-flex">

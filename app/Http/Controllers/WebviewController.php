@@ -98,6 +98,57 @@ class WebviewController extends Controller
         return Response::make($xml->asXML(), 200, ['Content-Type' => 'application/xml']);
     }
 
+    public function facebookCatalog()
+    {
+        $mainproducts = Mainproduct::all();
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=facebook_catalog.csv",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand');
+
+        $callback = function() use($mainproducts, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($mainproducts as $mainproduct) {
+                $relatedProducts = json_decode($mainproduct->RelatedProductIds, true);
+                if (is_array($relatedProducts)) {
+                    $relatedProductIds = collect($relatedProducts)->pluck('productID')->toArray();
+                    $products = Product::whereIn('id', $relatedProductIds)->get();
+
+                    foreach ($products as $product) {
+                        $size = Size::where('product_id', $product->id)->first();
+                        $price = isset($size) ? $size->SalePrice : 0;
+                        
+                        // Clean description
+                        $description = strip_tags(str_replace('&nbsp;', ' ', $product->description));
+                        $description = substr($description, 0, 5000); // Facebook limit
+
+                        fputcsv($file, array(
+                            $product->id,
+                            $product->ProductName,
+                            $description,
+                            'in stock',
+                            'new',
+                            $price . ' BDT',
+                            url('product/' . $product->slug),
+                            url($product->ProductImage),
+                            'Rashibd' 
+                        ));
+                    }
+                }
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function webhook(Request $request)
     {
         $invoice = $request['invoice'];

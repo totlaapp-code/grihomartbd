@@ -1,3 +1,9 @@
+<style>
+    .select2-container {
+        width: 100% !important;
+        max-width: 100%;
+    }
+</style>
 <div class="row">
     <div class="col-md-5">
         <div class="card">
@@ -140,65 +146,66 @@
                 <strong>Product Info</strong>
             </div>
             <div class="card-body">
-                <table id="productTable" style="width: 100% !important;"
-                    class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Color</th>
-                            <th>Size</th>
-                            <th>Code</th>
-                            <th>Product Name</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($order->products as $product)
+                <div class="table-responsive">
+                    <table id="productTable" style="width: 100% !important;"
+                        class="table table-bordered table-striped">
+                        <thead>
                             <tr>
-                                <td style="display: none">
-                                    <input type="hidden" id="prd" value="old"><input type="text" class="productID" style="width:80px;" value="{{ $product->product_id }}"></td>
-                                <td>
-                                    <span class="Color"> <input type="text" name="color" id="ProductColor"  value="{{ $product->color }}" style="    max-width: 60px;"><br><a target="_blank" href="{{url('view-product',App\Models\Product::where('id', $product->product_id)->first()->ProductSlug)}}"><img src="{{asset(App\Models\Product::where('id',$product->product_id)->first()->ProductImage)}}" style="width:60px;margin-top:6px;"></a> </span>
-                                </td>
-                                <td>
-                                    <span class="Size">
-                                        <select class="form-control" name="size" id="ProductSize" style="width: 70px;">
-                                            <option value="">Choose</option>
-                                            @foreach(App\Models\Size::where('product_id',$product->product_id)->get() as $sz)
-                                                <option value="{{$sz->size}}" @if($product->size==$sz->size) selected @endif>{{$sz->size}}</option>
-                                            @endforeach
-                                        </select>
-                                    </span>
-                                </td>
-                                <td><span class="productCode">{{ $product->productCode }}</span></td>
-                                <td>
-                                    <span class="productName">{{ $product->productName }}<br>
-                                        <select class="form-control" name="sigment" id="sigment" style="width: 250px;">
-                                            <option value="">Choose</option>
-                                            @foreach(App\Models\Weight::where('product_id',$product->product_id)->get() as $wi)
-                                                <option value="{{$wi->weight}}" @if($product->sigment==$wi->weight) selected @endif>{{$wi->weight}}</option>
-                                            @endforeach
-                                        </select>
-                                    </span>
-                                </td>
-                                <td><input type="number" class="productQuantity form-control" style="width:80px;" value="{{ $product->quantity }}"></td>
-                                <td><input type="text" name="productPrice" class="productPrice" value="{{ $product->productPrice }}" style="max-width: 60px;"></td>
-                                <td><button class="btn btn-sm btn-danger delete-btn"><i class="fa fa-trash"></i></button></td>
+                                <th>Color</th>
+                                <th>Size</th>
+                                <th>Code</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th></th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="7">
-                                <select id="productID" type="text" style="width: 100%;" class="form-control">
-                                    <option value="">Select Product</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </tfoot>
-
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($order->products as $product)
+                                <tr>
+                                    <td style="display: none">
+                                        <input type="hidden" id="prd" value="old"><input type="text" class="productID" style="width:80px;" value="{{ $product->product_id }}"></td>
+                                    <td>
+                                        <span class="Color"> <input type="text" name="color" id="ProductColor"  value="{{ $product->color }}" style="    max-width: 60px;"><br><a target="_blank" href="{{url('view-product',App\Models\Product::where('id', $product->product_id)->first()->ProductSlug)}}"><img src="{{asset(App\Models\Product::where('id',$product->product_id)->first()->ProductImage)}}" style="width:60px;margin-top:6px;"></a> </span>
+                                    </td>
+                                    <td>
+                                        <span class="Size">
+                                            <select class="form-control" name="size" id="ProductSize" style="width: 70px;">
+                                                <option value="">Choose</option>
+                                                @foreach(App\Models\Size::where('product_id',$product->product_id)->get() as $sz)
+                                                    <option value="{{$sz->size}}" @if($product->size==$sz->size) selected @endif>{{$sz->size}}</option>
+                                                @endforeach
+                                            </select>
+                                        </span>
+                                    </td>
+                                    <td><span class="productCode">{{ $product->productCode }}</span></td>
+                                    <td>
+                                        <span class="productName">{{ $product->productName }}<br>
+                                            <select class="form-control" name="sigment" id="sigment" style="width: 250px;">
+                                                <option value="">Choose</option>
+                                                @foreach(App\Models\Weight::where('product_id',$product->product_id)->get() as $wi)
+                                                    <option value="{{$wi->weight}}" @if($product->sigment==$wi->weight) selected @endif>{{$wi->weight}}</option>
+                                                @endforeach
+                                            </select>
+                                        </span>
+                                    </td>
+                                    <td><input type="number" class="productQuantity form-control" style="width:80px;" value="{{ $product->quantity }}"></td>
+                                    <td><input type="text" name="productPrice" class="productPrice" value="{{ $product->productPrice }}" style="max-width: 60px;"></td>
+                                    <td><button class="btn btn-sm btn-danger delete-btn"><i class="fa fa-trash"></i></button></td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="7">
+                                    <select id="productID" type="text" style="width: 100%;" class="form-control">
+                                        <option value="">Select Product</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
                 <br>
 
                 <br>
@@ -331,19 +338,21 @@
                     </div>
                 </div>
                 <br>
-                <table id="orderCommentTable" style="border-top: 1px solid;" data-id="{{ $order->id }}" style="width: 100% !important;"
-                    class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Created At</th>
-                            <th>Notes</th>
-                            <th>User</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="table-responsive">
+                    <table id="orderCommentTable" style="border-top: 1px solid; width: 100% !important;" data-id="{{ $order->id }}"
+                        class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Created At</th>
+                                <th>Notes</th>
+                                <th>User</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
 
 
             </div>
@@ -355,23 +364,25 @@
                 <strong>Old Order</strong>
             </div>
             <div class="card-body">
-                <table id="oldOrderTable" style="width: 100% !important;border-top: 1px solid;" data-id="{{ $order->id }}"
-                    class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Invoice ID</th>
-                            <th>Customer Info</th>
-                            <th>Products</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>User</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="table-responsive">
+                    <table id="oldOrderTable" style="width: 100% !important;border-top: 1px solid;" data-id="{{ $order->id }}"
+                        class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Invoice ID</th>
+                                <th>Customer Info</th>
+                                <th>Products</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>User</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
 
 
             </div>

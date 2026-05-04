@@ -37,15 +37,14 @@
                 </div>
             </div>
             <div class="mb-3 col-12 d-block d-lg-none">
-                <div class="d-flex justify-content-between" style="font-size: 24px;">
-                    
-                    <div class="from-group">
-                        <lable>From:</lable>
-                        <input type="text" style="width:200px" class="form-control datepicker" id="infodate" value="{{date('Y-m-d')}}" name="infodate">
+                <div class="row g-2" style="font-size: 20px;">
+                    <div class="col-6">
+                        <label>From:</label>
+                        <input type="text" class="form-control datepicker w-100" id="infodate" value="{{date('Y-m-d')}}" name="infodate">
                     </div>
-                    <div class="from-group">
-                        <lable>To:</lable>
-                        <input type="text" style="width:200px" class="form-control datepicker" id="infodateto" value="{{date('Y-m-d')}}" name="infodateto">
+                    <div class="col-6">
+                        <label>To:</label>
+                        <input type="text" class="form-control datepicker w-100" id="infodateto" value="{{date('Y-m-d')}}" name="infodateto">
                     </div>
                 </div>
             </div> 
@@ -56,7 +55,7 @@
         <div class="card card-body">
              
             <div class="col-sm-6 col-xl-3">
-                <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                     <div class="ms-3">
                         <p class="mb-2">Account Balance</p>
                         <h6 class="mb-0" id="account">{{ \App\Models\Basicinfo::first()->account_balance }}</h6>
@@ -72,7 +71,7 @@
             <div class="row">
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Courier')}}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <img src="{{asset('public/cash1.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Courier Payment</p>
@@ -83,7 +82,7 @@
                 </div>
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Office Sale')}}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <img src="{{asset('public/money.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Office Sale Payment</p>
@@ -95,7 +94,7 @@
 
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Wholesale')}}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <img src="{{asset('public/pallete.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Wholesale Payment</p>
@@ -106,7 +105,7 @@
                 </div>
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Total')}}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <img src="{{asset('public/icon/income.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Total Payment </p>
@@ -123,7 +122,7 @@
             <div class="row">
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/expense-cost/Boost Cost')}}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <img src="{{asset('public/shuttle.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Boost Cost</p>
@@ -134,7 +133,7 @@
                 </div>
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/expense-cost/Office Cost')}}">
-                    <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                    <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                         <img src="{{asset('public/expense.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Office Cost</p>
@@ -146,7 +145,7 @@
 
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/expense-cost/Bank Deposit')}}">
-                    <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                    <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                         <img src="{{asset('public/mobile-banking.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Bank Deposit</p>
@@ -157,7 +156,7 @@
                 </div>
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/expense-cost/Total Cost')}}">
-                    <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                    <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                         <img src="{{asset('public/reduction.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Total Cost</p>
@@ -207,7 +206,7 @@
                 <div class="row">
                     <div class="col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/orderall') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <img src="{{asset('public/icon/order.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Total</p>
@@ -227,7 +226,7 @@
                 <div class="row">
                     <div class="mb-2 col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/orderall') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Total Order</p>
                                 <h6 class="mb-0" id="all">0</h6>
@@ -237,7 +236,7 @@
                     </div>
                     <div class="mb-2 col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/Pending') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Pending</p>
                                 <h6 class="mb-0" id="pending">0</h6>
@@ -247,7 +246,7 @@
                     </div>
                     <div class="mb-2 col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/Hold') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Hold</p>
                                 <h6 class="mb-0" id="hold">0</h6>
@@ -257,7 +256,7 @@
                     </div>
                     <div class="mb-2 col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/Cancelled') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Cancelled</p>
                                 <h6 class="mb-0" id="cancelled">0</h6>
@@ -277,7 +276,7 @@
                 <div class="row">
                     <div class="mb-2 col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/Ready to Ship') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Ready to Ship</p>
                                 <h6 class="mb-0" id="readytoship">0</h6>
@@ -287,7 +286,7 @@
                     </div>
                     <div class="mb-2 col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/Packaging') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Packaging</p>
                                 <h6 class="mb-0" id="packaging">0</h6>
@@ -297,7 +296,7 @@
                     </div>
                     <div class="mb-2 col-sm-6 col-lg-3">
                         <a href="{{ url('admin_order/Shipped') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Shipped</p>
                                 <h6 class="mb-0" id="shipped">0</h6>
@@ -319,11 +318,13 @@
         <div class="col-12 mb-4 text-center">
                 <h4 style="margin: 0;margin-top: 8px;">Grihomart BD</h4>
             </div>
-        <div class="p-4 mb-4 col-12 d-flex justify-content-between mt-4">
+        <div class="p-4 mb-4 col-12 d-flex flex-wrap justify-content-between align-items-center mt-4">
             <h4 style="margin: 0;margin-top: 8px;">COURIER STATUS</h4>  
-            <a type="button" data-bs-toggle="modal" data-bs-target="#mainTask" class="btn btn-primary m-2"
-                        style="float: right"> + Create Note</a>
-             <button onclick="printDivc()" class="btn btn-info">Print</button>
+            <div class="d-flex flex-wrap align-items-center mt-2 mt-md-0" style="gap: 10px;">
+                <a type="button" data-bs-toggle="modal" data-bs-target="#mainTask" class="btn btn-primary"
+                            style="white-space: nowrap;"> + Create Note</a>
+                 <button onclick="printDivc()" class="btn btn-info">Print</button>
+            </div>
         </div>
         <div class="row">
             <div style="margin: 0;margin-top: 8px;display: flex;font-size: 24px;color: black;font-weight: bold;margin-bottom: 20px;justify-content: center;">Date: <div id="dateid">{{date('Y-m-d')}}</div> </div> 
@@ -334,7 +335,7 @@
                 <div class="row">
                     <div class="mb-2 col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/Courier Pending') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Courier Pending</p>
                                 <h6 class="mb-0" id="courierPending">0</h6>
@@ -344,7 +345,7 @@
                     </div>
                     <div class="mb-2 col-sm-6 col-lg-3">
                         <a href="{{ url('admin_order/Completed') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Completed</p>
                                 <h6 class="mb-0" id="completed">0</h6>
@@ -354,7 +355,7 @@
                     </div>
                     <div class="mb-2 col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/Partial Delivered') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Partial Delivered</p>
                                 <h6 class="mb-0" id="partialDelivered">0</h6>
@@ -364,7 +365,7 @@
                     </div>
                     <div class="mb-2 col-sm-6 col-lg-3">
                         <a href="{{ url('admin_order/Del. Failed') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Del. Failed</p>
                                 <h6 class="mb-0" id="delfailed">0</h6>
@@ -375,7 +376,7 @@
     
                     <div class="mb-2 col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/Unknown') }}">
-                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-between">
+                        <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
                             <div class="ms-3">
                                 <p class="mb-2">Unknown</p>
                                 <h6 class="mb-0" id="unknown">0</h6>
@@ -512,7 +513,7 @@
                                 $avtotal+=$stock;
                             @endphp
                             <div class="mb-2 col-sm-6 col-xl-3">
-                                <div class="p-4 rounded bg-white d-flex align-items-center justify-content-between">
+                                <div class="p-4 rounded bg-white d-flex align-items-center justify-content-start h-100">
                                     <div class="ms-3">
                                         <p class="mb-2">{{$category->category_name}}</p>
                                         <h6 class="mb-0" id="">{{$stock}} pics</h6>
@@ -521,7 +522,7 @@
                             </div>
                         @endforeach
                         <div class="mb-2 col-sm-6 col-xl-3">
-                            <div class="p-4 rounded bg-white d-flex align-items-center justify-content-between">
+                            <div class="p-4 rounded bg-white d-flex align-items-center justify-content-start h-100">
                                 <div class="ms-3">
                                     <p class="mb-2">Total</p>
                                     <h6 class="mb-0" id="">{{$avtotal}} pics</h6>
