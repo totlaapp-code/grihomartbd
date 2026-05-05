@@ -1,15 +1,24 @@
  @forelse ($categoryproducts as $categoryproduct)
     @php
-        $firstcatepro=App\Models\Product::with([
-            'sizes' => function ($query) {
-                $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
-            }
-            ])->where('id',json_decode($categoryproduct->RelatedProductIds)[0]->productID)->select('id','ProductName')->first();
+        $relatedIds = json_decode($categoryproduct->RelatedProductIds);
+        $firstcatepro = null;
+        if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
+            $firstcatepro=App\Models\Product::with([
+                'sizes' => function ($query) {
+                    $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                }
+                ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
+        }
 
-        $review = App\Models\Review::where('product_id', $firstcatepro->id)->avg(
-                                        'rating',
-                                    );
-        $dis=intval(($firstcatepro->sizes[0]->Discount/$firstcatepro->sizes[0]->RegularPrice)*100)
+        $reviewCount = 0;
+        if ($firstcatepro) {
+            $reviewCount = App\Models\Review::where('product_id', $firstcatepro->id)->count();
+        }
+        
+        $dis = 0;
+        if (isset($firstcatepro->sizes[0]) && $firstcatepro->sizes[0]->RegularPrice > 0) {
+            $dis=intval(($firstcatepro->sizes[0]->Discount/$firstcatepro->sizes[0]->RegularPrice)*100);
+        }
     @endphp
     @if(isset($firstcatepro))
         <div class="mb-2 px-1 col-6 col-md-4 col-lg-3">
@@ -30,7 +39,7 @@
                              
                             <div class="d-flex my-2" style="justify-content:center">
                                 <div class="star" style="padding-top: 5px;">
-                                    <span style="font-weight: bold;color:black;font-size:10px">({{ App\Models\Review::where('product_id', $categoryproduct->id)->get()->count() }})</span>
+                                    <span style="font-weight: bold;color:black;font-size:10px">({{ $reviewCount }})</span>
                                         <span class="fas fa-star" id="checked"></span>
                                         <span class="fas fa-star" id="checked"></span>
                                         <span class="fas fa-star" id="checked"></span>
@@ -40,10 +49,12 @@
                                 </div>
                             </div>
                             <div class="price-box">
-                                <del class="old-product-price strong-400" style="color:red">৳
-                                    {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
-                                <span
-                                    class="product-price strong-600" style="color:black">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
+                                @if(isset($firstcatepro->sizes[0]))
+                                    <del class="old-product-price strong-400" style="color:red">৳
+                                        {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
+                                    <span
+                                        class="product-price strong-600" style="color:black">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
+                                @endif
                             </div>
                             
                         </div>

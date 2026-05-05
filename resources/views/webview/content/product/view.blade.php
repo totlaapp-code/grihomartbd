@@ -17,16 +17,25 @@
 <div class="row pt-2 pb-2" id="cateoryPro" style="background: white;">
  @forelse ($categoryproducts as $categoryproduct)
     @php
-        $firstcatepro=App\Models\Product::with([
-            'sizes' => function ($query) {
-                $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
-            }
-            ])->where('id',json_decode($categoryproduct->RelatedProductIds)[0]->productID)->select('id','ProductName')->first();
+        $relatedIds = json_decode($categoryproduct->RelatedProductIds);
+        $firstcatepro = null;
+        if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
+            $firstcatepro=App\Models\Product::with([
+                'sizes' => function ($query) {
+                    $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                }
+                ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
+        }
 
-        $review = App\Models\Review::where('product_id', $firstcatepro->id)->avg(
-                                        'rating',
-                                    );
-        $dis=intval(($firstcatepro->sizes[0]->Discount/$firstcatepro->sizes[0]->RegularPrice)*100)
+        $reviewRating = 0;
+        if ($firstcatepro) {
+            $reviewRating = App\Models\Review::where('product_id', $firstcatepro->id)->avg('rating');
+        }
+
+        $dis = 0;
+        if (isset($firstcatepro->sizes[0]) && $firstcatepro->sizes[0]->RegularPrice > 0) {
+            $dis=intval(($firstcatepro->sizes[0]->Discount/$firstcatepro->sizes[0]->RegularPrice)*100);
+        }
     @endphp
     @if(isset($firstcatepro))
         <div class="mb-2 px-1 col-6 col-md-4 col-lg-3">
@@ -56,10 +65,12 @@
                                 </div>
                             </div>
                             <div class="price-box">
-                                <del class="old-product-price strong-400" style="color:red">৳
-                                    {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
-                                <span
-                                    class="product-price strong-600" style="color:black">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
+                                @if(isset($firstcatepro->sizes[0]))
+                                    <del class="old-product-price strong-400" style="color:red">৳
+                                        {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
+                                    <span
+                                        class="product-price strong-600" style="color:black">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
+                                @endif
                             </div>
                             
                           </div>
@@ -72,7 +83,7 @@
                                 <input type="text" name="size" id="product_sizeold" hidden>
                                 <input type="text" name="product_id" value="{{ $firstcatepro->id }}" hidden>
                                 <input type="text" name="qty" value="1" id="qtyor" hidden>
-                                <button class="btn  btn-sm mb-0 btn-block"  id="purcheseBtn">অর্ডার করুন</button>
+                                <button class="btn  btn-sm mb-0 btn-block"  id="purcheseBtn" style="background: #ff4e00; color: white;">অর্ডার করুন</button>
                             </form>
                         </div>
                  </div>

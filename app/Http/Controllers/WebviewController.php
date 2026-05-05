@@ -242,7 +242,12 @@ class WebviewController extends Controller
     {
         $singlemain = Mainproduct::where('ProductSlug', $slug)->select('id', 'category_id', 'RelatedProductIds')->first();
 
-        $id = json_decode($singlemain->RelatedProductIds)[0]->productID;
+        $relatedIds = json_decode($singlemain->RelatedProductIds);
+        if (empty($relatedIds) || !isset($relatedIds[0]->productID)) {
+            return redirect()->back()->with('error', 'Product details not available.');
+        }
+
+        $id = $relatedIds[0]->productID;
         $productdetails = Product::with([
             'sizes' => function ($query) {
                 $query->select('id', 'product_id', 'Discount', 'RegularPrice', 'SalePrice')->where('status', 'Active');
@@ -487,19 +492,47 @@ class WebviewController extends Controller
     public function productdetails($slug)
     {
         $productdetails = Product::where('ProductSlug', $slug)->first();
-        $varients = Varient::where('product_id', $productdetails->id)->get();
-        $sizes = Size::where('product_id', $productdetails->id)->where('status', 'Active')->get();
-        $weights = Weight::where('product_id', $productdetails->id)->get();
-        $relatedproducts = Product::where('category_id', $productdetails->category_id)->where('status', 'Active')->inRandomOrder()->limit(15)->get();
+        if (!$productdetails) {
+            abort(404);
+        }
 
-        return view('webview.content.product.details', ['varients' => $varients, 'sizes' => $sizes, 'weights' => $weights, 'relatedproducts' => $relatedproducts, 'productdetails' => $productdetails]);
+        $shipping = Basicinfo::first();
+        $singlemain = Mainproduct::where('RelatedProductIds', 'LIKE', '%"productID":"' . $productdetails->id . '"%')->first();
+
+        $varients = Varient::where('product_id', $productdetails->id)->get();
+        $sizesolds = Size::where('product_id', $productdetails->id)->where('status', 'Active')->get();
+        $weightolds = Weight::where('product_id', $productdetails->id)->get();
+
+        $relatedproducts = Mainproduct::where('category_id', $productdetails->category_id)
+            ->where('status', 'Active')
+            ->orderByRaw('ISNULL(`position`), `position` ASC')
+            ->select('id', 'ProductName', 'ProductSlug', 'ProductImage', 'status', 'position', 'top_rated', 'RelatedProductIds')
+            ->inRandomOrder()
+            ->limit(8)
+            ->get();
+
+        return view('webview.content.product.details', [
+            'sizesolds' => $sizesolds,
+            'weightolds' => $weightolds,
+            'singlemain' => $singlemain,
+            'varients' => $varients,
+            'relatedproducts' => $relatedproducts,
+            'productdetails' => $productdetails,
+            'shipping' => $shipping
+        ]);
     }
 
     public function viewproductdetails($slug)
     {
         $shipping =Basicinfo::first();
         $singlemain = Mainproduct::where('ProductSlug', $slug)->select('id', 'category_id', 'RelatedProductIds')->first();
-        $id = json_decode($singlemain->RelatedProductIds)[0]->productID;
+
+        $relatedIds = json_decode($singlemain->RelatedProductIds);
+        if (empty($relatedIds) || !isset($relatedIds[0]->productID)) {
+            return redirect()->back()->with('error', 'Product details not available.');
+        }
+
+        $id = $relatedIds[0]->productID;
         $productdetails = Product::with([
             'sizes' => function ($query) {
                 $query->select('id', 'product_id', 'Discount', 'RegularPrice', 'SalePrice')->where('status', 'Active');

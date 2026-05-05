@@ -189,7 +189,7 @@
                                 style="text-align: center;">
                                 @method('POST')
                                 @csrf
-                                <input type="hidden" name="color" id="product_colororder" value="{{$varients[0]->color}}">
+                                <input type="hidden" name="color" id="product_colororder" value="{{ isset($varients[0]) ? $varients[0]->color : '' }}">
                                 <input type="hidden" name="size" id="product_sizeorder" value="">
                                 <input type="hidden" name="sigment" id="product_sigmentorder" value="">
                                 <input type="hidden" name="price" id="product_priceorder" value="">
@@ -211,7 +211,7 @@
                                 style="text-align: center;">
                                 @method('POST')
                                 @csrf
-                                <input type="hidden" name="color" id="product_colororder" value="{{$varients[0]->color}}">
+                                <input type="hidden" name="color" id="product_colororder" value="{{ isset($varients[0]) ? $varients[0]->color : '' }}">
                                 <input type="hidden" name="size" id="product_sizeorder" value="">
                                 <input type="hidden" name="sigment" id="product_sigmentorder" value="">
                                 <input type="hidden" name="price" id="product_priceorder" value="">

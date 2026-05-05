@@ -2,7 +2,11 @@
 
     @forelse ($slugproducts as $categoryproduct)
         @php
-            $firstcatepro=App\Models\Product::where('id',json_decode($categoryproduct->RelatedProductIds)[0]->productID)->first();
+            $relatedIds = json_decode($categoryproduct->RelatedProductIds);
+            $firstcatepro = null;
+            if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
+                $firstcatepro=App\Models\Product::where('id', $relatedIds[0]->productID)->first();
+            }
         @endphp
         @if(isset($firstcatepro))
             <div class="col-6 col-md-4 col-lg-3 mb-2">
@@ -14,15 +18,15 @@
                             </a>
                         </div>
                         @php
-                            $sizesss=App\Models\Size::where('product_id',$firstcatepro->id)->first();
-                            $dis=intval(($sizesss->Discount/$sizesss->RegularPrice)*100);
+                            $sizesss = App\Models\Size::where('product_id', $firstcatepro->id)->first();
+                            $dis = 0;
+                            if ($sizesss && $sizesss->RegularPrice > 0) {
+                                $dis = intval(($sizesss->Discount / $sizesss->RegularPrice) * 100);
+                            }
                         @endphp
                         
                         @if (isset($sizesss))
-                            
                             <span style="position: absolute;top: 0;background: green;width: 50px;color: white;border-radius: 4px;font-weight: bold;font-size: 12px;">&nbsp;{{$dis}}% off</span>
-                        @else
-                             
                         @endif
                         <!-- /.product-image -->
                         <div class="product-text" style="padding-bottom: 4px !important;background: white;">
@@ -37,13 +41,14 @@
                                         <span class="fas fa-star" id="checked"></span>
                                         <span class="fas fa-star" id="checked"></span>
                                         <span class="fas fa-star" id="checked"></span>
-                                     
-                                </div>
+                                 </div>
                             </div>
                             <div class="price-box">
-                                <del class="old-product-price strong-400" style="color:red">৳
-                                    {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
-                                <span class="product-price strong-600" style="color:black">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
+                                @if(isset($firstcatepro->sizes[0]))
+                                    <del class="old-product-price strong-400" style="color:red">৳
+                                        {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
+                                    <span class="product-price strong-600" style="color:black">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
+                                @endif
                             </div>
                             
                           </div>
@@ -56,7 +61,7 @@
                                 <input type="text" name="size" id="product_sizeold" hidden>
                                 <input type="text" name="product_id" value="{{ $firstcatepro->id }}" hidden>
                                 <input type="text" name="qty" value="1" id="qtyor" hidden>
-                                <button class="btn  btn-sm mb-0 btn-block"  id="purcheseBtn">অর্ডার করুন</button>
+                                <button class="btn  btn-sm mb-0 btn-block"  id="purcheseBtn" style="background: #ff4e00; color: white;">অর্ডার করুন</button>
                             </form>
                         </div>
                  </div>

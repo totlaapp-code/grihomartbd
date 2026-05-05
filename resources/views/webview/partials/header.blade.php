@@ -36,7 +36,6 @@
             height: 60px !important;
             padding: 0 15px !important;
             flex-wrap: nowrap !important;
-            overflow: hidden !important;
         }
     }
     @media (min-width: 992px) {
@@ -57,7 +56,7 @@
         </div>
     </div>
  
-    <div class="main-header" id="myHeader" style="background: #fff; border-bottom: 1px solid #e9e9e9; padding: 10px 0; overflow: hidden;">
+    <div class="main-header" id="myHeader" style="background: #fff; border-bottom: 1px solid #e9e9e9; padding: 10px 0; position: relative; z-index: 1000;">
         <div class="container">
             <!-- Desktop View -->
             <div class="desktop-header-view row align-items-center" style="margin: 0;">
@@ -108,11 +107,10 @@
                         <a href="{{ Auth::id() ? '#' : url('login') }}" onclick="{{ Auth::id() ? 'openProfileNav()' : '' }}" style="color: #000; font-size: 20px;"><i class="fa-solid fa-user"></i></a>
                     </div>
                     <div class="dropdown-cart">
-                        <a href="#" onclick="checkcart(this)" data-bs-toggle="dropdown" style="position: relative; text-decoration: none; color: #000; display: flex; align-items: center;">
+                        <a href="javascript:void(0);" onclick="checkcartview()" style="position: relative; text-decoration: none; color: #000; display: flex; align-items: center;">
                             <i class="fa-solid fa-bag-shopping" style="font-size: 24px;"></i>
                             <span style="position: absolute; top: -10px; right: -12px; background: #ff7000; color: #fff; font-size: 10px; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold;">{{ intval(Cart::count()) }}</span>
                         </a>
-                        <ul class="dropdown-menu"><li id="checkcartview"></li></ul>
                     </div>
                 </div>
             </div>
@@ -130,17 +128,16 @@
                     </a>
                 </div>
                 <div style="width: 15%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
-                    <a href="#" onclick="showser()" style="margin-right: 15px; color: #000; font-size: 20px; display: flex; align-items: center; justify-content: center; height: 100%;">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#searchPopup" style="margin-right: 15px; color: #000; font-size: 20px; display: flex; align-items: center; justify-content: center; height: 100%;">
                          <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
                     <div class="dropdown-cart" style="display: flex; align-items: center; height: 100%;">
-                        <a href="#" onclick="checkcart(this)" data-bs-toggle="dropdown" style="text-decoration: none; color: #000; display: flex; align-items: center; justify-content: center; height: 100%;">
+                        <a href="javascript:void(0);" onclick="checkcartview()" style="text-decoration: none; color: #000; display: flex; align-items: center; justify-content: center; height: 100%;">
                             <div style="position: relative; display: flex; align-items: center; justify-content: center;">
                                 <i class="fa-solid fa-bag-shopping" style="font-size: 22px;"></i>
                                 <span style="position: absolute; top: -8px; right: -10px; background: #ff7000; color: #fff; font-size: 9px; min-width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold;">{{ intval(Cart::count()) }}</span>
                             </div>
                         </a>
-                        <ul class="dropdown-menu"><li id="checkcartview"></li></ul>
                     </div>
                 </div>
             </div>

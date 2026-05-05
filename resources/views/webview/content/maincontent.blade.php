@@ -215,14 +215,20 @@
                 <div class="owl-carousel " id="promotionalofferSlide">
                     @forelse ($topproducts as $promotional)
                         @php
-                            $firstpro=App\Models\Product::with([
-                                'sizes' => function ($query) {
-                                    $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                            $relatedIds = json_decode($promotional->RelatedProductIds);
+                            $firstpro = null;
+                            $dis = 0;
+                            if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
+                                $firstpro=App\Models\Product::with([
+                                    'sizes' => function ($query) {
+                                        $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                                    }
+                                    ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
+                                
+                                if ($firstpro && count($firstpro->sizes) > 0 && $firstpro->sizes[0]->RegularPrice > 0) {
+                                    $dis=intval(($firstpro->sizes[0]->Discount/$firstpro->sizes[0]->RegularPrice)*100);
                                 }
-                                ])->where('id',json_decode($promotional->RelatedProductIds)[0]->productID)->select('id','ProductName')->first();
-    
-                                     $dis=intval(($firstpro->sizes[0]->Discount/$firstpro->sizes[0]->RegularPrice)*100)
-
+                            }
                        @endphp
                         @if(isset($firstpro))
                             <div class="item" id="featuredproduct" data-aos="fade-right" data-aos-duration="10">
@@ -253,10 +259,12 @@
                                                 </div>
                                             </div>
                                             <div class="price-box">
-                                                <del class="old-product-price strong-400" style="color:red">৳
+                                                @if(isset($firstpro->sizes[0]))
+                                                    <del class="old-product-price strong-400" style="color:red">৳
                                                     {{ round($firstpro->sizes[0]->RegularPrice) }}</del>
                                                 <span
                                                     class="product-price strong-600" style="color:black">৳ {{ round($firstpro->sizes[0]->SalePrice) }}</span>
+                                                @endif
                                             </div>
                                             
                                         </div>
@@ -290,14 +298,20 @@
                 <div class="owl-carousel " id="bestSellingSlide">
                     @forelse ($bestSelleingProducts as $promotional)
                         @php
-                            $firstpro=App\Models\Product::with([
-                                'sizes' => function ($query) {
-                                    $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                            $relatedIds = json_decode($promotional->RelatedProductIds);
+                            $firstpro = null;
+                            $dis = 0;
+                            if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
+                                $firstpro=App\Models\Product::with([
+                                    'sizes' => function ($query) {
+                                        $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                                    }
+                                    ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
+                                
+                                if ($firstpro && count($firstpro->sizes) > 0 && $firstpro->sizes[0]->RegularPrice > 0) {
+                                    $dis=intval(($firstpro->sizes[0]->Discount/$firstpro->sizes[0]->RegularPrice)*100);
                                 }
-                                ])->where('id',json_decode($promotional->RelatedProductIds)[0]->productID)->select('id','ProductName')->first();
-            $dis=intval(($firstpro->sizes[0]->Discount/$firstpro->sizes[0]->RegularPrice)*100)
-
-                             
+                            }
                        @endphp
                         @if(isset($firstpro))
                             <div class="item" id="featuredproduct" data-aos="fade-right" data-aos-duration="10">
@@ -329,10 +343,12 @@
                                                 </div>
                                             </div>
                                             <div class="price-box">
-                                                <del class="old-product-price strong-400" style="color:red">৳
+                                                @if(isset($firstpro->sizes[0]))
+                                                    <del class="old-product-price strong-400" style="color:red">৳
                                                     {{ round($firstpro->sizes[0]->RegularPrice) }}</del>
                                                 <span
                                                     class="product-price strong-600" style="color:black">৳ {{ round($firstpro->sizes[0]->SalePrice) }}</span>
+                                                @endif
                                             </div>
                                             
                                         </div>
@@ -394,14 +410,20 @@
     
                     @forelse ($categoryproduct->mainproducts as $product)
                         @php
-                            $firstcatepro=App\Models\Product::with([
-                                'sizes' => function ($query) {
-                                    $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                            $relatedIds = json_decode($product->RelatedProductIds);
+                            $firstcatepro = null;
+                            $dis = 0;
+                            if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
+                                $firstcatepro=App\Models\Product::with([
+                                    'sizes' => function ($query) {
+                                        $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                                    }
+                                    ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
+                                
+                                if ($firstcatepro && count($firstcatepro->sizes) > 0 && $firstcatepro->sizes[0]->RegularPrice > 0) {
+                                    $dis=intval(($firstcatepro->sizes[0]->Discount/$firstcatepro->sizes[0]->RegularPrice)*100);
                                 }
-                                ])->where('id',json_decode($product->RelatedProductIds)[0]->productID)->select('id','ProductName')->first();
-    
-                                        $dis=intval(($firstcatepro->sizes[0]->Discount/$firstcatepro->sizes[0]->RegularPrice)*100)
-
+                            }
                         @endphp
                         @if(isset($firstcatepro))
                             <div class="my-1 px-1 col-6 col-md-4 col-lg-3" fade-direction="left" fade-time="1">
@@ -432,9 +454,11 @@
                                                 </div>
                                             </div>
                                             <div class="price-box">
-                                                <del class="old-product-price strong-400" style="color:red">৳
-                                                    {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
-                                                <span  class="product-price strong-600" style="color:black">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
+                                                @if(isset($firstcatepro->sizes[0]))
+                                                    <del class="old-product-price strong-400" style="color:red">৳
+                                                        {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
+                                                    <span  class="product-price strong-600" style="color:black">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

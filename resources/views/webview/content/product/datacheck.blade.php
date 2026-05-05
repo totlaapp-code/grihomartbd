@@ -388,7 +388,7 @@
                                         <input type="hidden" name="qty" value="1" id="qtyoror">
                                         <button type="submit"
                                             class="mb-0 ml-2 btn btn-styled btn-base-1 btn-icon-left strong-700 hov-bounce hov-shaddow buy-now"
-                                            style="background:#000;color:white;width: 100%;font-size: 17px;">
+                                            style="background:#ff4e00;color:white;width: 100%;font-size: 17px;">
                                             অর্ডার করুন
                                         </button>
                                     </form>
@@ -727,15 +727,20 @@
                         id="relatedCarousel">
                         @forelse ($relatedproducts as $promotional)
                             @php
-                                $firstpro=App\Models\Product::with([
-                                    'sizes' => function ($query) {
-                                        $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
-                                    }
-                                    ])->where('id',json_decode($promotional->RelatedProductIds)[0]->productID)->select('id','ProductName')->first();
+                                $relatedIds = json_decode($promotional->RelatedProductIds);
+                                $firstpro = null;
+                                if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
+                                    $firstpro=App\Models\Product::with([
+                                        'sizes' => function ($query) {
+                                            $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                                        }
+                                        ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
+                                }
 
-                                $review = App\Models\Review::where('product_id', $firstpro->id)->avg(
-                                                                'rating',
-                                                            );
+                                $reviewRating = 0;
+                                if ($firstpro) {
+                                    $reviewRating = App\Models\Review::where('product_id', $firstpro->id)->avg('rating');
+                                }
                             @endphp
                             @if(isset($firstpro))
                                 <div class="item" id="featuredproduct">
@@ -752,7 +757,9 @@
                                                                 </a>
                                                             </div>
 
-                                                            <span id="discountpart"> <p id="pdis">SAVE ৳{{ round($firstpro->sizes[0]->Discount) }}</p></span>
+                                                            @if(isset($firstpro->sizes[0]))
+                                                                <span id="discountpart"> <p id="pdis">SAVE ৳{{ round($firstpro->sizes[0]->Discount) }}</p></span>
+                                                            @endif
 
                                                         </div>
                                                         <!-- /.product-image -->
@@ -770,31 +777,32 @@
                                                             <div class="d-flex" style="justify-content:space-between">
                                                                 <div class="star" style="padding-top: 5px;">
                                                                     <span style="font-weight: bold;color:black;font-size:10px">({{ App\Models\Review::where('product_id', $promotional->id)->get()->count() }})</span>
-                                                                    @if (intval($review) == 1)
+                                                                    @php $reviewInt = intval($reviewRating); @endphp
+                                                                    @if ($reviewInt == 1)
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star"></span>
                                                                         <span class="fas fa-star"></span>
                                                                         <span class="fas fa-star"></span>
                                                                         <span class="fas fa-star"></span>
-                                                                    @elseif(intval($review) == 2)
+                                                                    @elseif($reviewInt == 2)
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star"></span>
                                                                         <span class="fas fa-star"></span>
                                                                         <span class="fas fa-star"></span>
-                                                                    @elseif(intval($review) == 3)
+                                                                    @elseif($reviewInt == 3)
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star"></span>
                                                                         <span class="fas fa-star"></span>
-                                                                    @elseif(intval($review) == 4)
+                                                                    @elseif($reviewInt == 4)
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star"></span>
-                                                                    @elseif(intval($review) == 5)
+                                                                    @elseif($reviewInt == 5)
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star" id="checked"></span>
@@ -812,16 +820,18 @@
                                                             </div>
 
                                                             <div class="price-box">
-                                                                <del class="old-product-price strong-400">৳
-                                                                    {{ round($firstpro->sizes[0]->RegularPrice) }}</del>
-                                                                <span
-                                                                    class="product-price strong-600">৳ {{ round($firstpro->sizes[0]->SalePrice) }}</span>
+                                                                @if(isset($firstpro->sizes[0]))
+                                                                    <del class="old-product-price strong-400">৳
+                                                                        {{ round($firstpro->sizes[0]->RegularPrice) }}</del>
+                                                                    <span
+                                                                        class="product-price strong-600">৳ {{ round($firstpro->sizes[0]->SalePrice) }}</span>
+                                                                @endif
                                                             </div>
 
                                                         </div>
                                                         <a href="{{ url('view-product/' . $promotional->ProductSlug) }}">
                                                             <button class="mb-0 btn btn-danger btn-sm btn-block"
-                                                                    style="width: 100%;border-radius: 0%;" id="purcheseBtn">অর্ডার করুন</button>
+                                                                    style="width: 100%;border-radius: 0%; background: #ff4e00; color: white;" id="purcheseBtn">অর্ডার করুন</button>
                                                         </a>
 
                                                     </div>

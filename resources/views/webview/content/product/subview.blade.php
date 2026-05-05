@@ -62,7 +62,7 @@
                                         <input type="text" name="size" id="product_sizeold" hidden>
                                         <input type="text" name="product_id" value="{{ $categoryproduct->id }}" hidden>
                                         <input type="text" name="qty" value="1" id="qtyor" hidden>
-                                        <button class="btn  btn-sm mb-0 btn-block"  id="purcheseBtn">অর্ডার করুন</button>
+                                        <button class="btn  btn-sm mb-0 btn-block"  id="purcheseBtn" style="background: #ff4e00; color: white;">অর্ডার করুন</button>
                                     </form>
                                 </div>
                             

@@ -60,7 +60,16 @@
                         @forelse ($searchproducts as $product)
 
                             @php
-                                $firstcatepro=App\Models\Product::where('id',json_decode($product->RelatedProductIds)[0]->productID)->first();
+                                $relatedIds = json_decode($product->RelatedProductIds);
+                                $firstcatepro = null;
+                                if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
+                                    $firstcatepro=App\Models\Product::where('id', $relatedIds[0]->productID)->first();
+                                }
+                                
+                                $reviewCount = 0;
+                                if ($firstcatepro) {
+                                    $reviewCount = App\Models\Review::where('product_id', $firstcatepro->id)->count();
+                                }
                             @endphp
                             @if(isset($firstcatepro))
                                 <div class="mb-2 col-6 col-md-4 col-lg-2">
@@ -89,7 +98,7 @@
         
                                                             <div class="d-flex" style="justify-content:space-between">
                                                                 <div class="star" style="padding-top: 5px;">
-                                                                    <span style="font-weight: bold;color:black;font-size:10px">({{ App\Models\Review::where('product_id', $firstcatepro->id)->select('id')->get()->count() }})</span>
+                                                                    <span style="font-weight: bold;color:black;font-size:10px">({{ $reviewCount }})</span>
                                                                      
                                                                         <span class="fas fa-star" id="checked"></span>
                                                                         <span class="fas fa-star" id="checked"></span>
@@ -101,17 +110,19 @@
                                                             </div>
         
                                                            <div class="price-box">
-                                                                <del class="old-product-price strong-400">৳
-                                                                    {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
-                                                                <span
-                                                                    class="product-price strong-600">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
+                                                                @if(isset($firstcatepro->sizes[0]))
+                                                                    <del class="old-product-price strong-400">৳
+                                                                        {{ round($firstcatepro->sizes[0]->RegularPrice) }}</del>
+                                                                    <span
+                                                                        class="product-price strong-600">৳ {{ round($firstcatepro->sizes[0]->SalePrice) }}</span>
+                                                                @endif
                                                             </div>
         
                                                         </div>
         
                                                         <a href="{{ url('view-product/' . $product->ProductSlug) }}">
                                                             <button class="mb-0 btn btn-danger btn-sm btn-block"
-                                                                    style="width: 100%;border-radius: 0%;" id="purcheseBtn">অর্ডার করুন</button>
+                                                                    style="width: 100%;border-radius: 0%; background: #ff4e00; color: white;" id="purcheseBtn">অর্ডার করুন</button>
                                                         </a>
                                                     </div>
                                                     <!-- /.col -->

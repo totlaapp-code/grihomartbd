@@ -401,7 +401,7 @@
                                         style="text-align: center;">
                                         @method('POST')
                                         @csrf
-                                        <input type="hidden" name="color" id="product_colororder" value="{{$varients[0]->color}}">
+                                        <input type="hidden" name="color" id="product_colororder" value="{{ isset($varients[0]) ? $varients[0]->color : '' }}">
                                         <input type="hidden" name="size" id="product_sizeorder" value="">
                                         <input type="hidden" name="sigment" id="product_sigmentorder" value="">
                                         <input type="hidden" name="price" id="product_priceorder" value="">
@@ -423,7 +423,7 @@
                                         style="text-align: center;">
                                         @method('POST')
                                         @csrf
-                                        <input type="hidden" name="color" id="product_colororder" value="{{$varients[0]->color}}">
+                                        <input type="hidden" name="color" id="product_colororder" value="{{ isset($varients[0]) ? $varients[0]->color : '' }}">
                                         <input type="hidden" name="size" id="product_sizeorder" value="">
                                         <input type="hidden" name="sigment" id="product_sigmentorder" value="">
                                         <input type="hidden" name="price" id="product_priceorder" value="">
@@ -432,7 +432,7 @@
                                         <input type="hidden" name="qty" value="1" id="qtyoror">
                                         <button type="submit"
                                             class="order_now_btn mb-0 ml-2 btn btn-styled btn-base-1 btn-icon-left strong-700 hov-bounce hov-shaddow buy-now"
-                                            style="background: #ff8c00;color:white;width: 100%;font-size: 17px;">
+                                            style="background: #ff4e00;color:white;width: 100%;font-size: 17px;">
                                             অর্ডার করুন
                                         </button>
                                      </form>
@@ -741,15 +741,17 @@
                     <div class="owl-carousel related-owl-carousel featured-carousel owl-theme outer-top-xs" id="relatedCarousel">
                         @forelse ($relatedproducts as $promotional)
                             @php
-                                $firstpro=App\Models\Product::with([
-                                    'sizes' => function ($query) {
-                                        $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
-                                    }
-                                    ])->where('id',json_decode($promotional->RelatedProductIds)[0]->productID)->select('id','ProductName')->first();
-
-                                $review = App\Models\Review::where('product_id', $firstpro->id)->avg(
-                                                                'rating',
-                                                            );
+                                $relatedIds = json_decode($promotional->RelatedProductIds);
+                                $firstpro = null;
+                                if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
+                                    $firstpro=App\Models\Product::with([
+                                        'sizes' => function ($query) {
+                                            $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                                        }
+                                        ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
+                                }
+                                
+                                $review = $firstpro ? App\Models\Review::where('product_id', $firstpro->id)->avg('rating') : 0;
                             @endphp
                             @if(isset($firstpro))
                                 <div class="item" id="featuredproduct">
@@ -789,10 +791,12 @@
                                                 </div>
                                             </div>
                                             <div class="price-box">
-                                                <del class="old-product-price strong-400" style="color:red">৳
-                                                    {{ round($firstpro->sizes[0]->RegularPrice) }}</del>
-                                                <span
-                                                    class="product-price strong-600" style="color:black">৳ {{ round($firstpro->sizes[0]->SalePrice) }}</span>
+                                                @if(isset($firstpro->sizes[0]))
+                                                    <del class="old-product-price strong-400" style="color:red">৳
+                                                        {{ round($firstpro->sizes[0]->RegularPrice) }}</del>
+                                                    <span
+                                                        class="product-price strong-600" style="color:black">৳ {{ round($firstpro->sizes[0]->SalePrice) }}</span>
+                                                @endif
                                             </div>
                                             
                                         </div>

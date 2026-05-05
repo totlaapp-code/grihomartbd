@@ -90,7 +90,7 @@
                                                         hidden>
                                                     <input type="text" name="qty" value="1" id="qtyor" hidden>
                                                     <button class="btn btn-danger btn-sm mb-0 btn-block"
-                                                            style="width: 100%;border-radius: 0%;" id="purcheseBtn">অর্ডার করুন</button>
+                                                            style="width: 100%;border-radius: 0%; background: #ff4e00; color: white;" id="purcheseBtn">অর্ডার করুন</button>
                                                 </form>
 
                                             </div>
