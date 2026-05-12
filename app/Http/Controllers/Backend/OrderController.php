@@ -129,7 +129,11 @@ class OrderController extends Controller
     public function sendsms(Request $request)
     {
         if (isset($request->phone) && isset($request->message)) {
-            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $request->phone . '&senderid=RASHIBD.COM&message=' . $request->message . '');
+            try {
+                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $request->phone . '&senderid=RASHIBD.COM&message=' . $request->message . '');
+            } catch (\Exception $e) {
+                $sendstatus = false;
+            }
 
             $response['status'] = 'success';
             $response['message'] = 'SMS Send Successfully';
@@ -808,15 +812,21 @@ class OrderController extends Controller
                     }
                     if ($request['data']['status'] == 'Ready to Ship') {
                         $cu = Customer::where('order_id', $order->id)->first();
-                        $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                        if ($cu) {
+                            try {
+                                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                            } catch (\Exception $e) {
+                                $sendstatus = false;
+                            }
 
-                        if ($sendstatus) {
-                            $comment = new Comment();
-                            $comment->order_id = $order->id;
-                            $comment->comment = 'Successfully send a sms to this customer';
-                            $comment->admin_id = Auth::guard('admin')->user()->id;
-                            $comment->status = 1;
-                            $comment->save();
+                            if ($sendstatus) {
+                                $comment = new Comment();
+                                $comment->order_id = $order->id;
+                                $comment->comment = 'Successfully send a sms to this customer';
+                                $comment->admin_id = Auth::guard('admin')->user()->id;
+                                $comment->status = 1;
+                                $comment->save();
+                            }
                         }
                     }
                 }
@@ -832,15 +842,21 @@ class OrderController extends Controller
                     } else {
                         $order->shipped_by = Auth::guard('admin')->user()->id;
                         $cu = Customer::where('order_id', $order->id)->first();
-                        $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                        if ($cu) {
+                            try {
+                                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                            } catch (\Exception $e) {
+                                $sendstatus = false;
+                            }
 
-                        if ($sendstatus) {
-                            $comment = new Comment();
-                            $comment->order_id = $order->id;
-                            $comment->comment = 'Successfully send a sms to this customer';
-                            $comment->admin_id = Auth::guard('admin')->user()->id;
-                            $comment->status = 1;
-                            $comment->save();
+                            if ($sendstatus) {
+                                $comment = new Comment();
+                                $comment->order_id = $order->id;
+                                $comment->comment = 'Successfully send a sms to this customer';
+                                $comment->admin_id = Auth::guard('admin')->user()->id;
+                                $comment->status = 1;
+                                $comment->save();
+                            }
                         }
                     }
                 }
@@ -1450,31 +1466,41 @@ class OrderController extends Controller
 
         if ($request['status'] == 'Shipped') {
             $cu = Customer::where('order_id', $order->id)->first();
-            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+            if ($cu) {
+                try {
+                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                } catch (\Exception $e) {
+                    $sendstatus = false;
+                }
 
-            if ($sendstatus) {
-                $comment = new Comment();
-                $comment->order_id = $id;
-                $comment->comment = 'Successfully send a sms to this customer';
-                $comment->admin_id = Auth::guard('admin')->user()->id;
-                $comment->status = 1;
-                $comment->save();
-            } else {
+                if ($sendstatus) {
+                    $comment = new Comment();
+                    $comment->order_id = $id;
+                    $comment->comment = 'Successfully send a sms to this customer';
+                    $comment->admin_id = Auth::guard('admin')->user()->id;
+                    $comment->status = 1;
+                    $comment->save();
+                }
             }
         }
 
         if ($request['status'] == 'Ready to Ship') {
             $cu = Customer::where('order_id', $order->id)->first();
-            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+            if ($cu) {
+                try {
+                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                } catch (\Exception $e) {
+                    $sendstatus = false;
+                }
 
-            if ($sendstatus) {
-                $comment = new Comment();
-                $comment->order_id = $id;
-                $comment->comment = 'Successfully send a sms to this customer';
-                $comment->admin_id = Auth::guard('admin')->user()->id;
-                $comment->status = 1;
-                $comment->save();
-            } else {
+                if ($sendstatus) {
+                    $comment = new Comment();
+                    $comment->order_id = $id;
+                    $comment->comment = 'Successfully send a sms to this customer';
+                    $comment->admin_id = Auth::guard('admin')->user()->id;
+                    $comment->status = 1;
+                    $comment->save();
+                }
             }
         }
 
@@ -1593,15 +1619,21 @@ class OrderController extends Controller
                         } else {
                             $order->packing_by = Auth::guard('admin')->user()->id;
                             $cu = Customer::where('order_id', $order->id)->first();
-                            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                            if ($cu) {
+                                try {
+                                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                                } catch (\Exception $e) {
+                                    $sendstatus = false;
+                                }
 
-                            if ($sendstatus) {
-                                $comment = new Comment();
-                                $comment->order_id = $order->id;
-                                $comment->comment = 'Successfully send a sms to this customer';
-                                $comment->admin_id = Auth::guard('admin')->user()->id;
-                                $comment->status = 1;
-                                $comment->save();
+                                if ($sendstatus) {
+                                    $comment = new Comment();
+                                    $comment->order_id = $order->id;
+                                    $comment->comment = 'Successfully send a sms to this customer';
+                                    $comment->admin_id = Auth::guard('admin')->user()->id;
+                                    $comment->status = 1;
+                                    $comment->save();
+                                }
                             }
                         }
                     }
@@ -1610,15 +1642,21 @@ class OrderController extends Controller
                         } else {
                             $order->shipped_by = Auth::guard('admin')->user()->id;
                             $cu = Customer::where('order_id', $order->id)->first();
-                            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                            if ($cu) {
+                                try {
+                                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                                } catch (\Exception $e) {
+                                    $sendstatus = false;
+                                }
 
-                            if ($sendstatus) {
-                                $comment = new Comment();
-                                $comment->order_id = $order->id;
-                                $comment->comment = 'Successfully send a sms to this customer';
-                                $comment->admin_id = Auth::guard('admin')->user()->id;
-                                $comment->status = 1;
-                                $comment->save();
+                                if ($sendstatus) {
+                                    $comment = new Comment();
+                                    $comment->order_id = $order->id;
+                                    $comment->comment = 'Successfully send a sms to this customer';
+                                    $comment->admin_id = Auth::guard('admin')->user()->id;
+                                    $comment->status = 1;
+                                    $comment->save();
+                                }
                             }
                         }
                     }
@@ -2702,15 +2740,21 @@ class OrderController extends Controller
                 }
                 if ($request['data']['status'] == 'Ready to Ship') {
                     $cu = Customer::where('order_id', $order->id)->first();
-                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                    if ($cu) {
+                        try {
+                            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                        } catch (\Exception $e) {
+                            $sendstatus = false;
+                        }
 
-                    if ($sendstatus) {
-                        $comment = new Comment();
-                        $comment->order_id = $order->id;
-                        $comment->comment = 'Successfully send a sms to this customer';
-                        $comment->admin_id = Auth::guard('admin')->user()->id;
-                        $comment->status = 1;
-                        $comment->save();
+                        if ($sendstatus) {
+                            $comment = new Comment();
+                            $comment->order_id = $order->id;
+                            $comment->comment = 'Successfully send a sms to this customer';
+                            $comment->admin_id = Auth::guard('admin')->user()->id;
+                            $comment->status = 1;
+                            $comment->save();
+                        }
                     }
                 }
             }
@@ -2726,15 +2770,21 @@ class OrderController extends Controller
                 } else {
                     $order->shipped_by = Auth::guard('admin')->user()->id;
                     $cu = Customer::where('order_id', $order->id)->first();
-                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                    if ($cu) {
+                        try {
+                            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                        } catch (\Exception $e) {
+                            $sendstatus = false;
+                        }
 
-                    if ($sendstatus) {
-                        $comment = new Comment();
-                        $comment->order_id = $order->id;
-                        $comment->comment = 'Successfully send a sms to this customer';
-                        $comment->admin_id = Auth::guard('admin')->user()->id;
-                        $comment->status = 1;
-                        $comment->save();
+                        if ($sendstatus) {
+                            $comment = new Comment();
+                            $comment->order_id = $order->id;
+                            $comment->comment = 'Successfully send a sms to this customer';
+                            $comment->admin_id = Auth::guard('admin')->user()->id;
+                            $comment->status = 1;
+                            $comment->save();
+                        }
                     }
                 }
             }
