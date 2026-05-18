@@ -28,7 +28,6 @@
                                     <label for="storeID">Store Name</label>
                                     <select id="storeID"  class="form-control">
                                         <option value="1" selected >Grihomartbd.com</option>
-                                        <option value="2" >grihomartbd.com</option>
                                     </select>
                                 </div>
                             </div>
