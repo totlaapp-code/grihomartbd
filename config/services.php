@@ -31,9 +31,9 @@ return [
     ],
 
     'google' => [
-        'client_id' => '1034697914962-tms676rf7pqatd2t0skhh6f5dobd7kge.apps.googleusercontent.com',
-        'client_secret' => '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',
-        'redirect' => 'https://grihomartbd.com/callback/google',
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI', 'https://grihomartbd.com/callback/google'),
     ],
 
 ];
