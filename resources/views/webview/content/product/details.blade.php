@@ -701,7 +701,7 @@
                         index: 0,
                         price: gtmprice,
                         discount: gtmdiscount,
-                        item_brand: 'greenieagro.com',
+                        item_brand: 'grihomartbd.com',
                         item_category: gtmcategory,
                         currency: "BDT",
                         quantity: 1,
@@ -729,7 +729,7 @@
                                 index: 0,
                                 price: gtmprice,
                                 discount: gtmdiscount,
-                                item_brand: 'greenieagro.com',
+                                item_brand: 'grihomartbd.com',
                                 item_category: gtmcategory,
                                 currency: "BDT",
                                 quantity: $('#qtyoror').val()

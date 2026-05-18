@@ -21,7 +21,7 @@ class OrderConfirmedMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Your Order is Confirmed by Greenieagro')
+        return $this->subject('Your Order is Confirmed by Grihomartbd')
                     ->view('webview.email.confirm_mail');
     }
 }
