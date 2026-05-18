@@ -365,7 +365,7 @@ class ProductController extends Controller
         if ($request->weight) {
             $weights = $request->weight;
         }
-        $time = microtime('.') * 10000;
+        $time = microtime(true) * 10000;
 
 
         $productImg = $request->ProductImage;
@@ -547,7 +547,7 @@ class ProductController extends Controller
         if ($request->weight) {
             $weights = $request->weight;
         }
-        $time = microtime('.') * 10000;
+        $time = microtime(true) * 10000;
 
 
         $productImg = $request->ProductImage;
