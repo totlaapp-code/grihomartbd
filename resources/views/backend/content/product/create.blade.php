@@ -339,6 +339,39 @@
                                         <div id="collapseDelivery" class="collapse show" aria-labelledby="headingDelivery">
                                           <div class="card-body">
                                                 <p class="text-muted small">ফাঁকা রাখলে গ্লোবাল ডেলিভারি চার্জ প্রযোজ্য হবে। শুধুমাত্র এই প্রোডাক্টের জন্য আলাদা চার্জ চাইলে এখানে লিখুন।</p>
+                                                <style>
+                                                    .custom-delivery-toggle-container {
+                                                        background: rgba(255, 193, 7, 0.08); 
+                                                        border: 1px solid rgba(255, 193, 7, 0.25);
+                                                        transition: all 0.3s ease;
+                                                    }
+                                                    .custom-delivery-toggle-container:hover {
+                                                        background: rgba(255, 193, 7, 0.12);
+                                                        border-color: rgba(255, 193, 7, 0.4);
+                                                    }
+                                                    #free_delivery_toggle {
+                                                        width: 3.2rem !important;
+                                                        height: 1.7rem !important;
+                                                        cursor: pointer !important;
+                                                        background-color: #6c757d !important;
+                                                        border: 2px solid #adb5bd !important;
+                                                        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-2 -2 8 8'%3e%3ccircle cx='2' cy='2' r='2.5' fill='%23fff'/%3e%3c/svg%3e") !important;
+                                                        transition: background-color 0.25s ease, border-color 0.25s ease, background-position 0.25s ease !important;
+                                                    }
+                                                    #free_delivery_toggle:checked {
+                                                        background-color: #198754 !important;
+                                                        border-color: #198754 !important;
+                                                        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-2 -2 8 8'%3e%3ccircle cx='4' cy='2' r='2.5' fill='%23fff'/%3e%3c/svg%3e") !important;
+                                                    }
+                                                </style>
+                                                <div class="d-flex align-items-center mb-4 p-3 rounded custom-delivery-toggle-container">
+                                                    <div class="form-check form-switch m-0 d-flex align-items-center">
+                                                        <input class="form-check-input" type="checkbox" id="free_delivery_toggle" style="cursor: pointer;">
+                                                        <label class="form-check-label ms-3" for="free_delivery_toggle" style="cursor: pointer; font-weight: bold; color: #ffc107; font-size: 1.1rem; user-select: none;">
+                                                            🎁 সম্পূর্ণ ফ্রি ডেলিভারি (ফ্রি শিপিং সক্রিয় করুন)
+                                                        </label>
+                                                    </div>
+                                                </div>
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <div class="form-group mb-3">
@@ -353,6 +386,19 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <script>
+                                                    $(document).ready(function() {
+                                                        $('#free_delivery_toggle').on('change', function() {
+                                                            if ($(this).is(':checked')) {
+                                                                $('#inside_dhaka').val(0).prop('readonly', true).css('background-color', '#343a40');
+                                                                $('#outside_dhaka').val(0).prop('readonly', true).css('background-color', '#343a40');
+                                                            } else {
+                                                                $('#inside_dhaka').val('').prop('readonly', false).css('background-color', '');
+                                                                $('#outside_dhaka').val('').prop('readonly', false).css('background-color', '');
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
                                           </div>
                                         </div>
                                     </div>

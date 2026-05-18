@@ -27,7 +27,7 @@
                                 <div class="form-group">
                                     <label for="supplierID">Supplier Name</label>
                                     <select id="supplierID"  class="form-control">
-                                        <option value="1" selected >Rashi Fashion</option>
+                                        <option value="1" selected >GrihoMart BD</option>
                                     </select>
                                 </div>
                             </div>

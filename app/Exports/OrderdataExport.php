@@ -19,7 +19,7 @@ class OrderdataExport implements  FromCollection,WithHeadings,WithCustomStartCel
 {
  
     use Exportable;
-    private $collectionA; 
+    private $data; 
 
     public function __construct($collectionA)
     {
@@ -47,7 +47,7 @@ class OrderdataExport implements  FromCollection,WithHeadings,WithCustomStartCel
     
     public function styles(Worksheet $sheet)
     {
-        $sheet->setCellValue('E1', 'RASHI FASHION');
+        $sheet->setCellValue('E1', 'GRIHOMART BD');
         $sheet->mergeCells('E1:J1'); // Merge across multiple columns
         $sheet->getStyle('E1')->applyFromArray([
             'font' => [

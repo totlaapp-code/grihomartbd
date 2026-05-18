@@ -7,23 +7,23 @@
 
 @section('meta')
     <meta name="description" content="Online shopping in Bangladesh for beauty products, men, women, kids, fashion items, clothes, electronics, home appliances, gadgets, watch, many more.">
-    <meta name="keywords" content="Rashibd, online store bd, online shop bd, Organic fruits, Thai, UK, Korea, China, cosmetics, Jewellery, bags, dress, mobile, accessories, automation Products,">
+    <meta name="keywords" content="Grihomartbd, online store bd, online shop bd, Organic fruits, Thai, UK, Korea, China, cosmetics, Jewellery, bags, dress, mobile, accessories, automation Products,">
 
 
-    <meta itemprop="name" content="Best Online Shopping in Bangladesh | Rashibd">
+    <meta itemprop="name" content="Best Online Shopping in Bangladesh | Grihomartbd">
     <meta itemprop="description" content="Best online shopping in Bangladesh for beauty products, men, women, kids, fashion items, clothes, electronics, home appliances, gadgets, watch, many more.">
     <meta itemprop="image" content="{{env('APP_URL')}}{{\App\Models\Basicinfo::first()->logo}}">
 
     <meta property="og:url" content="{{env('APP_URL')}}">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Best Online Shopping in Bangladesh | Rashibd">
+    <meta property="og:title" content="Best Online Shopping in Bangladesh | Grihomartbd">
     <meta property="og:description" content="Online shopping in BD for beauty products, men, women, kids, fashion items, clothes, electronics, home appliances, gadgets, watch, many more.">
     <meta property="og:image" content="{{env('APP_URL')}}{{\App\Models\Basicinfo::first()->logo}}">
     <meta property="image" content="{{env('APP_URL')}}{{\App\Models\Basicinfo::first()->logo}}" />
     <meta property="url" content="{{env('APP_URL')}}">
     <meta itemprop="image" content="{{env('APP_URL')}}{{\App\Models\Basicinfo::first()->logo}}">
     <meta property="twitter:card" content="{{env('APP_URL')}}{{\App\Models\Basicinfo::first()->logo}}" />
-    <meta property="twitter:title" content="Best Online Shopping in Bangladesh | Rashibd" />
+    <meta property="twitter:title" content="Best Online Shopping in Bangladesh | Grihomartbd" />
     <meta property="twitter:url" content="{{env('APP_URL')}}">
     <meta name="twitter:image" content="{{env('APP_URL')}}{{\App\Models\Basicinfo::first()->logo}}">
 @endsection
@@ -481,7 +481,7 @@
         <br>
         <div class="col-12 col-lg-12">
             <div class="px-2 pt-0 p-md-3" style="padding-bottom:4px !important;padding-top: 8px !important;">
-                <a href="{{url('rashi-multimedia')}}"><h4 class="m-0" style="text-align: center;padding-bottom: 12px;font-size: 30px;"><b>Rashi Multimedia</b></h4></a>
+                <a href="{{url('multimedia')}}"><h4 class="m-0" style="text-align: center;padding-bottom: 12px;font-size: 30px;"><b>Grihomartbd Multimedia</b></h4></a>
             </div>
             <div class="owl-carousel owl-theme" id="youtube">
                 @forelse (App\Models\Menu::where('status','Active')->get() as $yout)

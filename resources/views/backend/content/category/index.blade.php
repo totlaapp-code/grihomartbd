@@ -170,7 +170,7 @@
                     data: 'category_icon',
                     name: 'category_icon',
                     render: function(data, type, full, meta) {
-                        return "<img src=../" + data + " height=\"40\" alt='No Image'/>";
+                        return "<img src=\"../" + data + "\" height=\"40\" alt='No Image'/>";
                     }
                 },
                 {

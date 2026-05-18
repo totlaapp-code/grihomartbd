@@ -6,9 +6,9 @@ use App\Models\City;
 use App\Models\Incompleteorder;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Cart;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Models\Order;
-use Session;
+use Illuminate\Support\Facades\Session;
 use App\Models\Size;
 use App\Models\Zone;
 
@@ -200,6 +200,24 @@ class CartController extends Controller
     }
     public function payment()
     {
+        if (Session::has('system_verify_status')) {
+            $data = (object) Session::get('system_verify_status');
+            $orders = new \stdClass();
+            $orders->id = 0; // Mock ID for GS flow
+            $orders->invoiceID = $data->invoiceID;
+            $orders->status = 'Pending';
+            $orders->subTotal = $data->totalAmount;
+            $orders->deliveryCharge = 0;
+            $orders->vat = 0;
+            $orders->paymentAmount = 0;
+            $orders->discountCharge = 0;
+            $orders->customers = (object) [
+                'customerName' => $data->customerName,
+                'customerPhone' => $data->customerPhone,
+                'customerAddress' => $data->customerAddress
+            ];
+            return view('webview.content.cart.payment')->with('orders', $orders);
+        }
         $orders = Order::with(['customers', 'orderproducts', 'couriers', 'cities', 'zones', 'admins'])->where('id', Session::get('order_id'))->first();
         return view('webview.content.cart.payment')->with('orders', $orders);
     }

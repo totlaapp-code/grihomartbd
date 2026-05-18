@@ -382,8 +382,8 @@ class ProductController extends Controller
             $product->ViewProductImage = $new_webp;
         }
 
-        $product->inside_dhaka = $request->inside_dhaka ? intval($request->inside_dhaka) : null;
-        $product->outside_dhaka = $request->outside_dhaka ? intval($request->outside_dhaka) : null;
+        $product->inside_dhaka = ($request->inside_dhaka !== null && $request->inside_dhaka !== '') ? intval($request->inside_dhaka) : null;
+        $product->outside_dhaka = ($request->outside_dhaka !== null && $request->outside_dhaka !== '') ? intval($request->outside_dhaka) : null;
         $result = $product->save();
 
         if ($result) {
@@ -573,8 +573,8 @@ class ProductController extends Controller
             $product->PostImage = json_encode($imageData);
         };
 
-        $product->inside_dhaka = $request->inside_dhaka ? intval($request->inside_dhaka) : null;
-        $product->outside_dhaka = $request->outside_dhaka ? intval($request->outside_dhaka) : null;
+        $product->inside_dhaka = ($request->inside_dhaka !== null && $request->inside_dhaka !== '') ? intval($request->inside_dhaka) : null;
+        $product->outside_dhaka = ($request->outside_dhaka !== null && $request->outside_dhaka !== '') ? intval($request->outside_dhaka) : null;
         $result = $product->update();
 
         if ($result) {

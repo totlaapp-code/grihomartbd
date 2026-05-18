@@ -196,7 +196,7 @@
                     data: 'slider_image',
                     name: 'slider_image',
                     render: function(data, type, full, meta) {
-                        return "<img src=../" + data + " height=\"40\" alt='No Image'/>";
+                        return "<img src=\"../" + data + "\" height=\"40\" alt='No Image'/>";
                     }
                 },
                 {

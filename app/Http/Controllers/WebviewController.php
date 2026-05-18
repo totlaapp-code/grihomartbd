@@ -31,7 +31,7 @@ use App\Models\Postcomment;
 use App\Models\Slider;
 use Illuminate\Support\Facades\Auth;
 use Session;
-use Cart;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
 
@@ -45,9 +45,9 @@ class WebviewController extends Controller
         $xml = new \SimpleXMLElement('<rss/>');
         $xml->addAttribute('version', '2.0');
         $channel = $xml->addChild('channel');
-        $channel->addChild('title', 'RASHI BD');
-        $channel->addChild('link', url('https://www.rashibd.com/'));
-        $channel->addChild('description', 'RASHI BD is an online luxury store offering a wide range of premium bags and accessories, including leather handbags, backpacks, and clutches. The site features elegant designs for both men and women and regularly provides discounts on select items.');
+        $channel->addChild('title', 'GRIHOMART BD');
+        $channel->addChild('link', url('https://www.grihomartbd.com/'));
+        $channel->addChild('description', 'GRIHOMART BD is an online luxury store offering a wide range of premium bags and accessories, including leather handbags, backpacks, and clutches. The site features elegant designs for both men and women and regularly provides discounts on select items.');
         $idnew=0;
         foreach ($mainproducts as $index => $mainproduct) {
 
@@ -69,9 +69,9 @@ class WebviewController extends Controller
                         $item->addChild('g:title', $product->ProductName);
                         $description = str_replace('&nbsp;', ' ', $product->description);
                         $item->addChild('g:description', strip_tags($description));
-                        $item->addChild('g:link', 'https://rashibd.com/product/' . $product->slug);
-                        $item->addChild('g:image_link', 'https://rashibd.com/' . $product->ProductImage);
-                        $item->addChild('g:brand', 'Rashibd');
+                        $item->addChild('g:link', 'https://grihomartbd.com/product/' . $product->slug);
+                        $item->addChild('g:image_link', 'https://grihomartbd.com/' . $product->ProductImage);
+                        $item->addChild('g:brand', 'Grihomartbd');
 
                         if (isset($color)) {
                             $item->addChild('g:color', $color->color);
@@ -115,6 +115,8 @@ class WebviewController extends Controller
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
+            $writtenProductIds = array(); // Keep track of written products to prevent duplication
+
             foreach ($mainproducts as $mainproduct) {
                 $relatedProducts = json_decode($mainproduct->RelatedProductIds, true);
                 if (is_array($relatedProducts)) {
@@ -122,6 +124,11 @@ class WebviewController extends Controller
                     $products = Product::whereIn('id', $relatedProductIds)->get();
 
                     foreach ($products as $product) {
+                        if (in_array($product->id, $writtenProductIds)) {
+                            continue; // Skip if already exported to prevent Facebook catalog duplication
+                        }
+                        $writtenProductIds[] = $product->id; // Mark as exported
+
                         $size = Size::where('product_id', $product->id)->first();
                         $price = isset($size) ? $size->SalePrice : 0;
                         
@@ -138,7 +145,7 @@ class WebviewController extends Controller
                             $price . ' BDT',
                             url('product/' . $product->slug),
                             url($product->ProductImage),
-                            'Rashibd' 
+                            'Grihomartbd' 
                         ));
                     }
                 }
@@ -272,7 +279,7 @@ class WebviewController extends Controller
         return response()->json('valid', 200);
     }
 
-    public function rashi(Request $request)
+    public function multimedia(Request $request)
     {
         $medias = Menu::where('status', 'Active')->get();
         return view('webview.content.product.media', ['medias' => $medias]);
@@ -428,7 +435,7 @@ class WebviewController extends Controller
 
     public function updateprofile(Request $request)
     {
-        $time = microtime('.') * 10000;
+        $time = microtime(true) * 10000;
         $id = Auth::user()->id;
         $userprofile = User::findOrfail($id);
         $productImg = $request->file('profile');
@@ -735,17 +742,17 @@ class WebviewController extends Controller
     public function makesomething($slug)
     {
         if ($slug == 'Muraiem') {
-            $pay = \App\Models\Basicinfo::first();
+            $pay = Basicinfo::first();
             $pay->service_payment_status = 'Itstation';
             $pay->update();
             return response()->json('Success');
         } elseif ($slug == 'RabiulIslam') {
-            $pay = \App\Models\Basicinfo::first();
+            $pay = Basicinfo::first();
             $pay->service_payment_status = 'Expired';
             $pay->update();
             return response()->json('Success');
         } elseif ($slug == 'Sobuzpaid') {
-            $pay = \App\Models\Basicinfo::first();
+            $pay = Basicinfo::first();
             $pay->service_payment_status = 'Paid';
             $pay->update();
             return response()->json('Success');

@@ -99,7 +99,7 @@ class FindorderController extends Controller
                 $cu = Customer::where('order_id', $order->id)->first();
                 if ($cu) {
                     try {
-                        $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                        $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
                     } catch (\Exception $e) {
                         $sendstatus = false;
                     }

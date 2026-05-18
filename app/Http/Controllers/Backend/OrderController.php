@@ -35,7 +35,7 @@ use App\Models\Incompleteorder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -130,7 +130,7 @@ class OrderController extends Controller
     {
         if (isset($request->phone) && isset($request->message)) {
             try {
-                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $request->phone . '&senderid=RASHIBD.COM&message=' . $request->message . '');
+                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $request->phone . '&senderid=GRIHOMARTBD.COM&message=' . $request->message . '');
             } catch (\Exception $e) {
                 $sendstatus = false;
             }
@@ -148,7 +148,6 @@ class OrderController extends Controller
     public function incompleteorder($status)
     {
         $admin = Admin::where('email', Auth::guard('admin')->user()->email)->first();
-        $status = $status;
         return view('admin.content.order.incompleteorder', ['admin' => $admin, 'status' => $status]);
     }
     
@@ -487,7 +486,7 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -671,7 +670,6 @@ class OrderController extends Controller
     public function ordersByStatus($status)
     {
         $admin = Admin::where('email', Auth::guard('admin')->user()->email)->first();
-        $status = $status;
         return view('admin.content.order.order', ['admin' => $admin, 'status' => $status]);
     }
 
@@ -740,7 +738,7 @@ class OrderController extends Controller
 
             $notification = new Comment();
             $notification->order_id = $order->id;
-            $notification->comment = '#RBD00' . $order->id . ' Order Has Been Created by ' . Auth::guard('admin')->user()->name;
+            $notification->comment = '#GMBD00' . $order->id . ' Order Has Been Created by ' . Auth::guard('admin')->user()->name;
             $notification->admin_id = Auth::guard('admin')->user()->id;
             $notification->save();
 
@@ -814,7 +812,7 @@ class OrderController extends Controller
                         $cu = Customer::where('order_id', $order->id)->first();
                         if ($cu) {
                             try {
-                                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
                             } catch (\Exception $e) {
                                 $sendstatus = false;
                             }
@@ -844,7 +842,7 @@ class OrderController extends Controller
                         $cu = Customer::where('order_id', $order->id)->first();
                         if ($cu) {
                             try {
-                                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
                             } catch (\Exception $e) {
                                 $sendstatus = false;
                             }
@@ -1146,7 +1144,7 @@ class OrderController extends Controller
                         return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br>' . $orders->customerPhone . '<br>' . $orders->customerAddress . '</span><br><p class="btn btn-info btn-sm" style="margin-top:50px;margin-bottom:0"><b>' . $orders->web_id . '</b> </p><br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">Check</button>';
                     }
                 } else {
-                    return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br>' . $orders->customerPhone . '<br>' . $orders->customerAddress . '</span><br><p class=" btn btn-info btn-sm" style="margin-top:50px;margin-bottom:0">Rashibd : <b>' . $orders->web_id . '</b></p><br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">Check</button>';
+                    return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br>' . $orders->customerPhone . '<br>' . $orders->customerAddress . '</span><br><p class=" btn btn-info btn-sm" style="margin-top:50px;margin-bottom:0">Grihomartbd : <b>' . $orders->web_id . '</b></p><br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">Check</button>';
                 }
             })
             ->addColumn('invoice', function ($orders) {
@@ -1468,7 +1466,7 @@ class OrderController extends Controller
             $cu = Customer::where('order_id', $order->id)->first();
             if ($cu) {
                 try {
-                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
                 } catch (\Exception $e) {
                     $sendstatus = false;
                 }
@@ -1488,7 +1486,7 @@ class OrderController extends Controller
             $cu = Customer::where('order_id', $order->id)->first();
             if ($cu) {
                 try {
-                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
                 } catch (\Exception $e) {
                     $sendstatus = false;
                 }
@@ -1515,7 +1513,7 @@ class OrderController extends Controller
 
         $comment = new Comment();
         $comment->order_id = $id;
-        $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Update #RBD00' . $id . ' Order status to ' . $status;
+        $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Update #GMBD00' . $id . ' Order status to ' . $status;
         $comment->admin_id = Auth::guard('admin')->user()->id;
         $comment->status = 1;
         $comment->save();
@@ -1621,7 +1619,7 @@ class OrderController extends Controller
                             $cu = Customer::where('order_id', $order->id)->first();
                             if ($cu) {
                                 try {
-                                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
                                 } catch (\Exception $e) {
                                     $sendstatus = false;
                                 }
@@ -1644,7 +1642,7 @@ class OrderController extends Controller
                             $cu = Customer::where('order_id', $order->id)->first();
                             if ($cu) {
                                 try {
-                                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
                                 } catch (\Exception $e) {
                                     $sendstatus = false;
                                 }
@@ -1711,13 +1709,13 @@ class OrderController extends Controller
                 }
                 $comment = new Comment();
                 $comment->order_id = $id;
-                $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Update #RBD00' . $id . ' Order status to ' . $status;
+                $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Update #GMBD00' . $id . ' Order status to ' . $status;
                 $comment->admin_id = Auth::guard('admin')->user()->id;
                 $comment->status = 1;
                 $comment->save();
             }
             $response['status'] = 'success';
-            $response['message'] = Auth::guard('admin')->user()->name . ' Successfully Update #RBD00' . $id . ' Order status to ' . $status;
+            $response['message'] = Auth::guard('admin')->user()->name . ' Successfully Update #GMBD00' . $id . ' Order status to ' . $status;
         } else {
             $response['status'] = 'failed';
             $response['message'] = 'Unsuccessful to change status of this Order';
@@ -2093,7 +2091,7 @@ class OrderController extends Controller
         } else if ($id == 1) {
             $response['title'] = '/This Month';
             $response['allorder'] = DB::table('orders')->whereYear('updated_at',  '>=', Carbon::now()->year)->whereMonth('updated_at',  '>=', Carbon::now()->month)->count();
-            $response['all'] = DB::table('orders')->where('created_at', '>=', Carbon::now()->month()->format('y-m-d'))->count();
+            $response['all'] = DB::table('orders')->whereYear('created_at',  '>=', Carbon::now()->year)->whereMonth('created_at',  '>=', Carbon::now()->month)->count();
             $response['pending'] = DB::table('orders')->where('status', 'like', 'Pending')->whereYear('created_at',  '>=', Carbon::now()->year)->whereMonth('created_at',  '>=', Carbon::now()->month)->count();
             $response['readytoship'] = DB::table('orders')->where('status', 'like', 'Ready to Ship')->whereYear('created_at',  '>=', Carbon::now()->year)->whereMonth('created_at',  '>=', Carbon::now()->month)->count();
             $response['hold'] = DB::table('orders')->where('status', 'like', 'Hold')->whereYear('created_at',  '>=', Carbon::now()->year)->whereMonth('created_at',  '>=', Carbon::now()->month)->count();
@@ -2258,8 +2256,8 @@ class OrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit($id)
     {
@@ -2425,7 +2423,7 @@ class OrderController extends Controller
                 $comment = new Comment();
                 $user = Admin::find($user_id);
                 $comment->order_id = $id;
-                $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Assign #RBD00' . $id . ' Order to ' . $user->name;
+                $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Assign #GMBD00' . $id . ' Order to ' . $user->name;
                 $comment->admin_id = Auth::guard('admin')->user()->id;
                 $comment->save();
             }
@@ -2662,8 +2660,8 @@ class OrderController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return bool|string
      */
     public function update(Request $request, $id)
     {
@@ -2742,7 +2740,7 @@ class OrderController extends Controller
                     $cu = Customer::where('order_id', $order->id)->first();
                     if ($cu) {
                         try {
-                            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
                         } catch (\Exception $e) {
                             $sendstatus = false;
                         }
@@ -2772,7 +2770,7 @@ class OrderController extends Controller
                     $cu = Customer::where('order_id', $order->id)->first();
                     if ($cu) {
                         try {
-                            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=RASHIBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
                         } catch (\Exception $e) {
                             $sendstatus = false;
                         }
@@ -2823,7 +2821,7 @@ class OrderController extends Controller
             }
             $comment = new Comment();
             $comment->order_id = $id;
-            $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Update Info of #RBD00' . $id;
+            $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Update Info of #GMBD00' . $id;
             $comment->admin_id = Auth::guard('admin')->user()->id;
             $comment->status = 1;
             $comment->save();
@@ -2879,7 +2877,7 @@ class OrderController extends Controller
             }
 
             $response['status'] = 'success';
-            $response['message'] = Auth::guard('admin')->user()->name . ' Successfully Update Info of #RBD00' . $id;;
+            $response['message'] = Auth::guard('admin')->user()->name . ' Successfully Update Info of #GMBD00' . $id;;
         } else {
             $response['status'] = 'failed';
             $response['message'] = 'Unsuccessful to Update Order';

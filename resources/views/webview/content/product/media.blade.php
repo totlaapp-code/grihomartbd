@@ -40,7 +40,7 @@
                      
                     <div class="row pt-2 pb-2" style="background: white;">
                         <div class="px-2 p-md-3 pt-0" style="padding-bottom:4px !important;padding-top: 8px !important;">
-                            <h4 class="m-0" style="text-align: center;padding-bottom: 12px;font-size: 30px;"><b>Blendwears Multimedia</b></h4>
+                            <h4 class="m-0" style="text-align: center;padding-bottom: 12px;font-size: 30px;"><b>{{ env('APP_NAME') }} Multimedia</b></h4>
                         </div>
                         @forelse ($medias as $media)
                             <div class="col-6 col-md-3 col-lg-3 mb-4">

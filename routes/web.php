@@ -61,7 +61,7 @@ Route::get('check-coupon', [WebviewController::class, 'couponcheck']);
 Route::get('reset-coupon', [WebviewController::class, 'resetcoupon']);
 Route::get('give/react/{slug}', [WebviewController::class, 'givereact']);
 Route::get('blogs', [WebviewController::class, 'blogs']);
-Route::get('blendwears-multimedia', [WebviewController::class, 'rashi']);
+Route::get('multimedia', [WebviewController::class, 'multimedia']);
 
 // cart
 Route::post('add-to-cart', [CartController::class, 'addtocart']);

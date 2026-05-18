@@ -110,7 +110,7 @@
                     data: 'file',
                     name: 'file',
                     render: function(data, type, full, meta) {
-                        return "<img src=http://localhost/rashi/" + data + " height=\"40\" alt='No Image'/>";
+                        return "<img src=http://localhost/grihomartbd/" + data + " height=\"40\" alt='No Image'/>";
                     }
                 }
             ],

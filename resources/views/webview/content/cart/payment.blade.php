@@ -126,24 +126,36 @@
                                                             <th style="width: 20%">Price</th>
                                                         </tr>
                                                         <?php
-                                                        $products = DB::table('orderproducts')->where('order_id', '=', $orders->id)->get();
+                                                        if (Session::has('ordered_products')) {
+                                                            $products = Session::get('ordered_products');
+                                                        } else {
+                                                            $products = DB::table('orderproducts')->where('order_id', '=', $orders->id)->get();
+                                                        }
                                                         foreach ($products as $product) { ?>
                                                         <tr>
                                                             <td>
-                                                                <a href="{{url('product',App\Models\Product::where('id',$product->product_id)->first()->ProductSlug)}}">
-                                                                    <img src="{{asset(App\Models\Product::where('id',$product->product_id)->first()->ProductImage)}}" style="width:60px">
-                                                                    {{ $product->productName }} @if ($product->color && $product->size)
-                                                                        (Colour: {{ $product->color }} , Size: {{ $product->size }})
-                                                                    @elseif($product->size)
-                                                                        (Size: {{ $product->size }})
-                                                                    @elseif($product->color)
-                                                                        (Size: {{ $product->color }})
-                                                                    @else
+                                                                <?php 
+                                                                    $pid = $product->product_id ?? $product->id;
+                                                                    $dbProd = App\Models\Product::where('id', $pid)->first();
+                                                                    $pName = $product->productName ?? $product->name;
+                                                                    $pSize = $product->size ?? ($product->options['size'] ?? '');
+                                                                    $pColor = $product->color ?? ($product->options['color'] ?? '');
+                                                                    $pQty = $product->quantity ?? ($product->qty ?? 0);
+                                                                    $pPrice = $product->productPrice ?? $product->price;
+                                                                ?>
+                                                                <a href="{{ $dbProd ? url('product', $dbProd->ProductSlug) : '#' }}">
+                                                                    <img src="{{ $dbProd ? asset($dbProd->ProductImage) : '' }}" style="width:60px">
+                                                                    {{ $pName }} @if ($pColor && $pSize)
+                                                                        (Colour: {{ $pColor }} , Size: {{ $pSize }})
+                                                                    @elseif($pSize)
+                                                                        (Size: {{ $pSize }})
+                                                                    @elseif($pColor)
+                                                                        (Size: {{ $pColor }})
                                                                     @endif
                                                                 </a>
                                                             </td>
-                                                            <td>{{ $product->quantity }}</td>
-                                                            <td>{{ $product->productPrice }} Tk</td>
+                                                            <td>{{ $pQty }}</td>
+                                                            <td>{{ $pPrice }} Tk</td>
                                                         </tr>
                                                         <?php } ?>
                                                         <tfoot>
@@ -202,7 +214,42 @@
 
 </div>
 
-<script>
+    <?php 
+        $rawPhone = $orders->customers->customerPhone;
+        $phone = preg_replace('/\D/', '', $rawPhone);
+        if (strlen($phone) == 11 && strpos($phone, '01') === 0) {
+            $phone = '88' . $phone;
+        }
+        $hashedPhone = hash('sha256', $phone);
+        $hashedName = hash('sha256', strtolower(trim($orders->customers->customerName)));
+    ?>
+    <script>
+    // Advanced Matching for Facebook Pixel
+    if (typeof fbq !== 'undefined') {
+        // Re-initialize with user data for Advanced Matching (Satisfies Facebook Diagnostic)
+        fbq('init', '1116560860653256', {
+            ph: "<?php echo $hashedPhone ?>",
+            fn: "<?php echo $hashedName ?>"
+        });
+
+        fbq('track', 'Purchase', {
+            value: Number("<?php echo $orders->subTotal ?>"),
+            currency: 'BDT',
+            content_name: 'Checkout',
+            content_type: 'product',
+            external_id: "<?php echo $orders->id ?>",
+            contents: [@foreach ($products as $cartInfo)
+                {
+                    id: "{{$cartInfo->product_id ?? $cartInfo->id}}",
+                    quantity: {{$cartInfo->quantity ?? ($cartInfo->qty ?? 0)}},
+                    item_price: Number("{{$cartInfo->productPrice ?? $cartInfo->price}}")
+                },
+            @endforeach]
+        }, { 
+            eventID: "<?php echo 'TRX45324'.$orders->id ?>"
+        });
+    }
+
     // Clear the previous ecommerce object.
     dataLayer.push({ ecommerce: null });
 
@@ -218,15 +265,19 @@
             affiliation:"", 
             external_id :"<?php echo $orders->id ?>",
             transaction_id:"<?php echo 'TRX45324'.$orders->id ?>", 
+            user_data: {
+                phone: "<?php echo $hashedPhone ?>",
+                first_name: "<?php echo $hashedName ?>"
+            },
             items: [@foreach ($products as $cartInfo)
                 {
-                    item_name: "{{$cartInfo->productName}}",
-                    item_id: "{{$cartInfo->product_id}}",
-                    price: Number("{{$cartInfo->productPrice}}"),  
-                    item_size: "{{$cartInfo->size}}",
-                    item_color: "{{$cartInfo->color}}",
+                    item_name: "{{$cartInfo->productName ?? $cartInfo->name}}",
+                    item_id: "{{$cartInfo->product_id ?? $cartInfo->id}}",
+                    price: Number("{{$cartInfo->productPrice ?? $cartInfo->price}}"),  
+                    item_size: "{{$cartInfo->size ?? ($cartInfo->options['size'] ?? '')}}",
+                    item_color: "{{$cartInfo->color ?? ($cartInfo->options['color'] ?? '')}}",
                     currency: "BDT",
-                    quantity: {{$cartInfo->quantity ?? 0}}
+                    quantity: {{$cartInfo->quantity ?? ($cartInfo->qty ?? 0)}}
                 },
             @endforeach],
             more:[
@@ -241,8 +292,7 @@
             ]
         }
     });
-    
-</script>
+    </script>
 
 <style>
     .process-steps {

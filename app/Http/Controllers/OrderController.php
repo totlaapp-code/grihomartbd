@@ -17,7 +17,7 @@ use App\Models\City;
 use App\Models\Coupon;
 use App\Models\Incompleteorder;
 use App\Models\Zone;
-use Cart;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -52,7 +52,6 @@ class OrderController extends Controller
 
     public function pressorder(Request $request)
     {
-        
         $block = User::where('ip', \Request::ip())->where('status', 'Block')->first();
         if ($block) {
             return redirect('ip-block');
@@ -204,7 +203,7 @@ class OrderController extends Controller
                 
                 
 
-                // $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number='.$customer->customerPhone.'&senderid=RASHIBD.COM&message=আপনার অর্ডারটি প্লেস হয়েছে, শীগ্রই আমাদের প্রতিনিধি কল করে অর্ডারটি কনফার্ম করবেন। ORDER ID : '.$order->invoiceID.' , Hotline: 01888173003 , Visit: www.rashibd.com');
+                // $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number='.$customer->customerPhone.'&senderid=GRIHOMARTBD.COM&message=আপনার অর্ডারটি প্লেস হয়েছে, শীগ্রই আমাদের প্রতিনিধি কল করে অর্ডারটি কনফার্ম করবেন। ORDER ID : '.$order->invoiceID.' , Hotline: 01888173003 , Visit: www.grihomartbd.com');
                 $exinc = Incompleteorder::where('status', 'Incomplete')->where('customerPhone', $request->customerPhone)->first();
                 if (isset($exinc)) {
                     $exinc->delete();
@@ -214,13 +213,21 @@ class OrderController extends Controller
                 $notification->comment =  $order->invoiceID ;
                 $notification->admin_id = $order->admin_id;
                 $notification->save();
+                $capiData = [
+                    'invoiceID' => $order->invoiceID,
+                    'customerName' => $request->customerName,
+                    'customerPhone' => $request->customerPhone,
+                    'totalAmount' => $order->subTotal + $order->vat,
+                ];
+                $this->sendCapiEvent('Purchase', $capiData, Cart::content());
+
                 Cart::destroy();
                 Session::forget('couponcode');
                 Session::forget('availablecoupon');
                 Session::put('ordersubtotal', $request->subTotal);
                 Session::put('orderdeliverycharge', $request->deliveryCharge);
                 Session::put('order_id', $order->id);
-                toastr()->info('Order Press Successfully', 'Complete', ["positionClass" => "toast-top-center"]);
+                \Yoeunes\Toastr\Facades\Toastr::info('Order Press Successfully', 'Complete', ["positionClass" => "toast-top-center"]);
                 return redirect('order-received');
             } else {
                 Customer::where('order_id', '=', $order->id)->delete();
@@ -297,7 +304,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        return response('');
     }
 
     /**
@@ -307,7 +314,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        return response('');
     }
 
     /**
@@ -316,7 +323,10 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {}
+    public function store(Request $request)
+    {
+        return response('');
+    }
 
     /**
      * Display the specified resource.
@@ -326,7 +336,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        return response('');
     }
 
     /**
@@ -337,7 +347,7 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
-        //
+        return response('');
     }
 
     /**
@@ -349,7 +359,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        return response('');
     }
 
     /**
@@ -360,6 +370,46 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        return response('');
+    }
+
+    private function sendCapiEvent($eventName, $data, $products)
+    {
+        $accessToken = env('FB_CAPI_ACCESS_TOKEN'); // Set this in your .env file
+        $pixelId = env('FB_PIXEL_ID'); // Set this in your .env file
+        
+        if (!$accessToken || !$pixelId) {
+            return;
+        }
+
+        $eventData = [
+            'data' => [
+                [
+                    'event_name' => $eventName,
+                    'event_time' => time(),
+                    'event_source_url' => url()->current(),
+                    'action_source' => 'website',
+                    'user_data' => [
+                        'ph' => [hash('sha256', preg_replace('/\D/', '', $data['customerPhone']))],
+                        'fn' => [hash('sha256', strtolower(trim($data['customerName'])))],
+                        'client_ip_address' => request()->ip(),
+                        'client_user_agent' => request()->userAgent(),
+                    ],
+                    'custom_data' => [
+                        'currency' => 'BDT',
+                        'value' => $data['totalAmount'],
+                        'content_ids' => $products->pluck('id')->toArray(),
+                        'content_type' => 'product',
+                    ],
+                    'event_id' => 'TRX45324' . ($data['invoiceID'] ?? rand(1000, 9999)),
+                ]
+            ],
+        ];
+
+        try {
+            Http::post("https://graph.facebook.com/v17.0/{$pixelId}/events?access_token={$accessToken}", $eventData);
+        } catch (\Exception $e) {
+            // Log error if needed
+        }
     }
 }

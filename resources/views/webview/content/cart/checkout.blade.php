@@ -131,13 +131,46 @@
                                                 $max_inside = (int)$basicInfo->inside_dhaka_charge;
                                                 $max_outside = (int)$basicInfo->outside_dhaka_charge;
 
+                                                $has_free_inside = false;
+                                                $has_free_outside = false;
+                                                $custom_inside_set = false;
+                                                $custom_outside_set = false;
+                                                $highest_custom_inside = 0;
+                                                $highest_custom_outside = 0;
+
                                                 foreach ($cartProducts as $cp) {
-                                                    if (isset($cp->inside_dhaka) && (int)$cp->inside_dhaka > $max_inside) {
-                                                        $max_inside = (int)$cp->inside_dhaka;
+                                                    if (isset($cp->inside_dhaka)) {
+                                                        $val = (int)$cp->inside_dhaka;
+                                                        $custom_inside_set = true;
+                                                        if ($val === 0) {
+                                                            $has_free_inside = true;
+                                                        }
+                                                        if ($val > $highest_custom_inside) {
+                                                            $highest_custom_inside = $val;
+                                                        }
                                                     }
-                                                    if (isset($cp->outside_dhaka) && (int)$cp->outside_dhaka > $max_outside) {
-                                                        $max_outside = (int)$cp->outside_dhaka;
+                                                    if (isset($cp->outside_dhaka)) {
+                                                        $val = (int)$cp->outside_dhaka;
+                                                        $custom_outside_set = true;
+                                                        if ($val === 0) {
+                                                            $has_free_outside = true;
+                                                        }
+                                                        if ($val > $highest_custom_outside) {
+                                                            $highest_custom_outside = $val;
+                                                        }
                                                     }
+                                                }
+
+                                                if ($has_free_inside) {
+                                                    $max_inside = 0;
+                                                } elseif ($custom_inside_set) {
+                                                    $max_inside = $highest_custom_inside;
+                                                }
+
+                                                if ($has_free_outside) {
+                                                    $max_outside = 0;
+                                                } elseif ($custom_outside_set) {
+                                                    $max_outside = $highest_custom_outside;
                                                 }
                                             @endphp
                                             <select id="deliveryCharge" name="deliveryCharge" class="form-control"
@@ -352,12 +385,7 @@
                                     <dt class="col-8">Delivery charge: </dt>
 
                                     <dd class="text-right col-4 text-danger"><strong>৳
-                                            @if (isset($product->outside_dhaka))
-                                                <span id="dinamicdalivery">{{ $product->outside_dhaka }}</span>
-                                            @else
-                                                <span
-                                                    id="dinamicdalivery">{{ App\Models\Basicinfo::first()->outside_dhaka_charge }}</span>
-                                            @endif
+                                            <span id="dinamicdalivery">{{ $max_outside }}</span>
                                         </strong></dd>
                                     @if (isset($coupon))
                                         <dt class="col-8" style="color: green">Coupon Discount: </dt>

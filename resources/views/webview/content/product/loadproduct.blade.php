@@ -239,9 +239,18 @@
                                         <div class="flext_area d-flex text-center">
                                             <i class="fa-solid fa-truck-fast"></i>
                                             <div class="mx-3">
-                                               <span>Outside Dhaka  {{ $shipping->outside_dhaka_charge }} Taka <br></span>
-                                                <span>Inside Dhaka  {{ $shipping->inside_dhaka_charge }} Taka <br></span>
-                                              </div>
+                                               @if(isset($productdetails->outside_dhaka))
+                                                   <span>Outside Dhaka  {{ $productdetails->outside_dhaka == 0 ? 'Free' : $productdetails->outside_dhaka . ' Taka' }} <br></span>
+                                               @else
+                                                   <span>Outside Dhaka  {{ $shipping->outside_dhaka_charge }} Taka <br></span>
+                                               @endif
+
+                                               @if(isset($productdetails->inside_dhaka))
+                                                   <span>Inside Dhaka  {{ $productdetails->inside_dhaka == 0 ? 'Free' : $productdetails->inside_dhaka . ' Taka' }} <br></span>
+                                               @else
+                                                   <span>Inside Dhaka  {{ $shipping->inside_dhaka_charge }} Taka <br></span>
+                                               @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -484,7 +493,7 @@ dataLayer.push({
             index: 0,
             price: gtmprice,
             discount: gtmdiscount,
-            item_brand: 'Rashibd.com',
+            item_brand: 'Grihomartbd.com',
             item_category: gtmcategory, 
             currency: "BDT",
             quantity: 1,
@@ -512,7 +521,7 @@ dataLayer.push({
                         index: 0,
                         price: gtmprice,
                         discount: gtmdiscount,
-                        item_brand: 'Rashibd.com',
+                        item_brand: 'Grihomartbd.com',
                         item_category: gtmcategory, 
                         currency: "BDT",
                         quantity: $('#qtyoror').val()

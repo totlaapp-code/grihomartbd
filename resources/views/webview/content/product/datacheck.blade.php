@@ -7,7 +7,7 @@
 
 @section('meta')
     <meta name="description" content="Online shopping in Bangladesh for beauty products, men, women, kids, fashion items, clothes, electronics, home appliances, gadgets, watch, many more.">
-    <meta name="keywords" content="Rashibd, online store bd, online shop bd, Organic fruits, Thai, UK, Korea, China, cosmetics, Jewellery, bags, dress, mobile, accessories, automation Products,">
+    <meta name="keywords" content="Grihomartbd, online store bd, online shop bd, Organic fruits, Thai, UK, Korea, China, cosmetics, Jewellery, bags, dress, mobile, accessories, automation Products,">
     <meta itemprop="name" content="{{ $productdetails->ProductName }}">
     <meta itemprop="description" content="Best online shopping in Bangladesh for beauty products, men, women, kids, fashion items, clothes, electronics, home appliances, gadgets, watch, many more.">
     <meta itemprop="image" content="{{env('APP_URL')}}{{ $productdetails->ProductImage }}">
@@ -396,8 +396,17 @@
                                     <p for="" class="mt-4" style=" margin: 0; padding-top: 1px;text-align:justify">বিঃদ্রঃ: আপনার ডেলিভারি লোকেশন যদি ঢাকার বাহিরে হয়, আপনাকে অবশ্যই বিকাশের মাধ্যম {{App\Models\Basicinfo::first()->outside_dhaka_charge}} টাকা ডেলিভারি চার্জ অগ্রিম প্রদান করতে হবে । আপনি অর্ডার করে দিন অতিশিগ্রই আমাদের প্রতিনিধি আপনার সাথে যোগাযোগ করবে ।</p>
                                     <p for="" class="mt-4" style=" margin: 0; padding-top: 1px;text-align:justify"> বিঃদ্রঃ: আপনার কম্পিউটার বা মোবাইল স্ক্রীন রেজুলেশন উপর নির্ভর করে, পণ্যের রঙ সামান্য পরিবর্তিত হতে পারে।</p>
 
-                                    <p class="m-0 mb-2" style="text-align: left"><strong style="font-size: 18px;color: black;font-weight: bold;"><i class="fas fa-truck"></i> Delivery Charge: Inside Dhaka - {{App\Models\Basicinfo::first()->inside_dhaka_charge}} tk.</strong></p>
-                                    <p class="m-0 mb-2" style="text-align: left"><strong style="font-size: 18px;color: black;font-weight: bold;"><i class="fas fa-truck"></i> Delivery Charge: Outside Dhaka - {{App\Models\Basicinfo::first()->outside_dhaka_charge}} tk.</strong></p>
+                                    @if(isset($productdetails->inside_dhaka))
+                                        <p class="m-0 mb-2" style="text-align: left"><strong style="font-size: 18px;color: black;font-weight: bold;"><i class="fas fa-truck"></i> Delivery Charge: Inside Dhaka - {{ $productdetails->inside_dhaka == 0 ? 'Free' : $productdetails->inside_dhaka . ' tk.' }}</strong></p>
+                                    @else
+                                        <p class="m-0 mb-2" style="text-align: left"><strong style="font-size: 18px;color: black;font-weight: bold;"><i class="fas fa-truck"></i> Delivery Charge: Inside Dhaka - {{App\Models\Basicinfo::first()->inside_dhaka_charge}} tk.</strong></p>
+                                    @endif
+
+                                    @if(isset($productdetails->outside_dhaka))
+                                        <p class="m-0 mb-2" style="text-align: left"><strong style="font-size: 18px;color: black;font-weight: bold;"><i class="fas fa-truck"></i> Delivery Charge: Outside Dhaka - {{ $productdetails->outside_dhaka == 0 ? 'Free' : $productdetails->outside_dhaka . ' tk.' }}</strong></p>
+                                    @else
+                                        <p class="m-0 mb-2" style="text-align: left"><strong style="font-size: 18px;color: black;font-weight: bold;"><i class="fas fa-truck"></i> Delivery Charge: Outside Dhaka - {{App\Models\Basicinfo::first()->outside_dhaka_charge}} tk.</strong></p>
+                                    @endif
                                     <p class="m-0 mb-2" style="text-align: left"><strong style="font-size: 18px;color: black;font-weight: bold;"><i class="fas fa-check"></i> Order today and receive it within {{App\Models\Basicinfo::first()->insie_dhaka}}.</strong></p>
                                     <p class="m-0 mb-2" style="text-align: left"><strong style="font-size: 18px;color: black;font-weight: bold;"><i class="fas fa-thumbs-up"></i>Quality Product</strong></p>
                                 </div>

@@ -33,7 +33,7 @@ return [
     'google' => [
         'client_id' => '1034697914962-tms676rf7pqatd2t0skhh6f5dobd7kge.apps.googleusercontent.com',
         'client_secret' => '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',
-        'redirect' => 'https://rashifashionbd.com/callback/google',
+        'redirect' => 'https://grihomartbd.com/callback/google',
     ],
 
 ];

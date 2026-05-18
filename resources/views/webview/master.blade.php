@@ -121,15 +121,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-CQSBT9VB53"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CQSBT9VB53"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', 'G-CQSBT9VB53');
-</script>
+    gtag('config', 'G-CQSBT9VB53');
+    </script>
 
 </head>
 
@@ -262,9 +262,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <div id="cartcount">
-        @if (count(Cart::content())>0)
+        @if (count(\Cart::content())>0)
         <div id="posit" type="button" onclick="checkcartview()">
-            <span style="font-size: 22px;line-height: 50px;color: white;">{{ count(Cart::content()) }}</span><img src="{{ asset('public/add-to-cart.png') }}" style="margin-top: -18px;height: 25px;padding-right: 8px;">
+            <span style="font-size: 22px;line-height: 50px;color: white;">{{ count(\Cart::content()) }}</span><img src="{{ asset('public/add-to-cart.png') }}" style="margin-top: -18px;height: 25px;padding-right: 8px;">
         </div>
         @endif
     </div>
@@ -581,7 +581,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 success: function(data) {
                     updatecart();
                     if (data == 'success') {
-                        window.location.href = 'https://seenur.com/checkout';
+                        window.location.href = '{{ url('checkout') }}';
                         $('#processing').modal('hide');
                     }
                 },

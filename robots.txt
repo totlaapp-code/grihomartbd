@@ -3,4 +3,4 @@ User-agent: *
 Disallow: 
 Disallow: /cg/i-bin
 Disallow: /admin
-Sitemap: https://rashifashionbd.com/
+Sitemap: https://grihomartbd.com/
