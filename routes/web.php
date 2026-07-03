@@ -21,8 +21,8 @@ use App\Http\Controllers\GoogleController;
 Route::get('/', [WebviewController::class, 'mainview']);
 
 // web view
-Route::get('/datafeed.csv', [WebviewController::class, 'datafeed'])->name('datafeed');
-Route::get('/facebook-catalog.csv', [WebviewController::class, 'facebookCatalog'])->name('facebook.catalog');
+Route::get('/datafeed-xml', [WebviewController::class, 'datafeed'])->name('datafeed');
+Route::get('/facebook-catalog', [WebviewController::class, 'facebookCatalog'])->name('facebook.catalog');
 Route::get('ip-block', [CartController::class, 'ipblock']);
 Route::get('empty-cart', [CartController::class, 'emptycart']);
 Route::get('delivery/cities', [CartController::class, 'city']);

@@ -316,6 +316,18 @@
             </div>
         </div>
 
+        <div class="col-sm-12 col-md-12 col-xl-12 mt-4">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h2 class="mb-4" style="text-align: center;color:red">Facebook Catalog</h2>
+                <div class="text-center">
+                    <p class="text-white mb-3">Facebook Product Catalog CSV ডাউনলোড করুন এবং Facebook Business Manager এ আপলোড করুন।</p>
+                    <a href="{{ url('facebook-catalog') }}" target="_blank" class="btn btn-primary btn-lg">
+                        <i class="fa fa-download me-2"></i> Download Facebook Catalog CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

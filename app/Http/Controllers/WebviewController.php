@@ -69,7 +69,7 @@ class WebviewController extends Controller
                         $item->addChild('g:title', $product->ProductName);
                         $description = str_replace('&nbsp;', ' ', $product->description);
                         $item->addChild('g:description', strip_tags($description));
-                        $item->addChild('g:link', 'https://grihomartbd.com/product/' . $product->slug);
+                        $item->addChild('g:link', 'https://grihomartbd.com/view-product/' . $product->ProductSlug);
                         $item->addChild('g:image_link', 'https://grihomartbd.com/' . $product->ProductImage);
                         $item->addChild('g:brand', 'Grihomartbd');
 
@@ -143,8 +143,8 @@ class WebviewController extends Controller
                             'in stock',
                             'new',
                             $price . ' BDT',
-                            url('product/' . $product->slug),
-                            url($product->ProductImage),
+                            'https://grihomartbd.com/view-product/' . $product->ProductSlug,
+                            'https://grihomartbd.com/' . ltrim(str_replace('public/', '', $product->ProductImage), '/'),
                             'Grihomartbd' 
                         ));
                     }
