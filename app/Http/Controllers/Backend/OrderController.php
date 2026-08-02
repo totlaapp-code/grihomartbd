@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Services\FraudCheck\FraudCheckService;
 use App\Http\Controllers\Controller;
 
 use App\Models\City;
@@ -123,6 +124,24 @@ class OrderController extends Controller
             'st' => $st,
             'sd' => $sd,
             'sc' => $sc
+        ]);
+    }
+
+    /**
+     * NEW: Fraud check using FraudCheckService (Steadfast official API).
+     * পুরানো fraudcheck() method-টি এখনও অপরিবর্তিত আছে।
+     * Test করে নিশ্চিত হলে পুরানোটা replace করা হবে।
+     */
+    public function fraudcheckV2(Request $request)
+    {
+        $phone   = $request->number;
+        $service = new FraudCheckService();
+        $result  = $service->check($phone);
+
+        return view('auth.fraud_v2', [
+            'phone'   => $phone,
+            'results' => $result['results'],
+            'summary' => $result['summary'],
         ]);
     }
 

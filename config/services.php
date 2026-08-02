@@ -36,4 +36,10 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', 'https://grihomartbd.com/callback/google'),
     ],
 
+    'steadfast' => [
+        'api_key'    => env('STEADFAST_API_KEY'),
+        'secret_key' => env('STEADFAST_SECRET_KEY'),
+        'base_url'   => 'https://portal.packzy.com/api/v1',
+    ],
+
 ];

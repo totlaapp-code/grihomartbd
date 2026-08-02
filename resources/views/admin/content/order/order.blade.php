@@ -1107,7 +1107,7 @@ $users = Admin::whereHas('roles', function ($q) {
             $('#invnum').html(inv);
             $.ajax({
                 type: "GET",
-                url: "https://dokangharbd.com/api/user/fraud-check-data",
+                url: "{{ url('admin/fraud-check-v2') }}",
                 data: {
                     'number': number,
                     '_token': token
@@ -1115,6 +1115,10 @@ $users = Admin::whereHas('roles', function ($q) {
                 success: function(response) {
                     $('.auto-load').css('display','none');
                     $('#cuslist').empty().append(response);
+                },
+                error: function() {
+                    $('.auto-load').css('display','none');
+                    $('#cuslist').html('<p class="text-danger text-center">ডেটা লোড করতে সমস্যা হয়েছে।</p>');
                 }
             });
         });

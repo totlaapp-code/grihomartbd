@@ -78,6 +78,7 @@ Route::group(['prefix' => 'admin',], function () {
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin:admin']], function () {
     Route::get('fraud-check-data', [OrderController::class, 'fraudcheck']);
+    Route::get('fraud-check-v2', [OrderController::class, 'fraudcheckV2']); // NEW - Steadfast API
     Route::get('sendsms', [OrderController::class, 'sendsms']);
     Route::get('/my/profile', [AdminInformation::class, 'myprofile']);
     Route::get('get/information', [OrderController::class, 'getinfo']);

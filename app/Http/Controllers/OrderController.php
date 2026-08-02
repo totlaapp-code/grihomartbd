@@ -71,10 +71,11 @@ class OrderController extends Controller
             return redirect('/empty-cart');
         } else {
             $admin = Admin::whereHas('roles', function ($q) {
-                $q->where('name', 'user');
+                $q->where('name', 'superadmin');
             })->where('status', 'Active')->inRandomOrder()->first();
 
             $order = new Order();
+            $order->admin_id = $admin->id;
 
 
             $exuser = User::where('email', $request->customerPhone)->first();
@@ -407,9 +408,10 @@ class OrderController extends Controller
         ];
 
         try {
-            Http::post("https://graph.facebook.com/v17.0/{$pixelId}/events?access_token={$accessToken}", $eventData);
+            $response = Http::post("https://graph.facebook.com/v17.0/{$pixelId}/events?access_token={$accessToken}", $eventData);
+            \Log::info('FB CAPI event sent', ['event' => $eventName, 'response' => $response->body(), 'status' => $response->status()]);
         } catch (\Exception $e) {
-            // Log error if needed
+            \Log::error('FB CAPI event failed', ['event' => $eventName, 'error' => $e->getMessage()]);
         }
     }
 }
