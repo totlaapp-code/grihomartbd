@@ -208,7 +208,7 @@
                                         <div class="card-header p-0" id="headingOne">
                                           <h5 class="mb-0">
                                             <button type="button" id="collupshead" class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseVariant" aria-expanded="true" aria-controls="collapseOne">
-                                                <h5 class="text-uppercase m-0">Colour<span class="text-danger">*</span></h5>
+                                                <h5 class="text-uppercase m-0">Colour</h5>
                                                 <h5 class="text-uppercase m-0">+</h5>
                                             </button>
                                           </h5>
@@ -533,11 +533,6 @@
                 return;
             }
             ProductName.css('border','1px solid #ced4da');
-
-            if(variantCount == 0){
-                toastr.error('Product Variant Should Not Be Empty');
-                return;
-            }
 
             var formData = new FormData();
 
