@@ -270,7 +270,7 @@
                                         <div class="card-header p-0" id="headingOne">
                                           <h5 class="mb-0">
                                             <button type="button" id="collupshead" class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseSize" aria-expanded="true" aria-controls="collapseOne">
-                                                <h5 class="text-uppercase m-0">Size<span class="text-danger">*</span></h5>
+                                                <h5 class="text-uppercase m-0">Size</h5>
                                                 <h5 class="text-uppercase m-0">+</h5>
                                             </button>
                                           </h5>
@@ -995,13 +995,7 @@ $(document).ready(function() {
         $(this).closest("tr").remove();
     });
 
-    // Add form submit on custom button
     $("#submit").on("click", function(e) {
-        // Check at least 1 row in size table
-        if ($("#sizeTable tbody tr").length === 0) {
-            toastr.error("At least one size must be added!");
-            return false;
-        }
 
         let isEmpty = false;
 
