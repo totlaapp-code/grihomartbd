@@ -192,7 +192,7 @@ class ComplainController extends Controller
     public function edit($id)
     {
         $complain = Complain::where('id', $id)->first();
-        $idin = Order::where('invoiceID', $complain->order_invoice_id)->first()->id;
+        $idin = optional(Order::where('invoiceID', $complain->order_invoice_id)->first())->id;
         $orders = DB::table('orders')
             ->select('orders.*', 'customers.customerName', 'customers.customerPhone', 'customers.customerAddress', 'couriers.courierName', 'cities.cityName', 'zones.zoneName', 'areas.areaName', 'admins.name',  'paymenttypes.paymentTypeName', 'payments.paymentNumber')
             ->leftJoin('customers', 'orders.id', '=', 'customers.order_id')

@@ -30,7 +30,7 @@ class StockController extends Controller
                 return $stocks->created_at->format('Y-m-d');
             })
             ->addColumn('purchese', function ($stocks) {
-                return 'ID: ' . $stocks->purchese_product_id . '<br> ' . Supplier::where('id', Purchase::where('id', $stocks->purchese_product_id)->first()->supplier_id)->first()->supplierName;
+                return 'ID: ' . $stocks->purchese_product_id . '<br> ' . optional(Supplier::where('id', Purchase::where('id', $stocks->purchese_product_id)->first())->supplier_id)->first()->supplierName;
             })
             ->escapeColumns([])->make(true);
     }

@@ -65,7 +65,7 @@ class ProductController extends Controller
                 }
             })
             ->editColumn('image', function ($product) {
-                return '<img src="../../' . Product::where('id', $product['id'])->first()->ProductImage . '" style="width:100px">';
+                return '<img src="../../' . optional(Product::where('id', $product['id'])->first())->ProductImage . '" style="width:100px">';
             })
             ->editColumn('products', function ($product) {
                 return $product['text'];
@@ -88,7 +88,7 @@ class ProductController extends Controller
                 return 'ID: ' . $products->id . '<br> SKU: ' . $products->ProductSku;
             })
             ->editColumn('image', function ($products) {
-                return '<img src="../../' . Product::where('id', $products->id)->first()->ProductImage . '" style="width:100px">';
+                return '<img src="../../' . optional(Product::where('id', $products->id)->first())->ProductImage . '" style="width:100px">';
             })
             ->editColumn('stocks', function ($products) {
                 $stocks = '';
@@ -158,7 +158,7 @@ class ProductController extends Controller
                 }
             })
             ->editColumn('image', function ($product) {
-                return '<img src="../../' . Product::where('id', $product['id'])->first()->ProductImage . '" style="width:100px">';
+                return '<img src="../../' . optional(Product::where('id', $product['id'])->first())->ProductImage . '" style="width:100px">';
             })
             ->editColumn('products', function ($product) {
                 return $product['text'];
@@ -481,7 +481,7 @@ class ProductController extends Controller
             })
             ->addColumn('category', function ($products) {
                  
-                    return Category::where('id',$products->category_id)->first()->category_name;
+                    return optional(Category::where('id',$products->category_id)->first())->category_name;
                  
             })
             ->addColumn('positioninfo', function ($products) {

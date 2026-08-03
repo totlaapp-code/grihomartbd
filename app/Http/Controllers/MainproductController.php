@@ -98,7 +98,7 @@ class MainproductController extends Controller
             ->addColumn('category', function ($products) {
                 $cate=Category::where('id', $products->category_id)->first();
                 if(isset($cate)){
-                    return Category::where('id', $products->category_id)->first()->category_name;
+                    return optional(Category::where('id', $products->category_id)->first())->category_name;
                 }else{
                     return '<span style="color:red">Category Deleted</span>';
                 }

@@ -33,7 +33,7 @@ class ReviewController extends Controller
                 return '<a href="#" type="button" id="deleteReviewBtn" data-id="' . $reviews->id . '" class="btn btn-danger btn-sm" ><i class="bi bi-archive" ></i></a>';
             })
             ->addColumn('user', function ($reviews) {
-                return User::where('id',$reviews->user_id)->first()->name;
+                return optional(User::where('id',$reviews->user_id)->first())->name;
             })
 
             ->make(true);

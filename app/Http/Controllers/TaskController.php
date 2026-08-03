@@ -93,7 +93,7 @@ class TaskController extends Controller
             ->addColumn('create_by', function ($tasks) {
                     $ad=Admin::where('id',$tasks->create_by)->first();
                     if(isset($ad)){
-                        return '<span style="color:red;font-weight:bold;">'.Admin::where('id',$tasks->create_by)->first()->name.'</span>';
+                        return '<span style="color:red;font-weight:bold;">'.optional(Admin::where('id',$tasks->create_by)->first())->name.'</span>';
                     }else{
                         return 'Not Available';
                     }
@@ -103,7 +103,7 @@ class TaskController extends Controller
             ->addColumn('assign_for', function ($tasks) {
                 $ad=Admin::where('id',$tasks->admin_id)->first();
                 if(isset($ad)){
-                   return '<span style="color:green;font-weight:bold;">'.Admin::where('id',$tasks->admin_id)->first()->name.'</span>';
+                   return '<span style="color:green;font-weight:bold;">'.optional(Admin::where('id',$tasks->admin_id)->first())->name.'</span>';
                 }else{
                     return 'Not Available';
                 }
@@ -157,7 +157,7 @@ class TaskController extends Controller
             ->addColumn('create_by', function ($tasks) {
                     $ad=Admin::where('id',$tasks->create_by)->first();
                     if(isset($ad)){
-                        return '<span style="color:red;font-weight:bold;">'.Admin::where('id',$tasks->create_by)->first()->name.'</span>';
+                        return '<span style="color:red;font-weight:bold;">'.optional(Admin::where('id',$tasks->create_by)->first())->name.'</span>';
                     }else{
                         return 'Not Available';
                     }
@@ -167,7 +167,7 @@ class TaskController extends Controller
             ->addColumn('assign_for', function ($tasks) {
                 $ad=Admin::where('id',$tasks->admin_id)->first();
                 if(isset($ad)){
-                   return '<span style="color:green;font-weight:bold;">'.Admin::where('id',$tasks->admin_id)->first()->name.'</span>';
+                   return '<span style="color:green;font-weight:bold;">'.optional(Admin::where('id',$tasks->admin_id)->first())->name.'</span>';
                 }else{
                     return 'Not Available';
                 }

@@ -120,7 +120,7 @@ class OrderController extends Controller
                 } else {
                     $couponuse = new Usecoupon();
                     $couponuse->user_id = Auth::id();
-                    $couponuse->coupon_id = Coupon::where('code', $request->coupon_code)->first()->id;
+                    $couponuse->coupon_id = optional(Coupon::where('code', $request->coupon_code)->first())->id;
                     $couponuse->code = $request->coupon_code;
                     $couponuse->date = date('Y-m-d');
                     $couponuse->save();

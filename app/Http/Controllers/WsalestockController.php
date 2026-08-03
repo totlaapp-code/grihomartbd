@@ -30,7 +30,7 @@ class WsalestockController extends Controller
                 return $wsalestocks->created_at->format('Y-m-d');
             })
             ->addColumn('wcustomer', function ($wsalestocks) {
-                return 'ID: ' . $wsalestocks->wsale_product_id . '<br> ' . Wcustomer::where('id', Wsale::where('id', $wsalestocks->wsale_product_id)->first()->wcustomer_id)->first()->wcustomerName;
+                return 'ID: ' . $wsalestocks->wsale_product_id . '<br> ' . optional(Wcustomer::where('id', Wsale::where('id', $wsalestocks->wsale_product_id)->first())->wcustomer_id)->first()->wcustomerName;
             })
             ->escapeColumns([])->make(true);
     }

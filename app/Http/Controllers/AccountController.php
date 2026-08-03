@@ -96,7 +96,7 @@ class AccountController extends Controller
                 <a href="#" type="button" id="deleteAccountBtn" data-id="' . $accounts->id . '" class="btn btn-danger btn-sm" ><i class="bi bi-archive" ></i></a>';
             })
             ->addColumn('admin', function ($accounts) {
-                return Admin::where('id',$accounts->admin_id)->first()->name;
+                return optional(Admin::where('id',$accounts->admin_id)->first())->name;
             })
             ->addColumn('titleinfo', function ($accounts) {
                 if($accounts->edit=='Yes'){
