@@ -273,7 +273,26 @@
                                 </div>
 
                                 <div class="mt-2 mb-2 row">
-                                    @if (empty(json_decode($singlemain->RelatedProductIds)))
+                                    @php
+                                        $related_prods = json_decode($singlemain->RelatedProductIds);
+                                        $valid_colors = [];
+                                        if (is_array($related_prods) || is_object($related_prods)) {
+                                            foreach($related_prods as $item) {
+                                                if (isset($item->productID) && $item->productID) {
+                                                    $valid_colors[] = $item->productID;
+                                                }
+                                            }
+                                        }
+                                        $has_colors = false;
+                                        if (count($valid_colors) > 1) {
+                                            $has_colors = true;
+                                        } elseif (count($valid_colors) == 1) {
+                                            if ($valid_colors[0] != $singlemain->id && $valid_colors[0] != $productdetails->id) {
+                                                $has_colors = true;
+                                            }
+                                        }
+                                    @endphp
+                                    @if (!$has_colors)
                                     @else
                                         <div class="mb-2 col-12 col-md-12 colorpart">
                                             <div class="d-flex">
