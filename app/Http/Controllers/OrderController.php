@@ -70,12 +70,7 @@ class OrderController extends Controller
         } elseif (Cart::count() == 0) {
             return redirect('/empty-cart');
         } else {
-            $admin = Admin::whereHas('roles', function ($q) {
-                $q->where('name', 'superadmin');
-            })->where('status', 'Active')->inRandomOrder()->first();
-
             $order = new Order();
-            $order->admin_id = $admin->id;
 
 
             $exuser = User::where('email', $request->customerPhone)->first();

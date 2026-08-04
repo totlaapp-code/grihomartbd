@@ -1453,11 +1453,8 @@ class OrderController extends Controller
 
         if ($order->status == 'Pending' && $request['status'] == 'Pending') {
         } else {
-            if ($request['status'] == 'Hold' || $request['status'] == 'Ready to Ship' || $request['status'] == 'Cancelled') {
-                if (isset($order->admin_id)) {
-                } else {
-                    $order->admin_id = Auth::guard('admin')->user()->id;
-                }
+            if (empty($order->admin_id)) {
+                $order->admin_id = Auth::guard('admin')->user()->id;
             }
             if ($request['status'] == 'Packaging') {
                 if (isset($order->packing_by)) {
