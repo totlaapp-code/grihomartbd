@@ -534,6 +534,10 @@ class WebviewController extends Controller
         $shipping =Basicinfo::first();
         $singlemain = Mainproduct::where('ProductSlug', $slug)->select('id', 'category_id', 'RelatedProductIds')->first();
 
+        if (!$singlemain) {
+            return redirect()->back()->with('error', 'Product details not available.');
+        }
+
         $relatedIds = json_decode($singlemain->RelatedProductIds);
         if (empty($relatedIds) || !isset($relatedIds[0]->productID)) {
             return redirect()->back()->with('error', 'Product details not available.');

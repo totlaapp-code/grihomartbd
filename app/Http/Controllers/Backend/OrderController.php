@@ -1196,7 +1196,7 @@ class OrderController extends Controller
                 return rtrim($orderProducts, '<br>');
             })
             ->editColumn('user', function ($orders) {
-                if (isset($orders->admin_id)) {
+                if (isset($orders->admin_id) && $orders->admins) {
                     return $orders->admins->name;
                 } else {
                     return 'user not assign';
