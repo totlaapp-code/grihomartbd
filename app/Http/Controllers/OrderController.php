@@ -58,10 +58,36 @@ class OrderController extends Controller
             return redirect('ip-block');
         }
         $products = Cart::content();
-        $excutomer = Customer::where('customerPhone', $request->customerPhone)->latest()->first();
+        $userIp = \Request::ip();
+        $deviceId = $request->input('device_id');
+        $customerPhone = $request->customerPhone;
+        $twentyFourHoursAgo = Carbon::now()->subHours(24);
+
+        $excutomer = Customer::where('customerPhone', $customerPhone)->latest()->first();
         if (isset($excutomer)) {
             $exorder = Order::where('id', $excutomer->order_id)->first();
-            if ($exorder->status == 'Pending' || $exorder->status == 'Packaging' || $exorder->status == 'Ready to Ship' || $exorder->status == 'Hold') {
+            if ($exorder) {
+                $isPendingStatus = in_array($exorder->status, ['Pending', 'Packaging', 'Ready to Ship', 'Hold']);
+                $isWithin24Hours = $exorder->created_at ? Carbon::parse($exorder->created_at)->gte($twentyFourHoursAgo) : false;
+                if ($isPendingStatus || $isWithin24Hours) {
+                    \Yoeunes\Toastr\Facades\Toastr::warning('দুঃখিত, ২৪ ঘণ্টায় ১টির বেশি অর্ডার অনুমোদিত নয়। আপনার একটি অর্ডার প্রক্রিয়াধীন রয়েছে।', 'Warning', ["positionClass" => "toast-top-center"]);
+                    return redirect('/exist-order');
+                }
+            }
+        }
+
+        if (\Schema::hasColumn('orders', 'ip_address')) {
+            $recentOrderExist = Order::where('created_at', '>=', $twentyFourHoursAgo)
+                ->where(function ($query) use ($userIp, $deviceId) {
+                    $query->where('ip_address', $userIp);
+                    if (!empty($deviceId)) {
+                        $query->orWhere('device_id', $deviceId);
+                    }
+                })
+                ->first();
+
+            if ($recentOrderExist) {
+                \Yoeunes\Toastr\Facades\Toastr::warning('দুঃখিত, আপনার ডিভাইস বা আইপি থেকে ২৪ ঘণ্টায় ১টির বেশি অর্ডার অনুমোদিত নয়।', 'Warning', ["positionClass" => "toast-top-center"]);
                 return redirect('/exist-order');
             }
         }
@@ -86,7 +112,7 @@ class OrderController extends Controller
                 $user->otp = $otp;
                 $otppass = $otp;
                 $user->active_status = 0;
-                $user->ip = \Request::ip();
+                $user->ip = $userIp;
                 $user->password = Hash::make($request->customerPhone);
                 $user->save();
 
@@ -98,6 +124,10 @@ class OrderController extends Controller
             $order->store_id = 1;
             $order->web_id = 'Website';
             $order->invoiceID = $this->uniqueID();
+            if (\Schema::hasColumn('orders', 'ip_address')) {
+                $order->ip_address = $userIp;
+                $order->device_id = $deviceId;
+            }
             $order->deliveryCharge = $request->deliveryCharge;
             $order->city_id = $request->city_id;
             $order->zone_id = $request->zone_id;

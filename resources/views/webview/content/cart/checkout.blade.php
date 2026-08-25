@@ -92,6 +92,7 @@
                                 @endphp
                                 <form action="{{ url('press/order') }}" method="POST" class="from-prevent-multiple-submits">
                                     @csrf
+                                    <input type="hidden" name="device_id" id="device_id">
                                     <div class="row">
                                         <div class="form-group col-12">
                                             <label>Name </label>
@@ -1009,10 +1010,57 @@
 
     <script type="text/javascript">
         (function () {
+            function getDeviceId() {
+                let deviceId = localStorage.getItem('gm_device_id');
+                if (!deviceId) {
+                    let canvas = document.createElement('canvas');
+                    let ctx = canvas.getContext('2d');
+                    let txt = 'grihomart_fp_1.0';
+                    ctx.textBaseline = "top";
+                    ctx.font = "14px 'Arial'";
+                    ctx.textBaseline = "alphabetic";
+                    ctx.fillStyle = "#f60";
+                    ctx.fillRect(125,1,62,20);
+                    ctx.fillStyle = "#069";
+                    ctx.fillText(txt, 2, 15);
+                    let canvasData = canvas.toDataURL();
+                    
+                    let fpString = [
+                        navigator.userAgent,
+                        navigator.language,
+                        screen.colorDepth,
+                        screen.width + 'x' + screen.height,
+                        new Date().getTimezoneOffset(),
+                        canvasData
+                    ].join('||');
+
+                    let hash = 0;
+                    for (let i = 0; i < fpString.length; i++) {
+                        let char = fpString.charCodeAt(i);
+                        hash = ((hash << 5) - hash) + char;
+                        hash |= 0;
+                    }
+                    deviceId = 'dev_' + Math.abs(hash) + '_' + Math.random().toString(36).substring(2, 9);
+                    localStorage.setItem('gm_device_id', deviceId);
+                }
+                return deviceId;
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                let devInput = document.getElementById('device_id');
+                if (devInput) {
+                    devInput.value = getDeviceId();
+                }
+            });
+
             $('.from-prevent-multiple-submits').on('submit', function () {
+                let devInput = document.getElementById('device_id');
+                if (devInput && !devInput.value) {
+                    devInput.value = getDeviceId();
+                }
                 $('.from-prevent-multiple-submits').attr('disabled', 'true');
                 $('.spinner').css('display', 'inline');
-            })
+            });
         })();
     </script>
     <script>
