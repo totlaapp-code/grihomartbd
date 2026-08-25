@@ -224,14 +224,8 @@
         $hashedName = hash('sha256', strtolower(trim($orders->customers->customerName)));
     ?>
     <script>
-    // Advanced Matching for Facebook Pixel
+    // Facebook Pixel - Purchase Event with Advanced Matching
     if (typeof fbq !== 'undefined') {
-        // Re-initialize with user data for Advanced Matching (Satisfies Facebook Diagnostic)
-        fbq('init', '1116560860653256', {
-            ph: "<?php echo $hashedPhone ?>",
-            fn: "<?php echo $hashedName ?>"
-        });
-
         fbq('track', 'Purchase', {
             value: Number("<?php echo $orders->subTotal ?>"),
             currency: 'BDT',

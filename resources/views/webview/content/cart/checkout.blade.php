@@ -1015,4 +1015,16 @@
             })
         })();
     </script>
+    <script>
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'InitiateCheckout', {
+            content_ids: [@foreach ($cartProducts as $cartProduct) "{{ $cartProduct->id }}", @endforeach],
+            content_type: 'product',
+            value: Number("{{ (float)str_replace(',', '', Cart::subtotal()) }}"),
+            currency: 'BDT'
+        }, {
+            eventID: "{{ $fbEventId ?? '' }}"
+        });
+    }
+    </script>
 @endsection

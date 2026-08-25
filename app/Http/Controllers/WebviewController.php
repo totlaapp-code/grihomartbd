@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Response;
+use App\Services\FacebookPixelService;
 use Illuminate\Support\Facades\File;
 
 class WebviewController extends Controller
@@ -269,7 +270,17 @@ class WebviewController extends Controller
         $sizesolds = Size::where('product_id', $productdetails->id)->where('status', 'Active')->get();
         $weightolds = Weight::where('product_id', $productdetails->id)->get();
 
-        return view('webview.content.product.datacheck', ['sizesolds' => $sizesolds, 'weightolds' => $weightolds, 'singlemain' => $singlemain, 'varients' => $varients, 'relatedproducts' => $relatedproducts, 'productdetails' => $productdetails]);
+        $fbEventId = 'vc_' . $productdetails->id . '_' . uniqid();
+
+        FacebookPixelService::sendCapiEvent('ViewContent', [], [
+            'currency' => 'BDT',
+            'value' => (float)($productdetails->SalePrice ?? $productdetails->RegularPrice),
+            'content_ids' => [(string)$productdetails->id],
+            'content_type' => 'product',
+            'content_name' => $productdetails->ProductName,
+        ], $fbEventId);
+
+        return view('webview.content.product.datacheck', ['sizesolds' => $sizesolds, 'weightolds' => $weightolds, 'singlemain' => $singlemain, 'varients' => $varients, 'relatedproducts' => $relatedproducts, 'productdetails' => $productdetails, 'fbEventId' => $fbEventId]);
     }
 
     public function resetcoupon(Request $request)
@@ -518,6 +529,16 @@ class WebviewController extends Controller
             ->limit(8)
             ->get();
 
+        $fbEventId = 'vc_' . $productdetails->id . '_' . uniqid();
+
+        FacebookPixelService::sendCapiEvent('ViewContent', [], [
+            'currency' => 'BDT',
+            'value' => (float)($productdetails->SalePrice ?? $productdetails->RegularPrice),
+            'content_ids' => [(string)$productdetails->id],
+            'content_type' => 'product',
+            'content_name' => $productdetails->ProductName,
+        ], $fbEventId);
+
         return view('webview.content.product.details', [
             'sizesolds' => $sizesolds,
             'weightolds' => $weightolds,
@@ -525,7 +546,8 @@ class WebviewController extends Controller
             'varients' => $varients,
             'relatedproducts' => $relatedproducts,
             'productdetails' => $productdetails,
-            'shipping' => $shipping
+            'shipping' => $shipping,
+            'fbEventId' => $fbEventId
         ]);
     }
 
@@ -558,7 +580,17 @@ class WebviewController extends Controller
         $sizesolds = Size::where('product_id', $productdetails->id)->where('status', 'Active')->get();
         $weightolds = Weight::where('product_id', $productdetails->id)->get();
 
-        return view('webview.content.product.details', ['sizesolds' => $sizesolds, 'weightolds' => $weightolds, 'singlemain' => $singlemain, 'varients' => $varients, 'relatedproducts' => $relatedproducts, 'productdetails' => $productdetails , 'shipping'=>$shipping]);
+        $fbEventId = 'vc_' . $productdetails->id . '_' . uniqid();
+
+        FacebookPixelService::sendCapiEvent('ViewContent', [], [
+            'currency' => 'BDT',
+            'value' => (float)($productdetails->SalePrice ?? $productdetails->RegularPrice),
+            'content_ids' => [(string)$productdetails->id],
+            'content_type' => 'product',
+            'content_name' => $productdetails->ProductName,
+        ], $fbEventId);
+
+        return view('webview.content.product.details', ['sizesolds' => $sizesolds, 'weightolds' => $weightolds, 'singlemain' => $singlemain, 'varients' => $varients, 'relatedproducts' => $relatedproducts, 'productdetails' => $productdetails , 'shipping'=>$shipping, 'fbEventId' => $fbEventId]);
     }
 
     public function loadrelatedpro(Request $request)

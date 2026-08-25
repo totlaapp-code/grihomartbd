@@ -42,4 +42,10 @@ return [
         'base_url'   => 'https://portal.packzy.com/api/v1',
     ],
 
+    'facebook' => [
+        'pixel_id' => env('FB_PIXEL_ID'),
+        'capi_token' => env('FB_CAPI_ACCESS_TOKEN'),
+        'test_event_code' => env('FB_TEST_EVENT_CODE'),
+    ],
+
 ];

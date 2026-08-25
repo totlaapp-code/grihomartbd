@@ -199,21 +199,32 @@
             },
 
             success: function(data) {
-                updatecart();
-                $.ajax({
-                    type: 'GET',
-                    url: '{{ url('get-cart-content') }}',
-
-                    success: function(response) {
-                        $('#cartViewModal .modal-body').empty().append(
-                            response);
-                    },
-                    error: function(error) {
-                        console.log('error');
-                    }
+            updatecart();
+            if (data && data.fbEventId && typeof fbq !== 'undefined') {
+                fbq('track', 'AddToCart', {
+                    content_name: data.name,
+                    content_ids: [data.product_id.toString()],
+                    content_type: 'product',
+                    value: Number(data.price),
+                    currency: 'BDT'
+                }, {
+                    eventID: data.fbEventId
                 });
-                $('#processing').modal('hide');
-                $('#cartViewModal').modal('show');
+            }
+            $.ajax({
+                type: 'GET',
+                url: '{{ url('get-cart-content') }}',
+
+                success: function(response) {
+                    $('#cartViewModal .modal-body').empty().append(
+                        response);
+                },
+                error: function(error) {
+                    console.log('error');
+                }
+            });
+            $('#processing').modal('hide');
+            $('#cartViewModal').modal('show');
             },
             error: function(error) {
                 console.log('error');

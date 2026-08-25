@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use App\Mail\NotificationMail;
 use Illuminate\Support\Facades\Mail;
+use App\Services\FacebookPixelService;
 
 class OrderController extends Controller
 {
@@ -210,10 +211,12 @@ class OrderController extends Controller
                 $notification->admin_id = $order->admin_id;
                 $notification->save();
                 $capiData = [
+                    'id' => $order->id,
                     'invoiceID' => $order->invoiceID,
                     'customerName' => $request->customerName,
                     'customerPhone' => $request->customerPhone,
                     'totalAmount' => $order->subTotal + $order->vat,
+                    'cityName' => isset($city) ? $city->cityName : null,
                 ];
                 $this->sendCapiEvent('Purchase', $capiData, Cart::content());
 
@@ -371,42 +374,30 @@ class OrderController extends Controller
 
     private function sendCapiEvent($eventName, $data, $products)
     {
-        $accessToken = env('FB_CAPI_ACCESS_TOKEN'); // Set this in your .env file
-        $pixelId = env('FB_PIXEL_ID'); // Set this in your .env file
-        
-        if (!$accessToken || !$pixelId) {
-            return;
+        $phone = preg_replace('/\D/', '', $data['customerPhone']);
+        if (strlen($phone) == 11 && strpos($phone, '01') === 0) {
+            $phone = '88' . $phone;
         }
 
-        $eventData = [
-            'data' => [
-                [
-                    'event_name' => $eventName,
-                    'event_time' => time(),
-                    'event_source_url' => url()->current(),
-                    'action_source' => 'website',
-                    'user_data' => [
-                        'ph' => [hash('sha256', preg_replace('/\D/', '', $data['customerPhone']))],
-                        'fn' => [hash('sha256', strtolower(trim($data['customerName'])))],
-                        'client_ip_address' => request()->ip(),
-                        'client_user_agent' => request()->userAgent(),
-                    ],
-                    'custom_data' => [
-                        'currency' => 'BDT',
-                        'value' => $data['totalAmount'],
-                        'content_ids' => $products->pluck('id')->toArray(),
-                        'content_type' => 'product',
-                    ],
-                    'event_id' => 'TRX45324' . ($data['invoiceID'] ?? rand(1000, 9999)),
-                ]
-            ],
+        $userData = [
+            'ph' => [hash('sha256', $phone)],
+            'fn' => [hash('sha256', strtolower(trim($data['customerName'])))],
+            'country' => [hash('sha256', 'bd')],
         ];
 
-        try {
-            $response = Http::post("https://graph.facebook.com/v17.0/{$pixelId}/events?access_token={$accessToken}", $eventData);
-            \Log::info('FB CAPI event sent', ['event' => $eventName, 'response' => $response->body(), 'status' => $response->status()]);
-        } catch (\Exception $e) {
-            \Log::error('FB CAPI event failed', ['event' => $eventName, 'error' => $e->getMessage()]);
+        if (!empty($data['cityName'])) {
+            $userData['ct'] = [hash('sha256', strtolower(trim(preg_replace('/[^a-zA-Z]/', '', $data['cityName']))))];
         }
+
+        $customData = [
+            'currency' => 'BDT',
+            'value' => $data['totalAmount'],
+            'content_ids' => $products->pluck('id')->toArray(),
+            'content_type' => 'product',
+        ];
+
+        $eventId = 'TRX45324' . ($data['id'] ?? $data['invoiceID'] ?? rand(1000, 9999));
+
+        FacebookPixelService::sendCapiEvent($eventName, $userData, $customData, $eventId);
     }
 }
