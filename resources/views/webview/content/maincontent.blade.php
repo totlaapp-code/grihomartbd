@@ -107,26 +107,43 @@
     #slider.owl-carousel:not(.owl-loaded) .hero-slider-item:not(:first-child) {
         display: none !important;
     }
+
+    /* ── Professional Banner: max-height like Daraz / Shopify ── */
     .hero-slider-item {
         position: relative;
         overflow: hidden;
         border-radius: 8px;
+        width: 100%;
+        /* Clamp height: never taller than 480px on desktop */
+        max-height: 480px;
     }
     .hero-slider-item img {
         width: 100%;
-        height: auto;
-        max-height: 420px;
-        object-fit: cover;
-        border-radius: 8px;
+        height: 100%;
+        max-height: 480px;
         display: block;
+        border-radius: 8px;
+        /* Fill the capped height, crop sides if needed (standard ecom behavior) */
+        object-fit: cover;
+        object-position: center;
     }
-    @media (max-width: 768px) {
-        .hero-slider-item {
-            border-radius: 6px;
-        }
+
+    /* Tablet: slightly smaller */
+    @media (max-width: 992px) {
+        .hero-slider-item,
         .hero-slider-item img {
-            max-height: 180px;
-            border-radius: 6px;
+            max-height: 380px;
+        }
+    }
+
+    /* Mobile: image fills width, natural height preserved (no crop) */
+    @media (max-width: 576px) {
+        .hero-slider-item,
+        .hero-slider-item img {
+            max-height: none;
+            height: auto;
+            border-radius: 4px;
+            object-fit: fill; /* show full image on mobile, no crop */
         }
     }
 

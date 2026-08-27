@@ -92,8 +92,9 @@
                             </div>
 
                             <div class="mt-4 mb-4">
+                                <label class="form-label text-muted">Slider Image <small class="text-info fw-bold">(Recommended Size: 1200 x 500 px or 1400 x 550 px)</small></label>
                                 <input class="form-control form-control-lg bg-dark" name="slider_image"
-                                    id="slider_image" type="file">
+                                    id="slider_image" type="file" accept="image/*">
                             </div>
                             <div class="form-group mt-2" style="text-align: right">
                                 <div class="submitBtnSCourse">
@@ -149,8 +150,9 @@
                                 <label for="floatingInput">Button Link</label>
                             </div>
                             <div class="mt-4 mb-4">
+                                <label class="form-label text-muted">Slider Image <small class="text-info fw-bold">(Recommended Size: 1200 x 500 px or 1400 x 550 px)</small></label>
                                 <input class="form-control form-control-lg bg-dark" name="slider_image"
-                                    id="slider_image" type="file">
+                                    id="slider_image" type="file" accept="image/*">
                             </div>
                             <input type="text" name="slider_id" id="slider_id" hidden>
 
