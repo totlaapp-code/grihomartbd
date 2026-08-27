@@ -9,8 +9,8 @@
     @yield('meta')
 
     @include('webview.partials.links.header')
-    <link rel="icon" type="image/x-icon" href="{{asset(App\Models\Basicinfo::first()->logo)}}">
-    <link rel="shortcut icon" type="image/png" href="{{asset(App\Models\Basicinfo::first()->logo)}}"/>
+    <link rel="icon" type="image/x-icon" href="{{asset(App\Models\Basicinfo::first()->favicon)}}">
+    <link rel="shortcut icon" type="image/png" href="{{asset(App\Models\Basicinfo::first()->favicon)}}"/>
     <link rel="stylesheet" href="{{ asset('public/frontend/css/custom-style.css') }}">
     @yield('subhead')
 
