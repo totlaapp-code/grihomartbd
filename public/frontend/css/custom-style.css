@@ -1,3 +1,73 @@
+/* ============================================================
+   🎨 GRIHOMART — GLOBAL DESIGN TOKENS
+   একটা জায়গায় color বদলালে পুরো site বদলাবে
+   ============================================================ */
+:root {
+    /* ── Brand Colors ── */
+    --color-primary:       #ff6b00;   /* Orange — main brand color */
+    --color-primary-dark:  #e05e00;   /* Darker orange for hover */
+    --color-primary-light: #ff8c33;   /* Lighter orange for accents */
+    --color-secondary:     #1e293b;   /* Slate Dark (Secondary Actions) */
+    --color-secondary-dark:#0f172a;   /* Slate Darker (Hover) */
+
+    /* ── Header Colors ── */
+    --color-header-bg:     #111111;   /* Main header background (black) */
+    --color-header-text:   #f1f1f1;   /* Header text / icons */
+    --color-topbar-bg:     #1a1a1a;   /* Top announcement bar */
+
+    /* ── UI Colors ── */
+    --color-bg:            #ffffff;   /* Page background */
+    --color-surface:       #f8f9fa;   /* Cards, inputs background */
+    --color-border:        #e2e8f0;   /* Borders */
+    --color-text:          #1e293b;   /* Body text */
+    --color-text-muted:    #64748b;   /* Muted / secondary text */
+    --color-danger:        #ef4444;   /* Red — cart badge, errors */
+    --color-success:       #22c55e;   /* Green — success states */
+
+    /* ── Shadows ── */
+    --shadow-sm:  0 1px 4px rgba(0,0,0,.08);
+    --shadow-md:  0 4px 16px rgba(0,0,0,.12);
+
+    /* ── Border Radius ── */
+    --radius-sm:  6px;
+    --radius-md:  10px;
+    --radius-full: 50px;
+
+    /* ── Transitions ── */
+    --transition: 0.2s ease;
+}
+
+/* ============================================================
+   GLOBAL THEME OVERRIDES
+   ============================================================ */
+.btn-theme, .btn-success, .bg-success, .btn-primary, .bg-primary {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: white !important;
+}
+.btn-theme:hover, .btn-success:hover, .btn-primary:hover {
+    background-color: var(--color-primary-dark) !important;
+    border-color: var(--color-primary-dark) !important;
+}
+
+.btn-theme-secondary, .bg-theme-secondary {
+    background-color: var(--color-secondary) !important;
+    border-color: var(--color-secondary) !important;
+    color: white !important;
+}
+.btn-theme-secondary:hover {
+    background-color: var(--color-secondary-dark) !important;
+    border-color: var(--color-secondary-dark) !important;
+    color: white !important;
+}
+#checkIconCart {
+    color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+}
+
+/* ============================================================
+   Legacy / Page-specific styles below
+   ============================================================ */
 #crimg:hover{
     transform:rotate(360deg);
     /* Firefox */

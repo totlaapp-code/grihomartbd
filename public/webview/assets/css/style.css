@@ -727,9 +727,20 @@ button #purcheseBtn {
 .sidepanel a {
     display: block;
     padding: 0.5rem;
-    padding-left: 27px;
+    padding-left: 12px;
     text-decoration: none;
     text-align: left;
+}
+
+/* Category sidebar list-group override */
+.sidepanel .list-group-item {
+    padding: 10px 12px !important;
+    padding-left: 12px !important;
+    display: flex !important;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 .sidepanel .level2-styles {

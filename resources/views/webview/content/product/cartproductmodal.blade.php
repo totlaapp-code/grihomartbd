@@ -1,6 +1,6 @@
 <div class="text-cart" style="padding-top: 20px">
     <i class="fa fa-check" id="checkIconCart"></i>
-    <h3 style="margin-top:0;color: green; margin-bottom: 0;"><span id="itemCount">{{ count($cartProducts) }}</span> Item
+    <h3 style="margin-top:0;color: var(--color-primary); margin-bottom: 0;"><span id="itemCount">{{ count($cartProducts) }}</span> Item
         added to your cart!</h3>
 </div>
 <button type="button" id="closebtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span

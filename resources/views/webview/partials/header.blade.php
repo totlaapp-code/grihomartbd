@@ -1,42 +1,43 @@
 <style>
     /* ==============================================
-       PROFESSIONAL E-COMMERCE HEADER STYLING
+       GRIHOMART HEADER — uses :root CSS Variables
+       Color change করতে custom-style.css এর :root দেখুন
        ============================================== */
-    
+
     .header-style-pro {
-        background: #ffffff;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        background: var(--color-header-bg);
+        box-shadow: var(--shadow-md);
         position: sticky;
         top: 0;
         z-index: 1000;
     }
 
-    /* Top Bar Styling */
+    /* ── Top Announcement Bar ── */
     .pro-top-bar {
-        background: #76b82a;
-        color: #ffffff;
+        background: var(--color-topbar-bg);
+        color: rgba(255,255,255,0.75);
         padding: 6px 0;
         font-size: 13px;
-        font-weight: 600;
+        font-weight: 500;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-
+    .pro-top-bar strong,
+    .pro-top-bar span { color: #fff; }
     .pro-top-bar a {
-        color: #ffffff;
+        color: var(--color-primary-light);
         text-decoration: none;
+        transition: color var(--transition);
     }
+    .pro-top-bar a:hover { color: var(--color-primary); }
 
-    .pro-top-bar a:hover {
-        text-decoration: underline;
-    }
-
-    /* Main Header Layout */
+    /* ── Main Header ── */
     .pro-main-header {
-        padding: 12px 0;
-        background: #ffffff;
-        border-bottom: 1px solid #f1f5f9;
+        padding: 10px 0;
+        background: var(--color-header-bg);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
     }
 
-    /* Hardened Desktop Search Box */
+    /* ── Search Box ── */
     .pro-search-box {
         max-width: 580px !important;
         width: 100% !important;
@@ -44,15 +45,19 @@
         display: flex !important;
         align-items: center !important;
         height: 44px !important;
-        border: 2px solid #76b82a !important;
-        border-radius: 8px !important;
+        border: 2px solid var(--color-primary) !important;
+        border-radius: var(--radius-sm) !important;
         overflow: hidden !important;
-        background: #ffffff !important;
+        background: #fff !important;
         box-sizing: border-box !important;
         padding: 0 !important;
         float: none !important;
+        transition: border-color var(--transition) !important;
     }
-
+    .pro-search-box:focus-within {
+        border-color: var(--color-primary-light) !important;
+        box-shadow: 0 0 0 3px rgba(255,107,0,.15) !important;
+    }
     .pro-search-box input,
     .pro-search-box input.search-input {
         flex: 1 !important;
@@ -64,21 +69,19 @@
         padding: 0 16px !important;
         margin: 0 !important;
         font-size: 14px !important;
-        color: #1e293b !important;
-        background: #ffffff !important;
+        color: var(--color-text) !important;
+        background: #fff !important;
         float: none !important;
         width: auto !important;
     }
-
     .pro-search-box button,
     .pro-search-box button.search-btn {
-        width: 55px !important;
+        width: 52px !important;
         height: 40px !important;
-        background: #76b82a !important;
-        color: #ffffff !important;
+        background: var(--color-primary) !important;
+        color: #fff !important;
         border: 0 !important;
         outline: none !important;
-        box-shadow: none !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -86,63 +89,72 @@
         font-size: 16px !important;
         margin: 0 !important;
         padding: 0 !important;
-        float: none !important;
         border-radius: 0 !important;
-        transition: background 0.2s ease !important;
+        transition: background var(--transition) !important;
     }
-
     .pro-search-box button.search-btn:hover {
-        background: #64a021 !important;
+        background: var(--color-primary-dark) !important;
     }
 
-    /* Right Side Action Items */
+    /* ── Right Side Action Items ── */
     .pro-header-actions {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 20px;
+        gap: 18px;
     }
-
     .pro-action-item {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         text-decoration: none;
-        color: #1e293b;
-        transition: color 0.2s ease;
+        color: var(--color-header-text);
+        transition: color var(--transition);
     }
-
-    .pro-action-item:hover {
-        color: #76b82a;
-    }
+    .pro-action-item:hover { color: var(--color-primary); }
 
     .pro-icon-circle {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.12);
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 17px;
         position: relative;
-        color: #334155;
-        transition: all 0.2s ease;
+        color: var(--color-header-text);
+        transition: all var(--transition);
+    }
+    .pro-action-item:hover .pro-icon-circle {
+        background: var(--color-primary);
+        border-color: var(--color-primary);
+        color: #fff;
     }
 
-    .pro-action-item:hover .pro-icon-circle {
-        background: #76b82a;
-        border-color: #76b82a;
-        color: #ffffff;
+    /* Phone text in header */
+    .pro-action-item .pro-action-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+    }
+    .pro-action-item .pro-action-text small {
+        font-size: 11px;
+        color: rgba(255,255,255,0.5);
+    }
+    .pro-action-item .pro-action-text span {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--color-header-text);
     }
 
     .pro-cart-badge {
         position: absolute;
         top: -5px;
         right: -5px;
-        background: #ef4444;
-        color: #ffffff;
+        background: var(--color-danger);
+        color: #fff;
         font-size: 10px;
         font-weight: 700;
         min-width: 18px;
@@ -151,36 +163,32 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 2px solid #ffffff;
+        border: 2px solid var(--color-header-bg);
     }
 
     /* ==============================================
-       MOBILE HEADER STYLING (< 992px)
+       MOBILE HEADER (< 992px)
        ============================================== */
     @media (max-width: 991px) {
-        .desktop-pro-header {
-            display: none !important;
-        }
-        
+        .desktop-pro-header { display: none !important; }
+
         .mobile-pro-header-wrapper {
             display: block !important;
             padding: 8px 15px 10px;
-            background: #ffffff;
-            border-bottom: 1px solid #f1f5f9;
+            background: var(--color-header-bg);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
         }
-
         .mobile-pro-header-top {
             display: flex !important;
             align-items: center !important;
             justify-content: space-between !important;
             height: 40px !important;
         }
-
         .mobile-menu-trigger {
             border: none !important;
             background: transparent !important;
             font-size: 22px !important;
-            color: #1e293b !important;
+            color: var(--color-header-text) !important;
             padding: 0 !important;
             margin: 0 !important;
             display: inline-flex !important;
@@ -188,25 +196,22 @@
             justify-content: center !important;
             width: 38px !important;
             height: 38px !important;
-            line-height: 1 !important;
             cursor: pointer !important;
         }
-
         .mobile-brand-logo {
             display: inline-flex !important;
             align-items: center !important;
-            justify-content: center !important;
             height: 38px !important;
         }
-
         .mobile-brand-logo img {
             max-height: 38px !important;
             width: auto !important;
             object-fit: contain !important;
+            /* Logo white/bright on dark bg */
+            filter: brightness(1.1);
         }
-
         .mobile-action-icon-btn {
-            color: #1e293b !important;
+            color: var(--color-header-text) !important;
             font-size: 18px !important;
             text-decoration: none !important;
             display: inline-flex !important;
@@ -215,68 +220,69 @@
             width: 38px !important;
             height: 38px !important;
             border-radius: 50% !important;
-            background: #f8fafc !important;
-            border: 1px solid #e2e8f0 !important;
-            line-height: 1 !important;
+            background: rgba(255,255,255,0.08) !important;
+            border: 1px solid rgba(255,255,255,0.12) !important;
+            transition: all var(--transition) !important;
+        }
+        .mobile-action-icon-btn:hover {
+            background: var(--color-primary) !important;
+            border-color: var(--color-primary) !important;
+            color: #fff !important;
         }
 
-        /* Clean Mobile Search Bar */
+        /* Mobile Search Bar */
         .mobile-search-input-group {
             display: flex !important;
             align-items: center !important;
             width: 100% !important;
-            border: 2px solid #76b82a !important;
-            border-radius: 50px !important;
+            border: 2px solid var(--color-primary) !important;
+            border-radius: var(--radius-full) !important;
             overflow: hidden !important;
-            background: #ffffff !important;
+            background: #fff !important;
             height: 40px !important;
-            box-shadow: 0 2px 6px rgba(107, 184, 23, 0.12) !important;
             margin-top: 8px !important;
             box-sizing: border-box !important;
             padding: 0 !important;
+            box-shadow: 0 2px 8px rgba(255,107,0,.2) !important;
         }
-
         .mobile-search-input-group input,
         .mobile-search-input-group input.mobile-search-field {
             flex: 1 !important;
             height: 36px !important;
-            line-height: 36px !important;
             border: 0 !important;
-            border-style: none !important;
             outline: none !important;
             box-shadow: none !important;
             padding: 0 16px !important;
             font-size: 13px !important;
             background: transparent !important;
-            color: #1e293b !important;
+            color: var(--color-text) !important;
             margin: 0 !important;
-            width: 100% !important;
         }
-
         .mobile-search-input-group button,
         .mobile-search-input-group button.mobile-search-btn {
             height: 36px !important;
             width: 44px !important;
-            background: #76b82a !important;
-            color: #ffffff !important;
+            background: var(--color-primary) !important;
+            color: #fff !important;
             border: 0 !important;
             outline: none !important;
-            box-shadow: none !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             font-size: 14px !important;
             cursor: pointer !important;
-            border-radius: 0 50px 50px 0 !important;
+            border-radius: 0 var(--radius-full) var(--radius-full) 0 !important;
             padding: 0 !important;
             margin: 0 !important;
+            transition: background var(--transition) !important;
+        }
+        .mobile-search-input-group button.mobile-search-btn:hover {
+            background: var(--color-primary-dark) !important;
         }
     }
 
     @media (min-width: 992px) {
-        .mobile-pro-header-wrapper {
-            display: none !important;
-        }
+        .mobile-pro-header-wrapper { display: none !important; }
         .desktop-pro-header {
             display: flex !important;
             align-items: center;
@@ -335,9 +341,9 @@
                             <div class="pro-icon-circle">
                                 <i class="fa-solid fa-phone"></i>
                             </div>
-                            <div class="d-none d-xl-block" style="line-height: 1.2;">
-                                <small style="font-size: 11px; color: #64748b; display: block;">Call Us</small>
-                                <span style="font-size: 13px; font-weight: 700; color: #1e293b;">{{ $basicinfo->phone_one }}</span>
+                            <div class="d-none d-xl-block pro-action-text">
+                                <small>Call Us</small>
+                                <span>{{ $basicinfo->phone_one }}</span>
                             </div>
                         </a>
                         @endif
@@ -394,23 +400,27 @@
     </div>
 
     <!-- Mobile Category Drawer -->
-    <div id="mySidepanel" class="sidepanel">
-        <div class="side-menu-header">
+    <div id="mySidepanel" class="sidepanel shadow-lg">
+        <div class="side-menu-header" style="background: var(--color-header-bg);">
             <div class="side-menu-close" onclick="closeNav()">
                 <i class="fas fa-close"></i>
             </div>
-            <div class="px-3 pb-3 side-login" style="padding-top: 12px; padding-left: 10px;">
-                <span style="font-size: 16px; color: #ffffff; font-weight: bold;">Categories</span>
+            <div class="px-3 pb-3 side-login" style="padding-top: 15px;">
+                <span style="font-size: 18px; color: #ffffff; font-weight: bold;">Categories</span>
             </div>
         </div>
-        <ul class="level1-styles collapse show" id="id0">
-            @forelse ($categories as $category)
-                <li>
-                    <a href="{{ url('products/category/' . $category->slug) }}">{{ $category->category_name }}</a>
-                </li>
-            @empty
-            @endforelse
-        </ul>
+        <div class="p-2 bg-white">
+            <div class="list-group list-group-flush border-0">
+                @forelse ($categories as $category)
+                    <a href="{{ url('products/category/' . $category->slug) }}" class="list-group-item list-group-item-action border-0 d-flex align-items-center py-3" style="font-size: 15px; color: #333; font-weight: 500; border-bottom: 1px solid #f1f5f9 !important;">
+                        <img src="{{ asset($category->category_icon) }}" alt="icon" style="width: 28px; height: 28px; min-width: 28px; margin-right: 10px; object-fit: contain; border-radius: 4px;" onerror="this.style.display='none'">
+                        <span style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $category->category_name }}</span>
+                        <i class="fas fa-chevron-right ms-auto text-muted" style="font-size: 12px; min-width: 12px; margin-left: 8px;"></i>
+                    </a>
+                @empty
+                @endforelse
+            </div>
+        </div>
     </div>
 
     <!-- Profile Sidepanel Drawer -->

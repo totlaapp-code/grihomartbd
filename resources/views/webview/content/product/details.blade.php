@@ -42,7 +42,7 @@
     color: rgb(255, 255, 255);
     line-height: 0;
     margin-bottom: 10px;
-    background: rgb(1, 105, 56);
+    background: var(--color-secondary);
     padding: 0px 10px;
     border-top: 15px solid transparent;
     border-bottom: 15px solid transparent;
@@ -460,7 +460,7 @@
                                         <input type="hidden" name="qty" value="1" id="qtyoror">
                                         <button type="submit"
                                             class="mb-0 ml-2 btn btn-styled btn-base-1 btn-icon-left strong-700 hov-bounce hov-shaddow buy-now"
-                                            style="background:#016938;;color:white;width: 100%;font-size: 17px;">
+                                            style="background:var(--color-secondary);color:white;width: 100%;font-size: 17px;">
                                             কার্টে যোগ করুন 
                                         </button>
                                      </form>
@@ -490,7 +490,7 @@
                                   </div>
                                   
                                   <div class="col-12 d-grid d-md-flex justify-content-md-center">
-                                      <a class="btn btn-success px-md-4 call_now_btn" href="tel: {{App\Models\Basicinfo::first()->phone_one}}"><i class="fa-solid fa-phone mx-2"></i> Call Now</a>
+                                      <a class="btn btn-theme-secondary px-md-4 call_now_btn" href="tel: {{App\Models\Basicinfo::first()->phone_one}}"><i class="fa-solid fa-phone mx-2"></i> Call Now</a>
                                   </div>
                                   <div class="col-12">
                                       <div class="mt-md-2 mt-2">

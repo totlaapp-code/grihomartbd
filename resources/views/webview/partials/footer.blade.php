@@ -6,7 +6,7 @@
         background-color: #ffffff;
         color: #475569;
         font-size: 14px;
-        border-top: 3px solid #76b82a;
+        border-top: 3px solid var(--color-primary);
         position: relative;
     }
     
@@ -26,7 +26,7 @@
         height: 42px;
         border-radius: 50%;
         background: #ffffff;
-        color: #76b82a;
+        color: var(--color-primary);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -67,7 +67,7 @@
         left: 0;
         width: 32px;
         height: 3px;
-        background: #76b82a;
+        background: var(--color-primary);
         border-radius: 2px;
     }
     
@@ -95,12 +95,12 @@
         font-weight: 500;
     }
     .pro-footer-links a:hover {
-        color: #76b82a;
+        color: var(--color-primary);
         transform: translateX(4px);
     }
     .pro-footer-links a i {
         font-size: 11px;
-        color: #76b82a;
+        color: var(--color-primary);
     }
 
     /* Contact Details */
@@ -118,7 +118,7 @@
     }
     .pro-contact-icon {
         color: #ffffff;
-        background-color: #76b82a;
+        background-color: var(--color-primary);
         width: 28px;
         height: 28px;
         border-radius: 50%;
@@ -135,7 +135,7 @@
         transition: color 0.2s ease;
     }
     .pro-contact-item a:hover {
-        color: #76b82a;
+        color: var(--color-primary);
     }
 
     /* Social Buttons */
@@ -159,20 +159,23 @@
         border: 1px solid #e2e8f0;
     }
     .pro-social-btn:hover {
-        background: #76b82a;
+        background: var(--color-primary);
         color: #ffffff;
         transform: translateY(-3px);
-        border-color: #76b82a;
+        border-color: var(--color-primary);
         box-shadow: 0 4px 10px rgba(118, 184, 42, 0.25);
     }
 
     /* Copyright Bar */
     .pro-footer-bottom {
-        background: #76b82a;
+        background: var(--color-header-bg);
         color: #ffffff;
         padding: 14px 0;
         font-size: 13.5px;
         font-weight: 500;
+    }
+    .pro-footer-bottom p, .pro-footer-bottom span {
+        color: #ffffff !important;
     }
     
     /* Mobile Fixed Bottom Nav Gap */
@@ -252,7 +255,7 @@
                         @if(!empty($basicinfo->logo))
                             <img src="{{ asset($basicinfo->logo) }}" alt="{{ env('APP_NAME') }}" style="max-height: 48px; width: auto; object-fit: contain;">
                         @else
-                            <h4 class="fw-bold m-0" style="color: #76b82a;">{{ env('APP_NAME') }}</h4>
+                            <h4 class="fw-bold m-0" style="color: var(--color-primary);">{{ env('APP_NAME') }}</h4>
                         @endif
                     </div>
                     <p class="pro-footer-text pe-lg-3">

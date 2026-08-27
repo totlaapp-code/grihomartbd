@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         #remqty {
-            background: red;
+            background: var(--color-secondary);
             border-radius: 0;
             color: white;
             padding: 5px;
@@ -15,7 +15,7 @@
         }
 
         #addqty {
-            background: green;
+            background: var(--color-primary);
             border-radius: 0;
             color: white;
             padding: 5px;
@@ -191,7 +191,7 @@
                                         <div class="col-12">
                                             <button type="submit" id="orderConfirm"
                                                 class="btn btn-lg btn-styled from-prevent-multiple-submits btn-base-1 btn-block btn-icon-left strong-500 hov-bounce hov-shaddow buy-now"
-                                                style="background:green;color:white;font-size:22px !important;width:100%;border-radius:4px;">
+                                                style="background:var(--color-primary);color:white;font-size:22px !important;width:100%;border-radius:4px;">
                                                 <i class="spinner fa fa-spinner fa-spin"></i> Confirm Order
                                             </button>
                                         </div>
@@ -204,9 +204,9 @@
                                                     @if (Auth::user()->available_coin > 0)
                                                         <div class="mb-3 d-flex">
                                                             <i class="fas fa-check-circle"
-                                                                style="font-size: 22px;margin-top: 3px; margin-right: 8px; color: green;"></i>
+                                                                style="font-size: 22px;margin-top: 3px; margin-right: 8px; color: var(--color-primary);"></i>
                                                             <label style="font-size: 20px;"> You have <span
-                                                                    style="color: green;font-weight:bold"
+                                                                    style="color: var(--color-primary);font-weight:bold"
                                                                     id="totalcoin">{{ Auth::user()->available_coin }}</span>
                                                                 coin for available !</label>
                                                         </div>
@@ -250,7 +250,7 @@
                                                         <div class="col-lg-12">
                                                             <div class="text-center btn-box">
                                                                 <button id="sslczPayBtn"
-                                                                    style="background: green; color: white; width: 100%; font-size: 22px !important; display: inline;"
+                                                                    style="background: var(--color-primary); color: white; width: 100%; font-size: 22px !important; display: inline;"
                                                                     token="if you have any token validation"
                                                                     postdata="your javascript arrays or objects which requires in backend"
                                                                     order="If you already have the transaction generated for current order"
@@ -375,7 +375,7 @@
                                             <input type="text" name="couponcode" @if (isset($coupon))
                                             value="{{ $coupon->code }}" @endif id="couponcode" class="form-control"
                                                 style="width: 80%;border-radius: 6px;">
-                                            <button class="btn btn-success btn-sm" style="font-size: 18px;color: white;"
+                                            <button class="btn btn-theme btn-sm" style="font-size: 18px;color: white;"
                                                 onclick="applycoupon()">Apply</button>
                                         </div>
                                     </div>
@@ -397,21 +397,21 @@
                                             <span id="dinamicdalivery">{{ $max_outside }}</span>
                                         </strong></dd>
                                     @if (isset($coupon))
-                                        <dt class="col-8" style="color: green">Coupon Discount: </dt>
+                                        <dt class="col-8" style="color: var(--color-primary)">Coupon Discount: </dt>
                                         @if ($coupon->type == 'Amount')
-                                            <dd class="text-right col-4" style="color: green"><strong>৳
-                                                    <span id="coupondiscount" style="color: green">{{ $coupon->amount }}</span>
+                                            <dd class="text-right col-4" style="color: var(--color-primary)"><strong>৳
+                                                    <span id="coupondiscount" style="color: var(--color-primary)">{{ $coupon->amount }}</span>
                                                 </strong></dd>
                                         @else
-                                            <dd class="text-right col-4" style="color: green"><strong>
-                                                    <span id="coupondiscount" style="color: green">৳
+                                            <dd class="text-right col-4" style="color: var(--color-primary)"><strong>
+                                                    <span id="coupondiscount" style="color: var(--color-primary)">৳
                                                     </span>
                                                 </strong>{{ intval(Cart::subtotalFloat() * ($coupon->amount / 100)) }}</dd>
                                         @endif
                                     @else
-                                        <dt class="col-8" style="color: green" id="coupontext1">Coupon Discount: </dt>
-                                        <dd class="text-right col-4" id="coupontext" style="color: green"><strong>৳
-                                                <span id="coupondiscount" style="color: green">0
+                                        <dt class="col-8" style="color: var(--color-primary)" id="coupontext1">Coupon Discount: </dt>
+                                        <dd class="text-right col-4" id="coupontext" style="color: var(--color-primary)"><strong>৳
+                                                <span id="coupondiscount" style="color: var(--color-primary)">0
                                                 </span>
                                             </strong></dd>
                                     @endif

@@ -181,39 +181,39 @@
     }
     .cat-circle-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 16px rgba(118, 184, 42, 0.18);
-        border-color: #76b82a;
+        box-shadow: 0 6px 16px rgba(255, 107, 0, 0.18);
+        border-color: var(--color-primary);
     }
     .cat-icon-wrapper {
-        width: 52px;
-        height: 52px;
+        width: 64px;
+        height: 64px;
         border-radius: 50%;
         background: #f8fafc;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
         transition: background 0.25s ease;
     }
     .cat-circle-card:hover .cat-icon-wrapper {
         background: #eef8e3;
     }
     .cat-icon-wrapper img {
-        width: 32px;
-        height: 32px;
+        width: 44px;
+        height: 44px;
         object-fit: contain;
     }
     .cat-card-title {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 700;
         color: #1e293b;
         margin: 0;
         line-height: 1.2;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
+        width: 100%;
+        white-space: nowrap;
         overflow: hidden;
-        word-break: break-word;
+        text-overflow: ellipsis;
+        display: block;
     }
 
     /* Mobile: 2-Row Horizontal Swipe Layout (Shopee/Daraz Style) */
@@ -250,16 +250,16 @@
             border-radius: 10px;
         }
         .cat-icon-wrapper {
-            width: 44px;
-            height: 44px;
+            width: 52px;
+            height: 52px;
             margin-bottom: 4px;
         }
         .cat-icon-wrapper img {
-            width: 26px;
-            height: 26px;
+            width: 32px;
+            height: 32px;
         }
         .cat-card-title {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
         }
     }
@@ -368,7 +368,7 @@
             </div>
             
             <div class="text-center">
-                 <a href="{{ url('promotional/products') }}" class="mb-0 btn btn-sm text-center" style="padding: 3px 8px;height: 26px;color: white;font-weight: bold;margin-top:9px;font-size:15px;background: #94DC10;border: 1px solid #94DC10;">VIEW ALL</a>
+                 <a href="{{ url('promotional/products') }}" class="mb-0 btn btn-sm text-center" style="padding: 3px 8px;height: 26px;color: white;font-weight: bold;margin-top:9px;font-size:15px;background: var(--color-primary);border: 1px solid var(--color-primary);">VIEW ALL</a>
             </div>
         </div> 
     @else
@@ -440,7 +440,7 @@
             </div>
             
             <div class="text-center">
-                 <a href="{{ url('promotional/products') }}" class="mb-0 btn btn-sm text-center" style="padding: 3px 8px;height: 26px;color: white;font-weight: bold;margin-top:9px;font-size:15px;background: #94DC10;border: 1px solid #94DC10;">VIEW ALL</a>
+                 <a href="{{ url('promotional/products') }}" class="mb-0 btn btn-sm text-center" style="padding: 3px 8px;height: 26px;color: white;font-weight: bold;margin-top:9px;font-size:15px;background: var(--color-primary);border: 1px solid var(--color-primary);">VIEW ALL</a>
             </div>
         </div> 
     @else
@@ -532,7 +532,7 @@
                     @endforelse
     
                 <div class="text-center">
-                     <a href="{{url('products/category/'.$categoryproduct->slug)}}" class="mb-0 btn btn-sm text-center" style="padding: 3px 8px;height: 26px;color: white;font-weight: bold;margin-top:9px;font-size:15px;background: #94DC10;border: 1px solid #94DC10;">VIEW ALL</a>
+                     <a href="{{url('products/category/'.$categoryproduct->slug)}}" class="mb-0 btn btn-sm text-center" style="padding: 3px 8px;height: 26px;color: white;font-weight: bold;margin-top:9px;font-size:15px;background: var(--color-primary);border: 1px solid var(--color-primary);">VIEW ALL</a>
                 </div>
               
                 </div>

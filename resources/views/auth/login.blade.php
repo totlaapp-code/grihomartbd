@@ -37,7 +37,7 @@
                             </label>
                         </div>
                         <button type="submit" id="submit-button"
-                            style="background:#058024;border:1px #058024;color: white;width:100%"
+                            style="background:var(--color-primary);border:1px var(--color-primary);color: white;width:100%"
                             class="btn-block btn-upper btn btn-dark checkout-page-button">Login</button>
                         <div class="radio outer-xs text-center">
                             <a href="{{ url('forgot-password') }}" class="forgot-password pull-right"

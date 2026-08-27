@@ -69,14 +69,27 @@
 
     var ENDPOINT = "{{ url('category-info-ajax') }}";
     var page = 1;
+    var isLoading = false;
+    var hasMoreData = true;
 
     $(window).scroll(function(){
-        page++;
-        infinteLoadMore(page);
+        if (!hasMoreData || isLoading) return;
+
+        // শুধু পেজের একদম নিচে গেলেই load হবে
+        var scrollTop = $(window).scrollTop();
+        var windowHeight = $(window).height();
+        var docHeight = $(document).height();
+
+        if (scrollTop + windowHeight >= docHeight - 200) {
+            page++;
+            infinteLoadMore(page);
+        }
     });
 
-
     function infinteLoadMore(page) {
+        if (isLoading) return;
+        isLoading = true;
+
         $.ajax({
             url: ENDPOINT + "?page=" + page,
             datatype: "html",
@@ -86,15 +99,17 @@
             }
         })
         .done(function (response) {
-            if (response.html == '') {
+            isLoading = false;
+            if (response.html == '' || response.html == null) {
                 $('.auto-load').html("");
+                hasMoreData = false; // আর কোনো data নেই, loop বন্ধ
                 return;
             }
-
             $('.auto-load').hide();
             $("#data-wrapper").append(response.html);
         })
         .fail(function (jqXHR, ajaxOptions, thrownError) {
+            isLoading = false;
             console.log('Server error occured');
         });
     }
