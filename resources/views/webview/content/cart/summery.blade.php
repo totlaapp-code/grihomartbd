@@ -21,10 +21,18 @@
                             <tbody>
                                 @forelse ($cartProducts as $cartProduct)
                                     <tr class="cart-item">
+                                        @php
+                                            $proImgSrc = $cartProduct->options->image ?? $cartProduct->image ?? null;
+                                            if (!$proImgSrc) {
+                                                $pModel = \App\Models\Product::find($cartProduct->id);
+                                                $proImgSrc = $pModel ? $pModel->ProductImage : '';
+                                            }
+                                            $proImgSrc = str_replace('public/', '', $proImgSrc);
+                                        @endphp
                                         <td class="product-image d-lg-block p-0">
                                             <a href="#" class="" style="text-align: center;">
-                                                <img style="width: 50px;" loading="lazy"
-                                                    src="{{ asset($cartProduct->image) }}">
+                                                <img style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" loading="lazy"
+                                                    src="{{ asset($proImgSrc) }}" alt="{{ $cartProduct->name }}">
                                             </a>
                                         </td>
 

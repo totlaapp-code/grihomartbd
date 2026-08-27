@@ -9,11 +9,19 @@
 <hr style="margin-top: 10px;margin-bottom: 10px">
 <div id="itemlest">
     @forelse ($cartProducts as $item)
+        @php
+            $itemImg = $item->options->image ?? $item->image ?? null;
+            if (!$itemImg) {
+                $pModel = \App\Models\Product::find($item->id);
+                $itemImg = $pModel ? $pModel->ProductImage : '';
+            }
+            $itemImg = str_replace('public/', '', $itemImg);
+        @endphp
         <div class="d-flex align-items-center" style="margin-bottom:10px">
             <div class="dc-image">
-                <a href="{{asset($item->image)}}">
-                    <img src="{{ asset($item->image) }}" class="img-fluid" alt=""
-                        style="height: 70px;">
+                <a href="{{ asset($itemImg) }}">
+                    <img src="{{ asset($itemImg) }}" class="img-fluid" alt="{{ $item->name }}"
+                        style="height: 70px; width: 70px; object-fit: cover; border-radius: 4px;">
                 </a>
             </div>
             <div class="dc-content">

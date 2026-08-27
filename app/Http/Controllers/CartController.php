@@ -30,8 +30,8 @@ class CartController extends Controller
                 'price' => $price,
                 'qty' => $request->qty,
                 'weight' => 1,
-                'image' => $cartProduct->ProductImage,
                 'options' => [
+                    'image' => $cartProduct->ProductImage,
                     'code' => $cartProduct->ProductSku,
                     'size' => $request->size,
                     'color' => $request->color,
@@ -43,17 +43,17 @@ class CartController extends Controller
             ]);
         } else {
             $size = Size::where('product_id', $cartProduct->id)->first();
-            $price =$size->SalePrice;
+            $price = $size ? $size->SalePrice : $cartProduct->ProductSalePrice;
             Cart::add([
                 'id' => $request->product_id,
                 'name' => $cartProduct->ProductName,
                 'price' => $price,
                 'qty' => $request->qty,
                 'weight' => 1,
-                'image' => $cartProduct->ProductImage,
                 'options' => [
+                    'image' => $cartProduct->ProductImage,
                     'code' => $cartProduct->ProductSku,
-                    'size' => $size->size,
+                    'size' => $size ? $size->size : null,
                     'color' => $request->color,
                     'sigment' => $request->sigment,
                     'inside_dhaka' => $cartProduct->inside_dhaka,

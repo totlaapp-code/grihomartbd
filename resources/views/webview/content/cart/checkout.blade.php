@@ -280,10 +280,18 @@
                                     <table class="table border-bottom" style="border: none;">
                                         @forelse ($cartProducts as $cartProduct)
                                             <tr class="cart-item" id="productcart{{ $cartProduct->rowId }}">
+                                                @php
+                                                    $proImgSrc = $cartProduct->options->image ?? $cartProduct->image ?? null;
+                                                    if (!$proImgSrc) {
+                                                        $pModel = \App\Models\Product::find($cartProduct->id);
+                                                        $proImgSrc = $pModel ? $pModel->ProductImage : '';
+                                                    }
+                                                    $proImgSrc = str_replace('public/', '', $proImgSrc);
+                                                @endphp
                                                 <td class="product-image" id="proImgDiv" style="width: 80px; vertical-align: top;">
                                                     <a href="#" class="mr-3">
-                                                        <img class=" ls-is-cached lazyloaded" src="{{ asset($cartProduct->image) }}"
-                                                            id="proImg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 5px;">
+                                                        <img class=" ls-is-cached lazyloaded" src="{{ asset($proImgSrc) }}"
+                                                            id="proImg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 5px;" alt="{{ $cartProduct->name }}">
                                                     </a>
                                                 </td>
 

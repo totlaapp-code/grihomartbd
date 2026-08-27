@@ -1,10 +1,18 @@
 @if (count($cartProducts) > 0)
     <div class="cart-item product-summary">
         @forelse ($cartProducts as $item)
+            @php
+                $itemImg = $item->options->image ?? $item->image ?? null;
+                if (!$itemImg) {
+                    $pModel = \App\Models\Product::find($item->id);
+                    $itemImg = $pModel ? $pModel->ProductImage : '';
+                }
+                $itemImg = str_replace('public/', '', $itemImg);
+            @endphp
             <div class="row">
                 <div class="col-4 col-xs-4">
                     <div class="image">
-                        <a href="#"><img src="{{ asset($item->image) }}" alt=""></a>
+                        <a href="#"><img src="{{ asset($itemImg) }}" alt="{{ $item->name }}" style="max-height: 60px; object-fit: cover;"></a>
                     </div>
                 </div>
                 <div class="col-7 col-xs-7" style="padding-left: 0">

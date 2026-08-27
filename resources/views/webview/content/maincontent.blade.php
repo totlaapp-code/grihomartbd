@@ -107,17 +107,26 @@
     #slider.owl-carousel:not(.owl-loaded) .hero-slider-item:not(:first-child) {
         display: none !important;
     }
+    .hero-slider-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+    }
     .hero-slider-item img {
         width: 100%;
-        height: 400px;
+        height: auto;
+        max-height: 420px;
         object-fit: cover;
-        border-radius: 0;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        border-radius: 8px;
+        display: block;
     }
     @media (max-width: 768px) {
+        .hero-slider-item {
+            border-radius: 6px;
+        }
         .hero-slider-item img {
-            height: 160px;
-            border-radius: 0;
+            max-height: 180px;
+            border-radius: 6px;
         }
     }
 
