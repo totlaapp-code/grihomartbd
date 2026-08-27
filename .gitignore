@@ -4,11 +4,13 @@
 /storage/*.key
 /vendor
 storage/logs
+storage/logs/*.log
 storage/debugbar
 storage/framework/views
 storage/framework/cache
 storage/framework/sessions
 public/images/uploads
+public/images
 .env
 .env.backup
 .env.bak
@@ -24,3 +26,11 @@ error_log
 .DS_Store
 auth.json
 *.php.bak
+# Large SQL dump files
+*.sql
+# Production exports
+grihomartbd_latest_production*.sql
+update_image_paths.sql
+# Scratch audit scripts
+audit_*.php
+images/
