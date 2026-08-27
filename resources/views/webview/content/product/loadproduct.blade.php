@@ -14,7 +14,7 @@
                                 </div>
                                 @forelse (json_decode($productdetails->PostImage) as $image)
                                     <div class="items">
-                                        <img class="w-100 h-100" src="{{asset('public/images/product/slider')}}/{{$image}}"
+                                        <img class="w-100 h-100" src="{{ asset('images/product/slider/' . $image) }}"
                                             alt="" style="border-radius: 4px;">
                                     </div>
                                 @empty
@@ -30,7 +30,7 @@
                                     <div class="items">
                                         <img class="w-100 h-100"
                                             style="padding:6px;border:1px solid;border-radius: 4px;"
-                                            src="{{asset('public/images/product/slider')}}/{{$image}}" alt="">
+                                            src="{{ asset('images/product/slider/' . $image) }}" alt="">
                                     </div>
                                 @empty
                                 @endforelse
@@ -127,9 +127,8 @@
                                             <input type="radio" class="m-0" hidden
                                                 id="size{{ $size->size }}" name="size"
                                                 onclick="getsize('{{ $size->size }}')">
-                                            <label class="sizetext ms-0" id="sizetext{{ $size->size }}"
+                                            <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1" id="sizetext{{ $size->size }}"
                                                 for="size{{ $size->size }}"
-                                                style="border: 1px solid #e4e4e4;font-size:18px;font-weight:bold;padding: 0px 8px;border-radius: 2px;margin-right:4px;margin-bottom:4px;"
                                                 onclick="getsize('{{ $size->size }}')">{{ $size->size }}</label>
                                             @else
                                             <input type="hidden" name="regularpriceofsize"
@@ -140,9 +139,9 @@
                                                 value="{{ $size->SalePrice }}">
                                             <input type="radio" class="m-0" hidden
                                                 id="size{{ $size->size }}" name="size" >
-                                            <label class="sizetext ms-0" id="sizetext{{ $size->size }}"
+                                            <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1 disabled" id="sizetext{{ $size->size }}"
                                                 for="size{{ $size->size }}"
-                                                style="border: 1px solid #e4e4e4;    color: rgb(151 150 150) !important;font-size:18px;font-weight:bold;padding: 0px 8px;border-radius: 2px;margin-right:4px;margin-bottom:4px;" ><del>{{ $size->size }} </del> </label>
+                                                style="opacity: 0.6;" ><del>{{ $size->size }} </del> </label>
                                             @endif
 
                                         @empty
@@ -169,10 +168,9 @@
                                             <input type="radio" class="m-0" hidden
                                                 id="size{{ $weight->id }}" name="size"
                                                 onclick="getweight('{{ $weight->id }}')">
-                                            <label class="weighttext ms-0"
+                                            <label class="weighttext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1"
                                                 id="weighttext{{ $weight->id }}"
                                                 for="size{{ $weight->id }}"
-                                                style="border: 1px solid #e4e4e4;font-size:16px;font-weight:bold;padding: 0px 6px;border-radius: 2px;margin-right:4px;margin-bottom:4px;"
                                                 onclick="getweight('{{ $weight->id }}')">{{ $weight->weight }}</label>
                                         @empty
                                         @endforelse
@@ -246,10 +244,8 @@
                             </div>
                           </div>
                           
-                          <div class="col-12">
-                              <div>
-                                  <a class="btn btn-success w-100 call_now_btn" href="tel: {{App\Models\Basicinfo::first()->phone_one}}"><i class="fa-solid fa-phone mx-2"></i> Call Now</a>
-                              </div>
+                          <div class="col-12 d-grid d-md-flex justify-content-md-center">
+                              <a class="btn btn-success px-md-4 call_now_btn" href="tel: {{App\Models\Basicinfo::first()->phone_one}}"><i class="fa-solid fa-phone mx-2"></i> Call Now</a>
                           </div>
                           <div class="col-12">
                               <div class="mt-md-2 mt-2">
@@ -292,15 +288,15 @@
 <div class="row single-product">
     <div class="p-0 col-md-12">
         <div class="product-tabs inner-bottom-xs wow fadeInUp">
-            <div class="row">
-                <div class="col-sm-12">
+            <div class="row m-0">
+                <div class="col-12 p-0">
                     <ul id="product-tabs" class="nav nav-tabs nav-tab-cell" style="display: inline-flex;">
                         <li class="active"><a data-bs-toggle="tab" id="istteb"
                                 href="#description">DESCRIPTION</a></li>
                     </ul>
                     <!-- /.nav-tabs #product-tabs -->
                 </div>
-                <div class="col-sm-12">
+                <div class="col-12 p-0">
 
                     <div class="tab-content">
 

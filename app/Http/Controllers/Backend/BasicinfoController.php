@@ -192,6 +192,11 @@ class BasicinfoController extends Controller
         } else {
             $webinfo->contact = null;
         }
+        if (isset($request->otp_system)) {
+            $webinfo->otp_system = $request->otp_system;
+        } else {
+            $webinfo->otp_system = 'ON'; // Default
+        }
         $webinfo->update();
         return redirect()->back()->with('message', 'Shipping info updated successfully');
     }
@@ -205,5 +210,25 @@ class BasicinfoController extends Controller
     public function destroy(Basicinfo $basicinfo)
     {
         //
+    }
+
+    public function smsTemplates()
+    {
+        $templates = [
+            'otp' => \App\Models\Information::where('key', 'sms_template_otp')->first()->value ?? '',
+            'confirmed' => \App\Models\Information::where('key', 'sms_template_confirmed')->first()->value ?? '',
+            'shipped' => \App\Models\Information::where('key', 'sms_template_shipped')->first()->value ?? '',
+        ];
+
+        return view('backend.content.basicinfo.sms_templates', compact('templates'));
+    }
+
+    public function updateSmsTemplates(Request $request)
+    {
+        \App\Models\Information::updateOrCreate(['key' => 'sms_template_otp'], ['value' => $request->sms_template_otp]);
+        \App\Models\Information::updateOrCreate(['key' => 'sms_template_confirmed'], ['value' => $request->sms_template_confirmed]);
+        \App\Models\Information::updateOrCreate(['key' => 'sms_template_shipped'], ['value' => $request->sms_template_shipped]);
+
+        return redirect()->back()->with('message', 'SMS Templates updated successfully');
     }
 }

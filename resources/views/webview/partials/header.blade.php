@@ -1,141 +1,359 @@
 <style>
-    .top-menu .menus ul {
-        display: flex;
-        flex-wrap: nowrap;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        overflow-x: auto;
-        scrollbar-width: none;
-    }
-    .top-menu .menus ul::-webkit-scrollbar {
-        display: none;
-    }
-    .top-menu .menus ul li {
-        white-space: nowrap;
-    }
-    .top-menu .menus ul li a {
-        color: black;
-        text-align: center;
-        padding: 12px 12px !important;
-        text-decoration: none;
-        font-weight: bold;
-        display: block;
+    /* ==============================================
+       PROFESSIONAL E-COMMERCE HEADER STYLING
+       ============================================== */
+    
+    .header-style-pro {
+        background: #ffffff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
     }
 
-    /* Visibility and Layout Control */
+    /* Top Bar Styling */
+    .pro-top-bar {
+        background: #76b82a;
+        color: #ffffff;
+        padding: 6px 0;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .pro-top-bar a {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .pro-top-bar a:hover {
+        text-decoration: underline;
+    }
+
+    /* Main Header Layout */
+    .pro-main-header {
+        padding: 12px 0;
+        background: #ffffff;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    /* Hardened Desktop Search Box */
+    .pro-search-box {
+        max-width: 580px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        height: 44px !important;
+        border: 2px solid #76b82a !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+        background: #ffffff !important;
+        box-sizing: border-box !important;
+        padding: 0 !important;
+        float: none !important;
+    }
+
+    .pro-search-box input,
+    .pro-search-box input.search-input {
+        flex: 1 !important;
+        height: 40px !important;
+        line-height: 40px !important;
+        border: 0 !important;
+        outline: none !important;
+        box-shadow: none !important;
+        padding: 0 16px !important;
+        margin: 0 !important;
+        font-size: 14px !important;
+        color: #1e293b !important;
+        background: #ffffff !important;
+        float: none !important;
+        width: auto !important;
+    }
+
+    .pro-search-box button,
+    .pro-search-box button.search-btn {
+        width: 55px !important;
+        height: 40px !important;
+        background: #76b82a !important;
+        color: #ffffff !important;
+        border: 0 !important;
+        outline: none !important;
+        box-shadow: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        font-size: 16px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        float: none !important;
+        border-radius: 0 !important;
+        transition: background 0.2s ease !important;
+    }
+
+    .pro-search-box button.search-btn:hover {
+        background: #64a021 !important;
+    }
+
+    /* Right Side Action Items */
+    .pro-header-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+    }
+
+    .pro-action-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: #1e293b;
+        transition: color 0.2s ease;
+    }
+
+    .pro-action-item:hover {
+        color: #76b82a;
+    }
+
+    .pro-icon-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        position: relative;
+        color: #334155;
+        transition: all 0.2s ease;
+    }
+
+    .pro-action-item:hover .pro-icon-circle {
+        background: #76b82a;
+        border-color: #76b82a;
+        color: #ffffff;
+    }
+
+    .pro-cart-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ef4444;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 700;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #ffffff;
+    }
+
+    /* ==============================================
+       MOBILE HEADER STYLING (< 992px)
+       ============================================== */
     @media (max-width: 991px) {
-        .desktop-header-view {
+        .desktop-pro-header {
             display: none !important;
         }
-        .mobile-header-view {
+        
+        .mobile-pro-header-wrapper {
+            display: block !important;
+            padding: 8px 15px 10px;
+            background: #ffffff;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .mobile-pro-header-top {
             display: flex !important;
             align-items: center !important;
             justify-content: space-between !important;
+            height: 40px !important;
+        }
+
+        .mobile-menu-trigger {
+            border: none !important;
+            background: transparent !important;
+            font-size: 22px !important;
+            color: #1e293b !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 38px !important;
+            height: 38px !important;
+            line-height: 1 !important;
+            cursor: pointer !important;
+        }
+
+        .mobile-brand-logo {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: 38px !important;
+        }
+
+        .mobile-brand-logo img {
+            max-height: 38px !important;
+            width: auto !important;
+            object-fit: contain !important;
+        }
+
+        .mobile-action-icon-btn {
+            color: #1e293b !important;
+            font-size: 18px !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            line-height: 1 !important;
+        }
+
+        /* Clean Mobile Search Bar */
+        .mobile-search-input-group {
+            display: flex !important;
+            align-items: center !important;
             width: 100% !important;
-            height: 60px !important;
-            padding: 0 15px !important;
-            flex-wrap: nowrap !important;
+            border: 2px solid #76b82a !important;
+            border-radius: 50px !important;
+            overflow: hidden !important;
+            background: #ffffff !important;
+            height: 40px !important;
+            box-shadow: 0 2px 6px rgba(107, 184, 23, 0.12) !important;
+            margin-top: 8px !important;
+            box-sizing: border-box !important;
+            padding: 0 !important;
+        }
+
+        .mobile-search-input-group input,
+        .mobile-search-input-group input.mobile-search-field {
+            flex: 1 !important;
+            height: 36px !important;
+            line-height: 36px !important;
+            border: 0 !important;
+            border-style: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            padding: 0 16px !important;
+            font-size: 13px !important;
+            background: transparent !important;
+            color: #1e293b !important;
+            margin: 0 !important;
+            width: 100% !important;
+        }
+
+        .mobile-search-input-group button,
+        .mobile-search-input-group button.mobile-search-btn {
+            height: 36px !important;
+            width: 44px !important;
+            background: #76b82a !important;
+            color: #ffffff !important;
+            border: 0 !important;
+            outline: none !important;
+            box-shadow: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 14px !important;
+            cursor: pointer !important;
+            border-radius: 0 50px 50px 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
         }
     }
+
     @media (min-width: 992px) {
-        .mobile-header-view {
+        .mobile-pro-header-wrapper {
             display: none !important;
         }
-        .desktop-header-view {
+        .desktop-pro-header {
             display: flex !important;
+            align-items: center;
         }
     }
 </style>
-<header class="header-style-1">
 
-    <!-- ============================================== TOP MENU ============================================== -->
-    <div class="top-barhead animate-dropdown" >
-        <div class="header-top-inner ">
-           <marquee behavior="" direction="" style="color:#fff;font-size:17px;font-weight:700;"> {{ $basicinfo->marquee_text }}</marquee>
+<header class="header-style-pro">
+    <!-- Top Announcement Bar -->
+    <div class="pro-top-bar">
+        <div class="container-fluid px-lg-4">
+            <div class="row align-items-center">
+                <div class="col-md-9 col-12">
+                    <marquee behavior="scroll" direction="left" scrollamount="5" style="margin: 0; padding: 0;">
+                        🛍️ {{ $basicinfo->marquee_text }}
+                    </marquee>
+                </div>
+                <div class="col-md-3 d-none d-md-block text-end">
+                    @if(!empty($basicinfo->phone_one))
+                        <i class="fa-solid fa-headset me-1"></i> Helpline: <a href="tel:{{ $basicinfo->phone_one }}">{{ $basicinfo->phone_one }}</a>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
- 
-    <div class="main-header" id="myHeader" style="background: #fff; border-bottom: 1px solid #e9e9e9; padding: 10px 0; position: relative; z-index: 1000;">
-        <div class="container">
-            <!-- Desktop View -->
-            <div class="desktop-header-view row align-items-center" style="margin: 0;">
-                <div class="col-lg-2 ps-0">
-                    <a href="{{ url('/') }}" style="display: flex; align-items: center;">
-                        <img src="{{ asset($basicinfo->logo) }}" alt="" style="max-height: 60px; width: auto;">
+
+    <!-- Desktop Main Header (>= 992px) -->
+    <div class="pro-main-header d-none d-lg-block">
+        <div class="container-fluid px-lg-4">
+            <div class="desktop-pro-header row align-items-center">
+                <!-- Logo -->
+                <div class="col-lg-3">
+                    <a href="{{ url('/') }}" class="d-inline-block">
+                        <img src="{{ asset($basicinfo->logo) }}" alt="Logo" style="max-height: 52px; width: auto; object-fit: contain;">
                     </a>
                 </div>
-                <div class="col-lg-5 top-menu">
-                    <div class="menus">
-                        <ul>
-                            <li><a href="{{ url('/') }}">Home</a></li>
-                            <li>
-                                <a class="category-btn dropdown-toggle" id="shopDropdown" data-bs-toggle="dropdown" style="font-weight:700;cursor: pointer;color:#222;font-size:16px;display: block;position: relative;">Product</a>
-                                <div class="dropdown-menu p-3 submenu-container" aria-labelledby="shopDropdown">
-                                    <div class="row">
-                                        @foreach ($categories as $category)
-                                            <div class="col submenu-column">
-                                                <h6 style="margin:6px auto;"><a href="{{ url('products/category/' . $category->slug) }}">{{ strtoupper($category->category_name) }}</a></h6>
-                                                <ul>
-                                                    @foreach ($category->subcategories as $subcategory)
-                                                        <li><a href="{{ url('products/sub/category/' . $subcategory->slug) }}">{{ $subcategory->sub_category_name }}</a></li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </li>
-                            <li><a href="{{url('venture/contact_us')}}">Contact</a></li>
-                            <li><a href="{{url('venture/about_us')}}">About-Us</a></li>
-                            <li><a href="{{url('promotional/products')}}">Best Selling</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <form action="{{ url('search') }}" method="GET" style="margin: 0;">
-                        <div style="display: flex; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; height: 40px; align-items: stretch;">
-                            <input name="search" placeholder="Search here..." style="flex: 1; border: none; padding: 0 15px; outline: none; font-size: 14px; height: 100%;">
-                            <button type="submit" style="background: #000; border: none; width: 50px; color: #fff; display: flex; align-items: center; justify-content: center; height: 100%; cursor: pointer; padding: 0;">
-                                <i class="fa-solid fa-magnifying-glass" style="font-size: 18px;"></i>
+
+                <!-- Search Box -->
+                <div class="col-lg-6">
+                    <form action="{{ url('search') }}" method="GET" style="margin: 0 !important; padding: 0 !important;">
+                        <div class="pro-search-box">
+                            <input type="text" name="search" class="search-input" placeholder="Search for products..." required>
+                            <button type="submit" class="search-btn" title="Search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
                         </div>
                     </form>
                 </div>
-                <div class="col-lg-2 d-flex justify-content-end align-items-center pe-0">
-                    <div style="margin-right: 20px;">
-                        <a href="{{ Auth::id() ? '#' : url('login') }}" onclick="{{ Auth::id() ? 'openProfileNav()' : '' }}" style="color: #000; font-size: 20px;"><i class="fa-solid fa-user"></i></a>
-                    </div>
-                    <div class="dropdown-cart">
-                        <a href="javascript:void(0);" onclick="checkcartview()" style="position: relative; text-decoration: none; color: #000; display: flex; align-items: center;">
-                            <i class="fa-solid fa-bag-shopping" style="font-size: 24px;"></i>
-                            <span style="position: absolute; top: -10px; right: -12px; background: #ff7000; color: #fff; font-size: 10px; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold;">{{ intval(Cart::count()) }}</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Mobile View -->
-            <div class="mobile-header-view" style="padding: 0 15px !important;">
-                <div style="width: 15%; height: 100%; display: flex; align-items: center; justify-content: flex-start;">
-                    <button type="button" onclick="openNav()" style="border: none; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center; margin: 0; height: 100%; color: #120d3f; font-size: 24px;">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                </div>
-                <div style="width: 70%; height: 100%; display: flex; align-items: center; justify-content: center;">
-                    <a href="{{ url('/') }}" style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                        <img src="{{ asset($basicinfo->logo) }}" alt="" style="max-height: 55px; width: auto; display: block; vertical-align: middle;">
-                    </a>
-                </div>
-                <div style="width: 15%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#searchPopup" style="margin-right: 15px; color: #000; font-size: 20px; display: flex; align-items: center; justify-content: center; height: 100%;">
-                         <i class="fa-solid fa-magnifying-glass"></i>
-                    </a>
-                    <div class="dropdown-cart" style="display: flex; align-items: center; height: 100%;">
-                        <a href="javascript:void(0);" onclick="checkcartview()" style="text-decoration: none; color: #000; display: flex; align-items: center; justify-content: center; height: 100%;">
-                            <div style="position: relative; display: flex; align-items: center; justify-content: center;">
-                                <i class="fa-solid fa-bag-shopping" style="font-size: 22px;"></i>
-                                <span style="position: absolute; top: -8px; right: -10px; background: #ff7000; color: #fff; font-size: 9px; min-width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold;">{{ intval(Cart::count()) }}</span>
+                <!-- Actions -->
+                <div class="col-lg-3">
+                    <div class="pro-header-actions">
+                        <!-- Hotline Badge -->
+                        @if(!empty($basicinfo->phone_one))
+                        <a href="tel:{{ $basicinfo->phone_one }}" class="pro-action-item" title="Call Us">
+                            <div class="pro-icon-circle">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div class="d-none d-xl-block" style="line-height: 1.2;">
+                                <small style="font-size: 11px; color: #64748b; display: block;">Call Us</small>
+                                <span style="font-size: 13px; font-weight: 700; color: #1e293b;">{{ $basicinfo->phone_one }}</span>
+                            </div>
+                        </a>
+                        @endif
+
+                        <!-- Account / User -->
+                        <a href="{{ Auth::id() ? 'javascript:void(0);' : url('login') }}" onclick="{{ Auth::id() ? 'openProfileNav()' : '' }}" class="pro-action-item" title="Account">
+                            <div class="pro-icon-circle">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                        </a>
+
+                        <!-- Shopping Cart -->
+                        <a href="javascript:void(0);" onclick="checkcartview()" class="pro-action-item" title="Cart">
+                            <div class="pro-icon-circle">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                                <span class="pro-cart-badge">{{ intval(Cart::count()) }}</span>
                             </div>
                         </a>
                     </div>
@@ -144,256 +362,79 @@
         </div>
     </div>
 
+    <!-- Mobile App Header Layout (< 992px) -->
+    <div class="mobile-pro-header-wrapper d-lg-none">
+        <div class="mobile-pro-header-top">
+            <!-- Left: Hamburger Category Drawer Button -->
+            <button type="button" onclick="openNav()" class="mobile-menu-trigger" aria-label="Menu">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
 
-    <!-- side bar panel start -->
+            <!-- Center: Brand Logo -->
+            <a href="{{ url('/') }}" class="mobile-brand-logo">
+                <img src="{{ asset($basicinfo->logo) }}" alt="Logo">
+            </a>
+
+            <!-- Right: Cart Icon ONLY -->
+            <a href="javascript:void(0);" onclick="checkcartview()" class="mobile-action-icon-btn position-relative" title="Cart">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="pro-cart-badge">{{ intval(Cart::count()) }}</span>
+            </a>
+        </div>
+
+        <!-- Integrated Clean Mobile Search Bar -->
+        <form action="{{ url('search') }}" method="GET" style="margin: 0 !important; padding: 0 !important;">
+            <div class="mobile-search-input-group">
+                <input type="text" name="search" class="mobile-search-field" placeholder="Search for products..." required>
+                <button type="submit" class="mobile-search-btn" title="Search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Mobile Category Drawer -->
     <div id="mySidepanel" class="sidepanel">
-        <div class="side-menu-header ">
+        <div class="side-menu-header">
             <div class="side-menu-close" onclick="closeNav()">
                 <i class="fas fa-close"></i>
             </div>
-            <div class="px-3 pb-3 side-login" style="padding-top: 12px;padding-bottom: 15px; padding-left: 10px;">
-                <a href=""></a>
-                <a style="font-size: 16px" href="#">Categories</a>
+            <div class="px-3 pb-3 side-login" style="padding-top: 12px; padding-left: 10px;">
+                <span style="font-size: 16px; color: #ffffff; font-weight: bold;">Categories</span>
             </div>
         </div>
         <ul class="level1-styles collapse show" id="id0">
-             
             @forelse ($categories as $category)
                 <li>
-                    <a href="{{ url('products/category/' . $category->slug) }}">{{ $category->category_name }} </a>
+                    <a href="{{ url('products/category/' . $category->slug) }}">{{ $category->category_name }}</a>
                 </li>
             @empty
             @endforelse
-
         </ul>
     </div>
 
-     <!-- side bar panel start -->
-     <div id="myProfileSidepanel" class="sidepanel">
-        <div class="side-menu-header ">
+    <!-- Profile Sidepanel Drawer -->
+    <div id="myProfileSidepanel" class="sidepanel">
+        <div class="side-menu-header">
             <div class="side-menu-close" onclick="clossProfileNav()">
                 <i class="fas fa-close"></i>
             </div>
-            <div class="px-3 pb-3 side-login" style="padding-top: 12px;padding-bottom: 15px; padding-left: 10px;">
+            <div class="px-3 pb-3 side-login" style="padding-top: 12px; padding-left: 10px;">
                 @if(Auth::guard('web')->check())
-                   @if(Auth::guard('web')->user()->profile))
-                        <img src="{{ asset(Auth::guard('web')->user()->profile) }}" alt="" id="profileImage">
-                    @else
-                        <img src="{{ asset('public/backend/img/user.jpg') }}" alt="" id="profileImage">
-                    @endif
-                <h4 class="m-0 text-left" style="color: white;font-size: 16px;text-transform: uppercase;">{{ Auth::guard('web')->user()->name }}</h4>
-                <h4 class="m-0 text-left" style="color: white;font-size: 16px;">{{ Auth::guard('web')->user()->email }}</h4>
-                @else
+                    <h4 class="m-0 text-left" style="color: white; font-size: 16px; text-transform: uppercase;">{{ Auth::guard('web')->user()->name }}</h4>
+                    <h4 class="m-0 text-left" style="color: white; font-size: 14px;">{{ Auth::guard('web')->user()->email }}</h4>
                 @endif
-
-
             </div>
         </div>
         <div class="py-0 widget-profile-menu">
             <ul class="categories categories--style-3">
-                <li class="p-0">
-                    <a href="{{ url('user/dashboard') }}" class="active">
-                        <i class="fas fa-dashboard category-icon"></i>
-                        <span class="category-name">
-                            Dashboard
-                        </span>
-                    </a>
-                </li>
-
-                <li class="p-0">
-                    <a href="{{ url('user/wallets') }}" class="">
-                        <i class="fas fa-wallet category-icon"></i>
-                        <span class="category-name">
-                            Wallet </span>
-                    </a>
-                </li>
-
-                <li class="p-0">
-                    <a href="{{ url('user/purchase_history') }}" class="">
-                        <i class="fas fa-file-text category-icon"></i>
-                        <span class="category-name">
-                            Orders </span>
-                    </a>
-                </li>
-
-                <li class="p-0">
-                    <a href="{{ url('track-order') }}" class="">
-                        <i class="fas fa-file-text category-icon"></i>
-                        <span class="category-name">
-                            Track Order
-                        </span>
-                    </a>
-                </li>
-                <li class="p-0">
-                    <a href="{{ url('user/profile') }}" class="">
-                        <i class="fas fa-user category-icon"></i>
-                        <span class="category-name">
-                            Manage Profile
-                        </span>
-                    </a>
-                </li>
-                <li class="p-0">
-                    <a href="{{ url('logout') }}" class="">
-                        <i class="fas fa-comment category-icon"></i>
-                        <span class="category-name">
-                            Logout
-                        </span>
-                    </a>
-                </li>
+                <li class="p-0"><a href="{{ url('user/dashboard') }}"><i class="fas fa-dashboard category-icon"></i> Dashboard</a></li>
+                <li class="p-0"><a href="{{ url('user/wallets') }}"><i class="fas fa-wallet category-icon"></i> Wallet</a></li>
+                <li class="p-0"><a href="{{ url('user/purchase_history') }}"><i class="fas fa-file-text category-icon"></i> Orders</a></li>
+                <li class="p-0"><a href="{{ url('track-order') }}"><i class="fas fa-file-text category-icon"></i> Track Order</a></li>
+                <li class="p-0"><a href="{{ url('user/profile') }}"><i class="fas fa-user category-icon"></i> Manage Profile</a></li>
+                <li class="p-0"><a href="{{ url('logout') }}"><i class="fas fa-comment category-icon"></i> Logout</a></li>
             </ul>
         </div>
     </div>
-    <!-- side bar panel end -->
 </header>
-
-<!-- Search Popup Modal -->
-<div class="modal fade" id="searchPopup" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 0px !important">
-            <div class="modal-body" style="padding: 0px;">
-                <div class="modalsearch-area">
-                    <div class="control-group d-flex justify-content-between">
-                        <input class="mb-0 search-field" id="modalsearchinput" onkeyup="searchproduct()"
-                            placeholder="Search here...">
-                        <a class="search-button" data-bs-dismiss="modal" href="#"></a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div id="searchproductlist" style="background: white;margin: 10px;height: auto;overflow: scroll;">
-
-    </div>
-</div>
-
-<style>
-    #profileImage {
-        border-radius: 50%;
-        padding: 0px;
-        padding-bottom: 8px;
-        padding-top: 10px;
-    }
-
-    .sidebar-widget-title {
-        position: relative;
-    }
-
-    .sidebar-widget-title:before {
-        content: "";
-        width: 100%;
-        height: 1px;
-        background: #eee;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 50%;
-    }
-
-    .py-3 {
-        padding-bottom: 1rem !important;
-    }
-
-    .sidebar-widget-title span {
-        background: #fff;
-        text-transform: uppercase;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.2em;
-        position: relative;
-        padding: 8px;
-        color: #dadada;
-    }
-
-    ul.categories {
-        padding: 0;
-        margin: 0;
-        list-style: none;
-    }
-
-    ul.categories--style-3>li {
-        border: 0;
-    }
-
-    ul.categories>li {
-        border-bottom: 1px solid #f1f1f1;
-    }
-
-    .widget-profile-menu a i {
-        opacity: 0.6;
-        font-size: 13px !important;
-        top: 0 !important;
-        width: 18px;
-        height: 18px;
-        text-align: center;
-        line-height: 18px;
-        display: inline-block;
-        margin-right: 0.5rem !important;
-    }
-
-    .category-name {
-        color: black;
-        font-size: 18px;
-    }
-
-    .category-icon {
-        font-size: 18px;
-        color: black;
-    }
-    .modalsearch-area .search-field {
-        border: medium none;
-        padding: 10px;
-        border-right: none;
-        float: left;
-    }
-
-    .modalsearch-area .search-button {
-        display: inline-block;
-        float: left;
-        margin-top: -1px;
-        padding: 6px 15px 7px;
-        text-align: center;
-        background-color: #000000;
-        border: 1px solid #000000;
-    }
-
-    .modalsearch-area .search-button:after {
-        color: #fff;
-        content: "\f00d";
-        font-family: fontawesome;
-        font-size: 24px;
-        line-height: 9px;
-        vertical-align: middle;
-    }
-    #hideser{
-       display:none; 
-    }
-</style>
-<script>
-    function showser() {
-        var s=$('#valcheck').val();
-        if(s=='0'){
-            $('#valcheck').val('1');
-            $('#hideser').css('display','none');
-        }else{
-            $('#valcheck').val('0');
-            $('#hideser').css('display','inline');
-
-        }
-    }
-    function showserBig() {
-        var s=$('#valcheck').val();
-        if(s=='0'){
-
-            $('#valcheck').val('1');
-            $('#hideser').css('display','inline');
-
-        }else{
-
-            $('#valcheck').val('0');
-            $('#hideser').css('display','none');
-
-        }
-    }
-</script>

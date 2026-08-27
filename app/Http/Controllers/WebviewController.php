@@ -159,31 +159,75 @@ class WebviewController extends Controller
 
     public function webhook(Request $request)
     {
-        $invoice = $request['invoice'];
-        $order = Order::where('invoiceID', $invoice)->first();
-        if (isset($order)) {
-            if ($request['status'] == 'delivered') {
-                $order->status = 'Completed';
-            } else if ($request['status'] == 'pending') {
-                $order->status = 'Courier Pending';
-            } else if ($request['status'] == 'cancelled') {
-                $order->status = 'Del. Failed';
-            } else if ($request['status'] == 'partial_delivered') {
-                $order->status = 'Partial Delivered';
-            } else if ($request['status'] == 'unknown') {
-                $order->status = 'Unknown';
-            } else {
+        // Secret Token Barrier Check from .env
+        $secretToken = env('STEADFAST_WEBHOOK_TOKEN');
+        if (!empty($secretToken)) {
+            $providedToken = $request->header('X-Webhook-Token') 
+                ?? $request->header('X-Steadfast-Token')
+                ?? $request->bearerToken() 
+                ?? $request->input('token') 
+                ?? $request->input('secret');
+
+            if ($providedToken !== $secretToken) {
+                return response()->json(['status' => 'error', 'message' => 'Unauthorized Webhook Security Token'], 401);
             }
-            $order->update();
+        }
+
+        $invoice = $request->input('invoice') ?? $request->input('invoice_id') ?? $request->input('consignment_id');
+        $trackingCode = $request->input('tracking_code') ?? $request->input('tracking_id');
+        $rawStatus = strtolower(trim($request->input('status', '')));
+
+        if (empty($invoice) && empty($trackingCode)) {
+            return response()->json(['status' => 'error', 'message' => 'Invoice or tracking code missing'], 400);
+        }
+
+        $query = Order::query();
+        if (!empty($invoice)) {
+            $query->where('invoiceID', $invoice);
+        }
+        if (!empty($trackingCode)) {
+            $query->orWhere('courier_tracking_link', 'LIKE', '%' . $trackingCode . '%');
+        }
+        $order = $query->first();
+
+        if ($order) {
+            $newStatus = $order->status;
+
+            if ($rawStatus === 'delivered') {
+                $newStatus = 'Completed';
+                $order->completeDate = \Carbon\Carbon::now()->format('Y-m-d H:i:s');
+                if (empty($order->completed_by)) {
+                    $order->completed_by = 1;
+                }
+            } elseif ($rawStatus === 'partial_delivered') {
+                $newStatus = 'Partial Delivered';
+            } elseif (in_array($rawStatus, ['cancelled', 'delivery_failed', 'cancel'])) {
+                $newStatus = 'Del. Failed';
+            } elseif (in_array($rawStatus, ['pending', 'hold'])) {
+                $newStatus = 'Courier Pending';
+            } elseif (in_array($rawStatus, ['in_transit', 'out_for_delivery', 'delivery_in_progress'])) {
+                $newStatus = 'In Transit';
+            } elseif (!empty($rawStatus)) {
+                $newStatus = ucfirst($rawStatus);
+            }
+
+            $order->status = $newStatus;
+            $order->save();
 
             $comment = new Comment();
             $comment->order_id = $order->id;
-            $comment->comment = 'Steadfast Successfully change status of invoice: ' . $invoice . ' to : ' . $request['status'];
+            $comment->comment = 'Steadfast Webhook Auto-Update: Status changed to [' . $newStatus . '] (Courier Status: ' . $rawStatus . ')';
             $comment->admin_id = 1;
             $comment->status = 1;
             $comment->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Order status updated successfully to ' . $newStatus
+            ], 200);
         }
-        return response()->json('success', 200);
+
+        return response()->json(['status' => 'error', 'message' => 'Order not found'], 404);
     }
     public function couponcheck(Request $request)
     {
@@ -223,27 +267,108 @@ class WebviewController extends Controller
         }
     }
 
+    public static function preloadMainProducts($mainProducts)
+    {
+        if (empty($mainProducts) || count($mainProducts) === 0) {
+            return $mainProducts;
+        }
+
+        $relatedProductIds = [];
+        $mainProductIds = [];
+
+        foreach ($mainProducts as $mp) {
+            $mainProductIds[] = $mp->id;
+            $rel = json_decode($mp->RelatedProductIds);
+            if (!empty($rel) && isset($rel[0]->productID)) {
+                $relatedProductIds[] = intval($rel[0]->productID);
+            }
+        }
+
+        $relatedProductIds = array_unique(array_filter($relatedProductIds));
+        $mainProductIds = array_unique(array_filter($mainProductIds));
+
+        if (empty($relatedProductIds)) {
+            return $mainProducts;
+        }
+
+        $productsMap = Product::with(['sizes' => function ($query) {
+            $query->select('id', 'product_id', 'Discount', 'RegularPrice', 'SalePrice');
+        }])
+        ->whereIn('id', $relatedProductIds)
+        ->get()
+        ->keyBy('id');
+
+        $reviewCounts = Review::whereIn('product_id', $mainProductIds)
+            ->selectRaw('product_id, COUNT(*) as count')
+            ->groupBy('product_id')
+            ->pluck('count', 'product_id')
+            ->toArray();
+
+        foreach ($mainProducts as $mp) {
+            $rel = json_decode($mp->RelatedProductIds);
+            $firstpro = null;
+            $dis = 0;
+            $pid = (!empty($rel) && isset($rel[0]->productID)) ? intval($rel[0]->productID) : null;
+            if ($pid && isset($productsMap[$pid])) {
+                $firstpro = $productsMap[$pid];
+                if (count($firstpro->sizes) > 0 && $firstpro->sizes[0]->RegularPrice > 0) {
+                    $dis = intval(($firstpro->sizes[0]->Discount / $firstpro->sizes[0]->RegularPrice) * 100);
+                }
+            }
+            $mp->firstpro = $firstpro;
+            $mp->discount_percent = $dis;
+            $mp->review_count = $reviewCounts[$mp->id] ?? 0;
+        }
+
+        return $mainProducts;
+    }
+
     public function mainview()
     {
-        $categories = Category::where('status', 'Active')->select('id', 'category_name', 'category_icon', 'slug')->get();
-        $sliders = Slider::where('status', 'Active')->select('id', 'slider_btn_link', 'slider_title', 'slider_image')->get();
-        $adds = Addbanner::where('status', 'Active')->whereIn('id', ['1', '2'])->select('id', 'add_link', 'add_image', 'status')->get();
-        $addbottoms = Addbanner::where('status', 'Active')->whereIn('id', ['3', '4'])->select('id', 'add_link', 'add_image', 'status')->get();
+        $data = \Illuminate\Support\Facades\Cache::remember('homepage_mainview_data', 300, function () {
+            $categories = Category::where('status', 'Active')->select('id', 'category_name', 'category_icon', 'slug')->get();
+            $sliders = Slider::where('status', 'Active')->select('id', 'slider_btn_link', 'slider_title', 'slider_image')->get();
+            $adds = Addbanner::where('status', 'Active')->whereIn('id', ['1', '2'])->select('id', 'add_link', 'add_image', 'status')->get();
+            $addbottoms = Addbanner::where('status', 'Active')->whereIn('id', ['3', '4'])->select('id', 'add_link', 'add_image', 'status')->get();
 
-        $topproducts = Mainproduct::where('status', 'Active')->where('top_rated', '1')->orderByRaw('ISNULL(`position`), `position` ASC')->select('id', 'ProductName', 'ProductSlug', 'ProductImage', 'status', 'position', 'top_rated', 'RelatedProductIds')->inRandomOrder()->take(8)->get();
-        $bestSelleingProducts = Mainproduct::where('status', 'Active')->where('best_selleing', '1')->orderByRaw('ISNULL(`position`), `position` ASC')->select('id', 'ProductName', 'ProductSlug', 'ProductImage', 'status', 'position', 'top_rated', 'RelatedProductIds')->inRandomOrder()->take(8)->get();
-        $categoryproducts = Category::where('status', 'Active')->where('front_status', 0)->select('id', 'category_name', 'slug', 'position')->orderBy('position')->get();
+            $topproducts = Mainproduct::where('status', 'Active')->where('top_rated', '1')->orderByRaw('ISNULL(`position`), `position` ASC')->select('id', 'ProductName', 'ProductSlug', 'ProductImage', 'status', 'position', 'top_rated', 'RelatedProductIds')->take(8)->get();
+            $bestSelleingProducts = Mainproduct::where('status', 'Active')->where('best_selleing', '1')->orderByRaw('ISNULL(`position`), `position` ASC')->select('id', 'ProductName', 'ProductSlug', 'ProductImage', 'status', 'position', 'top_rated', 'RelatedProductIds')->take(8)->get();
+            $categoryproducts = Category::where('status', 'Active')->where('front_status', 0)->select('id', 'category_name', 'slug', 'position')->orderBy('position')->get();
 
-        $categoryproducts->each(function ($category) {
-            $category->mainproducts = $category->mainproducts()
-                ->select('id', 'category_id', 'ProductName', 'ProductSlug', 'ProductImage', 'status', 'position', 'top_rated', 'RelatedProductIds')
-                ->where('status', 'Active')
-                ->orderBy('position', 'desc')
-                ->take(12) // Limit to 12 main products
-                ->get();
+            $categoryproducts->each(function ($category) {
+                $category->mainproducts = $category->mainproducts()
+                    ->select('id', 'category_id', 'ProductName', 'ProductSlug', 'ProductImage', 'status', 'position', 'top_rated', 'RelatedProductIds')
+                    ->where('status', 'Active')
+                    ->orderBy('position', 'desc')
+                    ->take(12)
+                    ->get();
+            });
+
+            $allMainProducts = collect();
+            $allMainProducts = $allMainProducts->merge($topproducts)->merge($bestSelleingProducts);
+            foreach ($categoryproducts as $cat) {
+                if (isset($cat->mainproducts)) {
+                    $allMainProducts = $allMainProducts->merge($cat->mainproducts);
+                }
+            }
+
+            self::preloadMainProducts($allMainProducts);
+
+            $medias = Menu::where('status', 'Active')->get();
+
+            return [
+                'categories' => $categories,
+                'sliders' => $sliders,
+                'adds' => $adds,
+                'addbottoms' => $addbottoms,
+                'topproducts' => $topproducts,
+                'categoryproducts' => $categoryproducts,
+                'medias' => $medias,
+                'bestSelleingProducts' => $bestSelleingProducts
+            ];
         });
-     $medias = Menu::where('status', 'Active')->get();
-        return view('webview.content.maincontent', ['categories' => $categories, 'sliders' => $sliders, 'adds' => $adds, 'addbottoms' => $addbottoms, 'topproducts' => $topproducts, 'categoryproducts' => $categoryproducts,'medias'=> $medias, 'bestSelleingProducts'=>$bestSelleingProducts]);
+
+        return view('webview.content.maincontent', $data);
     }
 
     public function productdetailsnew($slug)
@@ -632,6 +757,7 @@ class WebviewController extends Controller
         $categorysingle = Category::where('slug', $slug)->select('id', 'category_name', 'slug', 'status')->first();
         $categoryproducts = Mainproduct::where('status', 'Active')->where('category_id', $categorysingle->id)->orderByRaw('ISNULL(`position`), `position` ASC')->select('id', 'ProductName', 'ProductSlug', 'ProductImage', 'status', 'position', 'RelatedProductIds')->paginate(12);
         Session::put('category_id', $categorysingle->id);
+        self::preloadMainProducts($categoryproducts->items());
         return view('webview.content.product.category', ['categoryproducts' => $categoryproducts, 'categorysingle' => $categorysingle]);
     }
 
@@ -639,6 +765,7 @@ class WebviewController extends Controller
     {
         $category_id = Session::get('category_id');
         $categoryproducts = Mainproduct::where('category_id', $category_id)->where('status', 'Active')->orderByRaw('ISNULL(`position`), `position` ASC')->select('id', 'ProductName', 'ProductSlug', 'ProductImage', 'status', 'position', 'RelatedProductIds')->paginate(12);
+        self::preloadMainProducts($categoryproducts->items());
 
         if ($request->ajax()) {
             $view = view('webview.product', compact('categoryproducts'))->render();
@@ -661,6 +788,7 @@ class WebviewController extends Controller
         $searchproducts = Mainproduct::where('status', 'Active')
             ->where('ProductName', 'LIKE', "%{$search}%")
             ->get();
+        self::preloadMainProducts($searchproducts);
         return view('webview.content.product.mainsearch', ['searchproducts' => $searchproducts]);
     }
     public function combo()
@@ -715,10 +843,11 @@ class WebviewController extends Controller
         $subcategory = Subcategory::where('slug', $request->subcategory)->select('id', 'sub_category_name', 'slug', 'status')->first();
         if (isset($request->price_range)) {
             $num = preg_split("/[,]/", $request->price_range);
-             $subcategoryproducts = Mainproduct::where('status', 'Active')->where('subcategory_id', $subcategory->id)->orderByRaw('ISNULL(`position`), `position` ASC')->paginate(12);
+            $subcategoryproducts = Mainproduct::where('status', 'Active')->where('subcategory_id', $subcategory->id)->orderByRaw('ISNULL(`position`), `position` ASC')->paginate(12);
         } else {
             $subcategoryproducts = Mainproduct::where('status', 'Active')->where('subcategory_id', $subcategory->id)->orderByRaw('ISNULL(`position`), `position` ASC')->paginate(12);
         }
+        self::preloadMainProducts($subcategoryproducts->items());
         return view('webview.content.product.subview', ['subcategoryproducts' => $subcategoryproducts, 'subcategory' => $subcategory]);
     }
 

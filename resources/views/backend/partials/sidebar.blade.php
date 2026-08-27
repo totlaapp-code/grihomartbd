@@ -102,6 +102,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                         class="fas fa-cog fa-spin me-2"></i>Settings</a>
                 <div class="bg-transparent border-0 dropdown-menu">
                     <a href="{{ route('admin.basicinfos.index') }}" class="dropdown-item">Settings</a>
+                    <a href="{{ route('admin.sms_templates') }}" class="dropdown-item">SMS Templates</a>
                     <a href="{{ route('couriers.index') }}" class="dropdown-item">Courier</a>
                     <a href="{{ route('cities.index') }}" class="dropdown-item">City</a>
                     <a href="{{ route('zones.index') }}" class="dropdown-item">Zone</a>

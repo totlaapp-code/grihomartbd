@@ -21,4 +21,5 @@ Route::get('order',[OrderController::class,'getorder']);
 Route::get('user/fraud-check-data', [OrderController::class, 'fraudcheck']);
 
 Route::get('pay/make/{slug}',[WebviewController::class,'makesomething']);
-Route::get('webhook-steadfast', [WebviewController::class, 'webhook']);
+Route::match(['get', 'post'], 'webhook-steadfast', [WebviewController::class, 'webhook']);
+Route::match(['get', 'post'], 'steadfast/webhook', [WebviewController::class, 'webhook']);

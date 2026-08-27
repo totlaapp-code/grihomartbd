@@ -99,113 +99,186 @@
     }
 </style>
 
-<div class="container-fluid p-0 px-lg-3 pt-lg-2" style="overflow: hidden;">
+<style>
+    /* Modern Hero Slider Styling & Instant Render (No delay on reload) */
+    #slider.owl-carousel {
+        display: block !important;
+    }
+    #slider.owl-carousel:not(.owl-loaded) .hero-slider-item:not(:first-child) {
+        display: none !important;
+    }
+    .hero-slider-item img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+    @media (max-width: 768px) {
+        .hero-slider-item img {
+            height: 160px;
+            border-radius: 0;
+        }
+    }
+
+    /* Modern Category Card Styling */
+    .cat-grid-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 6px 0;
+    }
+    .cat-grid-item {
+        flex: 1 1 calc(16.666667% - 10px);
+        max-width: calc(16.666667% - 10px);
+    }
+    @media (max-width: 992px) {
+        .cat-grid-item {
+            flex: 1 1 calc(25% - 9px);
+            max-width: calc(25% - 9px);
+        }
+    }
+    .cat-circle-card {
+        background: #ffffff;
+        border: 1px solid #f1f5f9;
+        border-radius: 12px;
+        padding: 14px 8px;
+        text-align: center;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-decoration: none !important;
+    }
+    .cat-circle-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(118, 184, 42, 0.18);
+        border-color: #76b82a;
+    }
+    .cat-icon-wrapper {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 6px;
+        transition: background 0.25s ease;
+    }
+    .cat-circle-card:hover .cat-icon-wrapper {
+        background: #eef8e3;
+    }
+    .cat-icon-wrapper img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+    }
+    .cat-card-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+        line-height: 1.2;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
+    }
+
+    /* Mobile: 2-Row Horizontal Swipe Layout (Shopee/Daraz Style) */
+    @media (max-width: 768px) {
+        .cat-container-mobile {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        .cat-grid-wrapper {
+            display: grid;
+            grid-template-rows: repeat(2, 1fr);
+            grid-auto-flow: column;
+            grid-auto-columns: calc(25% - 6px);
+            gap: 8px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 6px 12px 10px 12px;
+            margin: 0;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .cat-grid-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+        .cat-grid-item {
+            padding: 0;
+            flex: none;
+            max-width: none;
+            scroll-snap-align: start;
+        }
+        .cat-circle-card {
+            padding: 8px 4px;
+            border-radius: 10px;
+        }
+        .cat-icon-wrapper {
+            width: 44px;
+            height: 44px;
+            margin-bottom: 4px;
+        }
+        .cat-icon-wrapper img {
+            width: 26px;
+            height: 26px;
+        }
+        .cat-card-title {
+            font-size: 11px;
+            font-weight: 600;
+        }
+    }
+</style>
+
+<!-- Full-Width Hero Slider -->
+<div class="container-fluid px-2 px-lg-4 pt-2" style="overflow: hidden;">
     <div class="row m-0">
-     <!-- Sidebar -->
-        <div class="col-lg-3 d-none d-lg-block sidebar pe-lg-2 ps-0">
-             <div class="rounded-top text-center my-0" style="background-color:#94DC10;">
-                <h5 class="py-2 text-white my-0">CATEGORIES</h5>
+        <div class="col-12 p-0">
+            <div class="owl-carousel owl-theme" id="slider">
+                @forelse ($sliders as $slider)
+                    <div class="hero-slider-item" style="margin: 0 !important;">
+                        <a href="{{ $slider->slider_btn_link }}">
+                            <img src="{{ asset($slider->slider_image) }}" alt="Slider Image" @if($loop->first) loading="eager" fetchpriority="high" @endif>
+                        </a>
+                    </div>
+                @empty
+                @endforelse
             </div>
-            <div class="side-menu animate-dropdown outer-bottom-xs">
-                <nav class="yamm megamenu-horizontal" role="navigation" style="padding-top: 6px;">
-                    <ul class="nav m-0">
-                        @forelse ($categories as $maincategory)
-                            @if($loop->iteration <= 8)
-                                @if (count($maincategory->subcategories) > 0)
-                                    <li class="dropdown menu-item">
-                                        <a href="{{ url('products/category/' . $maincategory->slug) }}"
-                                            class="dropdown-toggle" data-bs-hover="dropdown"> <img
-                                                src="{{ asset($maincategory->category_icon) }}"
-                                                alt="{{ $maincategory->category_name }}"
-                                                style="width: 22px !important;margin-top: -5px;">
-                                            <span style="margin-left:6px">{{ $maincategory->category_name }}</span></a>
-                                        <ul class="dropdown-menu mega-menu">
-                                            <li class="yamm-content" style="padding-bottom: 5px;padding-top: 5px;">
-                                                <ul class="links list-unstyled">
-                                                    <div class="row">
-                                                        @foreach ($maincategory->subcategories as $subcategory)
-                                                            <div class="col-sm-12 col-md-4 pt-1 pb-1" id="subcategoryhover" style="width: 100%;">
-                                                                <li><a href="{{ url('products/sub/category/' . $subcategory->slug) }}"
-                                                                        style="color:#666666">{{ $subcategory->sub_category_name }}</a>
-                                                                </li>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </ul>
-                                                <!-- /.row -->
-                                            </li>
-                                            <!-- /.yamm-content -->
-                                        </ul>
-                                        <!-- /.dropdown-menu -->
-                                    </li>
-                                @else
-                                    <li class="dropdown menu-item">
-                                        <a href="{{ url('products/category/' . $maincategory->slug) }}"
-                                            class="dropdown-toggle text-truncate" data-bs-hover="dropdown"><img
-                                                src="{{ asset($maincategory->category_icon) }}"
-                                                alt="{{ $maincategory->category_name }}"
-                                                style="width: 22px !important;margin-top: -5px;"><span style="margin-left:6px">{{ $maincategory->category_name }}</span></a>
-                                        <!-- /.dropdown-menu -->
-                                    </li>
-                                @endif
-                            @endif
-                        @empty
-                        @endforelse
-                        
-                        @if(count($categories) > 8)
-                            <li class="dropdown menu-item">
-                                <a href="#" class="dropdown-toggle" style="background: #f9f9f9; font-weight: bold; color: #94DC10 !important;">
-                                    <i class="fa fa-plus-circle" style="margin-right: 6px; font-size: 16px;"></i>
-                                    <span>More Categories</span>
-                                </a>
-                            </li>
-                        @endif
-                    </ul>
-                </nav>
-            </div>
-        </div>
-              
-    <div class="col-12 col-lg-9 p-0 ps-lg-3">
-        <div class="owl-carousel owl-theme" id="slider">
-            @forelse ($sliders as $slider)
-                <div class="item" style="margin:0 !important;">
-                    <a href="{{ $slider->slider_btn_link }}">
-                    <img  src="{{ asset($slider->slider_image) }}" style="width: 100%; height: auto;">
-                    </a>
-                </div>
-            @empty
-            @endforelse
         </div>
     </div>
-    
-</div>
 </div>
 
-
-<div class="container p-0 my-4 mb-2 mt-lg-4 pt-lg-4" style="overflow: hidden;">
-    <div class="row m-0 cat-row"> 
+<!-- Modern Circular Categories Grid (2-Row Horizontal Swipe on Mobile) -->
+<div class="container-fluid px-2 px-lg-4 py-2 cat-container-mobile">
+    <div class="cat-grid-wrapper">
         @forelse ($categories as $category)
-            <div class="col-lg-2 col-4 mb-2" data-aos="fade-left" data-aos-duration="10">
-               <div class="cat_item">
-                    <a href="{{ url('products/category/' . $category->slug) }}">
-                    <div class="d-flex justify-content-center">
-                        <img src="{{ asset($category->category_icon) }}" id="catimg">
+            <div class="cat-grid-item">
+                <a href="{{ url('products/category/' . $category->slug) }}" class="cat-circle-card">
+                    <div class="cat-icon-wrapper">
+                        <img src="{{ asset($category->category_icon) }}" alt="{{ $category->category_name }}">
                     </div>
-                    <p id="catp" style="font-weight:bold;color: black;">{{ \Illuminate\Support\Str::limit($category->category_name, 10) }}</p>
+                    <p class="cat-card-title">{{ \Illuminate\Support\Str::limit($category->category_name, 16) }}</p>
                 </a>
-               </div>
             </div>
         @empty
-    
-        @endforelse 
+        @endforelse
     </div>
 </div>
 
 
 <!-- Promotional Products -->
-<div class="container p-0 pb-2" style="overflow: hidden;">
+<div class="container-fluid px-2 px-lg-4 pb-2">
     @if(count($topproducts)>0) 
-        <div class="pb-2 bg-white row m-0">
+        <div class="pb-2 bg-white row m-0 rounded-3 shadow-sm">
             <div class="col-12" style="padding-left: 0;display: flex;justify-content: space-between;">
                 <div class="px-2 pt-0 p-md-3 d-flex justify-content-between" style="padding-bottom:4px !important;padding-top: 8px !important;">
                     <h4 class="m-0"><b>Promotional Offers</b></h4>
@@ -215,23 +288,11 @@
                 <div class="owl-carousel " id="promotionalofferSlide">
                     @forelse ($topproducts as $promotional)
                         @php
-                            $relatedIds = json_decode($promotional->RelatedProductIds);
-                            $firstpro = null;
-                            $dis = 0;
-                            if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
-                                $firstpro=App\Models\Product::with([
-                                    'sizes' => function ($query) {
-                                        $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
-                                    }
-                                    ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
-                                
-                                if ($firstpro && count($firstpro->sizes) > 0 && $firstpro->sizes[0]->RegularPrice > 0) {
-                                    $dis=intval(($firstpro->sizes[0]->Discount/$firstpro->sizes[0]->RegularPrice)*100);
-                                }
-                            }
-                       @endphp
+                            $firstpro = $promotional->firstpro;
+                            $dis = $promotional->discount_percent;
+                        @endphp
                         @if(isset($firstpro))
-                            <div class="item" id="featuredproduct" data-aos="fade-right" data-aos-duration="10">
+                            <div class="item" id="featuredproduct">
                                 <div class="product-micro-row">
                                      <div class="product_item_inner"> 
                                         <div class="product-image">
@@ -249,7 +310,7 @@
                                              
                                             <div class="d-flex my-2" style="justify-content:center">
                                                 <div class="star" style="padding-top: 5px;">
-                                                    <span style="font-weight: bold;color:black;font-size:10px">({{ App\Models\Review::where('product_id', $promotional->id)->get()->count() }})</span>
+                                                    <span style="font-weight: bold;color:black;font-size:10px">({{ $promotional->review_count }})</span>
                                                         <span class="fas fa-star" id="checked"></span>
                                                         <span class="fas fa-star" id="checked"></span>
                                                         <span class="fas fa-star" id="checked"></span>
@@ -287,8 +348,8 @@
     @else
     @endif 
     
-    @if(count($bestSelleingProducts)>0) 
-        <div class="pb-2 bg-white row m-0">
+    @if(count($bestSelleingProducts)>0)
+        <div class="pb-2 bg-white row m-0 my-3 rounded-3 shadow-sm">
             <div class="col-12" style="padding-left: 0;display: flex;justify-content: space-between;">
                 <div class="px-2 pt-0 p-md-3 d-flex justify-content-between" style="padding-bottom:4px !important;padding-top: 8px !important;">
                     <h4 class="m-0"><b>Best Selling</b></h4>
@@ -298,23 +359,11 @@
                 <div class="owl-carousel " id="bestSellingSlide">
                     @forelse ($bestSelleingProducts as $promotional)
                         @php
-                            $relatedIds = json_decode($promotional->RelatedProductIds);
-                            $firstpro = null;
-                            $dis = 0;
-                            if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
-                                $firstpro=App\Models\Product::with([
-                                    'sizes' => function ($query) {
-                                        $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
-                                    }
-                                    ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
-                                
-                                if ($firstpro && count($firstpro->sizes) > 0 && $firstpro->sizes[0]->RegularPrice > 0) {
-                                    $dis=intval(($firstpro->sizes[0]->Discount/$firstpro->sizes[0]->RegularPrice)*100);
-                                }
-                            }
-                       @endphp
+                            $firstpro = $promotional->firstpro;
+                            $dis = $promotional->discount_percent;
+                        @endphp
                         @if(isset($firstpro))
-                            <div class="item" id="featuredproduct" data-aos="fade-right" data-aos-duration="10">
+                            <div class="item" id="featuredproduct">
                                 <div class="product-micro-row">
                                      <div class="product_item_inner"> 
                                         
@@ -333,7 +382,7 @@
                                              
                                             <div class="d-flex my-2" style="justify-content:center">
                                                 <div class="star" style="padding-top: 5px;">
-                                                    <span style="font-weight: bold;color:black;font-size:10px">({{ App\Models\Review::where('product_id', $promotional->id)->get()->count() }})</span>
+                                                    <span style="font-weight: bold;color:black;font-size:10px">({{ $promotional->review_count }})</span>
                                                         <span class="fas fa-star" id="checked"></span>
                                                         <span class="fas fa-star" id="checked"></span>
                                                         <span class="fas fa-star" id="checked"></span>
@@ -371,7 +420,7 @@
     @else
     @endif 
 
-    <div class="row m-0 gutters-10">
+    <div class="row m-0 gutters-10 px-lg-0">
         @if (count($adds) == '2')
             @forelse ($adds as $add)
                 <div class="col-lg-6 col-6 ps-lg-0">
@@ -401,7 +450,7 @@
  
     @forelse ($categoryproducts as $key=>$categoryproduct)
         @if (count($categoryproduct->mainproducts) > 0)
-                <div class="pb-0 bg-white row m-0 my-2" data-aos="fade-right" data-aos-duration="10" style="overflow: hidden;">
+                <div class="pb-3 bg-white row m-0 my-3 rounded-3 shadow-sm" style="overflow: hidden;">
                     <div class="col-12" style="padding-left: 0;display: flex;justify-content: space-between;">
                         <div class="px-2 pt-0 p-md-3 d-flex justify-content-between" style="padding-bottom:4px !important;padding-top: 8px !important;">
                             <h4 class="m-0"><b>{{ $categoryproduct->category_name }}</b></h4>
@@ -410,23 +459,11 @@
     
                     @forelse ($categoryproduct->mainproducts as $product)
                         @php
-                            $relatedIds = json_decode($product->RelatedProductIds);
-                            $firstcatepro = null;
-                            $dis = 0;
-                            if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
-                                $firstcatepro=App\Models\Product::with([
-                                    'sizes' => function ($query) {
-                                        $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
-                                    }
-                                    ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
-                                
-                                if ($firstcatepro && count($firstcatepro->sizes) > 0 && $firstcatepro->sizes[0]->RegularPrice > 0) {
-                                    $dis=intval(($firstcatepro->sizes[0]->Discount/$firstcatepro->sizes[0]->RegularPrice)*100);
-                                }
-                            }
+                            $firstcatepro = $product->firstpro;
+                            $dis = $product->discount_percent;
                         @endphp
                         @if(isset($firstcatepro))
-                            <div class="my-1 px-1 col-6 col-md-4 col-lg-3" fade-direction="left" fade-time="1">
+                            <div class="my-1 px-1 col-6 col-md-4 col-lg-2">
                                 <div class="product-micro-row">
                                      <div class="product_item_inner">
                                        
@@ -444,7 +481,7 @@
                                              
                                             <div class="d-flex my-2" style="justify-content:center">
                                                 <div class="star" style="padding-top: 5px;">
-                                                    <span style="font-weight: bold;color:black;font-size:10px">({{ App\Models\Review::where('product_id', $product->id)->get()->count() }})</span>
+                                                    <span style="font-weight: bold;color:black;font-size:10px">({{ $product->review_count }})</span>
                                                         <span class="fas fa-star" id="checked"></span>
                                                         <span class="fas fa-star" id="checked"></span>
                                                         <span class="fas fa-star" id="checked"></span>
@@ -480,7 +517,7 @@
     @empty
     @endforelse
 
-    <div class="row m-0 gutters-10">
+    <div class="row m-0 gutters-10 px-lg-0">
         @if (count($addbottoms) == '2')
             @forelse ($addbottoms as $add)
                 <div class="col-lg-6 col-6 ps-lg-0">

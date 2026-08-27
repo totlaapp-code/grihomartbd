@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Session;
 use Codeboxr\PathaoCourier\Facade\PathaoCourier;
+use App\Services\FacebookPixelService;
 
 class OrderController extends Controller
 {
@@ -149,7 +150,8 @@ class OrderController extends Controller
     {
         if (isset($request->phone) && isset($request->message)) {
             try {
-                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $request->phone . '&senderid=GRIHOMARTBD.COM&message=' . $request->message . '');
+                $message = $request->message;
+                \App\Services\SmsNetBdService::sendNotification($request->phone, $message);
             } catch (\Exception $e) {
                 $sendstatus = false;
             }
@@ -816,10 +818,6 @@ class OrderController extends Controller
                 }
             }
 
-            if ($request['data']['status'] == 'Shipped') {
-                $order->deliveryDate = date('Y-m-d');
-            }
-
             if ($order->status == 'Pending' && $request['data']['status'] == 'Pending') {
             } else {
                 if ($request['data']['status'] == 'Hold' || $request['data']['status'] == 'Ready to Ship' || $request['data']['status'] == 'Cancelled') {
@@ -831,7 +829,9 @@ class OrderController extends Controller
                         $cu = Customer::where('order_id', $order->id)->first();
                         if ($cu) {
                             try {
-                                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                                $template = \App\Models\Information::where('key', 'sms_template_confirmed')->first()->value ?? 'ধন্যবাদ, আপনার অর্ডারটি ID:[invoice_id] কনফার্ম হয়েছে - মোটঃ [sub_total] টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003';
+                                $message = str_replace(['[invoice_id]', '[sub_total]'], [$order->invoiceID, $order->subTotal], $template);
+                                \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
                             } catch (\Exception $e) {
                                 $sendstatus = false;
                             }
@@ -845,6 +845,9 @@ class OrderController extends Controller
                                 $comment->save();
                             }
                         }
+
+                        // FB CAPI Purchase event - শুধু Ready to Ship এ একবারই fire হবে
+                        FacebookPixelService::sendOrderPurchaseEvent($order);
                     }
                 }
                 if ($request['data']['status'] == 'Packaging') {
@@ -861,7 +864,9 @@ class OrderController extends Controller
                         $cu = Customer::where('order_id', $order->id)->first();
                         if ($cu) {
                             try {
-                                $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                                $template = \App\Models\Information::where('key', 'sms_template_shipped')->first()->value ?? ' অভিনন্দন,আপনার অর্ডারটি [invoice_id] কুরিয়ার করা হয়েছে।মোটঃ[sub_total] টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ [tracking_link] , Hotline: 01888173003';
+                                $message = str_replace(['[invoice_id]', '[sub_total]', '[tracking_link]'], [$order->invoiceID, $order->subTotal, $order->courier_tracking_link], $template);
+                                \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
                             } catch (\Exception $e) {
                                 $sendstatus = false;
                             }
@@ -1156,14 +1161,18 @@ class OrderController extends Controller
 
         return Datatables::of($orders->orderBy('orders.id', 'DESC'))
             ->addColumn('customerInfo', function ($orders) {
+                $otpBadge = $orders->otp_verified 
+                    ? '<br><span class="badge bg-soft-success text-success" style="font-size:11px; padding: 4px 6px; margin-top: 5px;"><i class="fas fa-check-circle"></i> OTP Verified</span>' 
+                    : '<br><span class="badge bg-soft-warning text-warning" style="font-size:11px; padding: 4px 6px; margin-top: 5px;"><i class="fas fa-exclamation-triangle"></i> Unverified</span>';
+
                 if ($orders->store_id == '1') {
                     if ($orders->web_id == 'Website') {
-                        return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br>' . $orders->customerPhone . '<br>' . $orders->customerAddress . '</span><br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">Check</button>';
+                        return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br>' . $orders->customerPhone . '<br>' . $orders->customerAddress . '</span>' . $otpBadge . '<br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">Check</button>';
                     } else {
-                        return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br>' . $orders->customerPhone . '<br>' . $orders->customerAddress . '</span><br><p class="btn btn-info btn-sm" style="margin-top:50px;margin-bottom:0"><b>' . $orders->web_id . '</b> </p><br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">Check</button>';
+                        return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br>' . $orders->customerPhone . '<br>' . $orders->customerAddress . '</span>' . $otpBadge . '<br><p class="btn btn-info btn-sm" style="margin-top:5px;margin-bottom:0"><b>' . $orders->web_id . '</b> </p><br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">Check</button>';
                     }
                 } else {
-                    return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br>' . $orders->customerPhone . '<br>' . $orders->customerAddress . '</span><br><p class=" btn btn-info btn-sm" style="margin-top:50px;margin-bottom:0">Grihomartbd : <b>' . $orders->web_id . '</b></p><br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">Check</button>';
+                    return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br>' . $orders->customerPhone . '<br>' . $orders->customerAddress . '</span>' . $otpBadge . '<br><p class=" btn btn-info btn-sm" style="margin-top:5px;margin-bottom:0">Grihomartbd : <b>' . $orders->web_id . '</b></p><br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">Check</button>';
                 }
             })
             ->addColumn('invoice', function ($orders) {
@@ -1365,7 +1374,7 @@ class OrderController extends Controller
                     }
                 }
                 if ($admin->hasRole('admin')) {
-                    if ($order->status == 'Ready to Ship' || $order->status == 'Packaging' || $order->status == 'Completed' || $order->status == 'Del. Failed' || $order->status == 'Shipped') {
+                    if ($order->status == 'Pending' || $order->status == 'Hold' || $order->status == 'Ready to Ship' || $order->status == 'Packaging' || $order->status == 'Completed' || $order->status == 'Del. Failed' || $order->status == 'Shipped') {
                         if ($request['status'] == 'Cancelled' || $request['status'] == 'Hold' || $request['status'] == 'Shipped' || $request['status'] == 'Pending') {
                             $response['status'] = 'failed';
                             $response['message'] = 'You do not have permission to update this order status';
@@ -1422,7 +1431,7 @@ class OrderController extends Controller
                     $ops = Orderproduct::where('order_id', $order->id)->get();
                     foreach ($ops as $op) {
                         $size = Size::where('product_id', $op->product_id)->where('size', $op->size)->first();
-                        if ($size->available_stock >= $op->quantity) {
+                        if ($size && $size->available_stock >= $op->quantity) {
                             $size->sold += $op->quantity;
                             $size->available_stock -= $op->quantity;
                             $size->update();
@@ -1441,9 +1450,11 @@ class OrderController extends Controller
                     $ops = Orderproduct::where('order_id', $order->id)->get();
                     foreach ($ops as $op) {
                         $size = Size::where('product_id', $op->product_id)->where('size', $op->size)->first();
-                        $size->sold -= $op->quantity;
-                        $size->available_stock += $op->quantity;
-                        $size->update();
+                        if ($size) {
+                            $size->sold -= $op->quantity;
+                            $size->available_stock += $op->quantity;
+                            $size->update();
+                        }
                     }
                 }
             }
@@ -1481,8 +1492,11 @@ class OrderController extends Controller
         if ($request['status'] == 'Shipped') {
             $cu = Customer::where('order_id', $order->id)->first();
             if ($cu) {
+                $sendstatus = true;
                 try {
-                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                    $template = \App\Models\Information::where('key', 'sms_template_shipped')->first()->value ?? ' অভিনন্দন,আপনার অর্ডারটি [invoice_id] কুরিয়ার করা হয়েছে।মোটঃ[sub_total] টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ [tracking_link] , Hotline: 01888173003';
+                    $message = str_replace(['[invoice_id]', '[sub_total]', '[tracking_link]'], [$order->invoiceID, $order->subTotal, $order->courier_tracking_link], $template);
+                    \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
                 } catch (\Exception $e) {
                     $sendstatus = false;
                 }
@@ -1501,8 +1515,11 @@ class OrderController extends Controller
         if ($request['status'] == 'Ready to Ship') {
             $cu = Customer::where('order_id', $order->id)->first();
             if ($cu) {
+                $sendstatus = true;
                 try {
-                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                    $template = \App\Models\Information::where('key', 'sms_template_confirmed')->first()->value ?? 'ধন্যবাদ, আপনার অর্ডারটি ID:[invoice_id] কনফার্ম হয়েছে - মোটঃ [sub_total] টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003';
+                    $message = str_replace(['[invoice_id]', '[sub_total]'], [$order->invoiceID, $order->subTotal], $template);
+                    \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
                 } catch (\Exception $e) {
                     $sendstatus = false;
                 }
@@ -1515,6 +1532,12 @@ class OrderController extends Controller
                     $comment->status = 1;
                     $comment->save();
                 }
+            }
+            // FB CAPI Purchase event - fires once when status becomes Ready to Ship
+            try {
+                FacebookPixelService::sendOrderPurchaseEvent($order);
+            } catch (\Exception $e) {
+                // Prevent Facebook CAPI errors from blocking order status save
             }
         }
 
@@ -1578,7 +1601,7 @@ class OrderController extends Controller
                         }
                     }
                     if ($admin->hasRole('admin')) {
-                        if ($order->status == 'Ready to Ship' || $order->status == 'Packaging' || $order->status == 'Completed' || $order->status == 'Del. Failed' || $order->status == 'Shipped') {
+                        if ($order->status == 'Pending' || $order->status == 'Hold' || $order->status == 'Ready to Ship' || $order->status == 'Packaging' || $order->status == 'Completed' || $order->status == 'Del. Failed' || $order->status == 'Shipped') {
                             if ($request['status'] == 'Cancelled' || $request['status'] == 'Hold' || $request['status'] == 'Shipped' || $request['status'] == 'Pending') {
                                 $response['status'] = 'failed';
                                 $response['message'] = 'You do not have permission to update this order status';
@@ -1635,7 +1658,9 @@ class OrderController extends Controller
                             $cu = Customer::where('order_id', $order->id)->first();
                             if ($cu) {
                                 try {
-                                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                                    $template = \App\Models\Information::where('key', 'sms_template_confirmed')->first()->value ?? 'ধন্যবাদ, আপনার অর্ডারটি ID:[invoice_id] কনফার্ম হয়েছে - মোটঃ [sub_total] টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003';
+                                $message = str_replace(['[invoice_id]', '[sub_total]'], [$order->invoiceID, $order->subTotal], $template);
+                                \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
                                 } catch (\Exception $e) {
                                     $sendstatus = false;
                                 }
@@ -1658,7 +1683,9 @@ class OrderController extends Controller
                             $cu = Customer::where('order_id', $order->id)->first();
                             if ($cu) {
                                 try {
-                                    $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                                    $template = \App\Models\Information::where('key', 'sms_template_shipped')->first()->value ?? ' অভিনন্দন,আপনার অর্ডারটি [invoice_id] কুরিয়ার করা হয়েছে।মোটঃ[sub_total] টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ [tracking_link] , Hotline: 01888173003';
+                                $message = str_replace(['[invoice_id]', '[sub_total]', '[tracking_link]'], [$order->invoiceID, $order->subTotal, $order->courier_tracking_link], $template);
+                                \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
                                 } catch (\Exception $e) {
                                     $sendstatus = false;
                                 }
@@ -1700,6 +1727,8 @@ class OrderController extends Controller
                             }
                         }
                     }
+                    // FB CAPI Purchase event - fires once when status becomes Ready to Ship
+                    FacebookPixelService::sendOrderPurchaseEvent($order);
                 }
 
                 if ($order->status == 'Ready to Ship' || $order->status == 'Packaging' || $order->status == 'Shipped' || $order->status == 'Completed' || $order->status == 'Del. Failed') {
@@ -2756,7 +2785,9 @@ class OrderController extends Controller
                     $cu = Customer::where('order_id', $order->id)->first();
                     if ($cu) {
                         try {
-                            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message=ধন্যবাদ, আপনার অর্ডারটি ID:' . $order->invoiceID . ' কনফার্ম হয়েছে - মোটঃ ' . $order->subTotal . ' টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003');
+                            $template = \App\Models\Information::where('key', 'sms_template_confirmed')->first()->value ?? 'ধন্যবাদ, আপনার অর্ডারটি ID:[invoice_id] কনফার্ম হয়েছে - মোটঃ [sub_total] টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003';
+                    $message = str_replace(['[invoice_id]', '[sub_total]'], [$order->invoiceID, $order->subTotal], $template);
+                    \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
                         } catch (\Exception $e) {
                             $sendstatus = false;
                         }
@@ -2786,7 +2817,9 @@ class OrderController extends Controller
                     $cu = Customer::where('order_id', $order->id)->first();
                     if ($cu) {
                         try {
-                            $sendstatus = Http::get('http://bulksmsbd.net/api/smsapi?api_key=3z2e9owl4PGXLakGMAmv&type=text&number=' . $cu->customerPhone . '&senderid=GRIHOMARTBD.COM&message= অভিনন্দন,আপনার অর্ডারটি ' . $order->invoiceID . ' কুরিয়ার করা হয়েছে।মোটঃ' . $order->subTotal . ' টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ ' . $order->courier_tracking_link . ' , Hotline: 01888173003');
+                            $template = \App\Models\Information::where('key', 'sms_template_shipped')->first()->value ?? ' অভিনন্দন,আপনার অর্ডারটি [invoice_id] কুরিয়ার করা হয়েছে।মোটঃ[sub_total] টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ [tracking_link] , Hotline: 01888173003';
+                    $message = str_replace(['[invoice_id]', '[sub_total]', '[tracking_link]'], [$order->invoiceID, $order->subTotal, $order->courier_tracking_link], $template);
+                    \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
                         } catch (\Exception $e) {
                             $sendstatus = false;
                         }

@@ -1,23 +1,25 @@
  @forelse ($categoryproducts as $categoryproduct)
     @php
-        $relatedIds = json_decode($categoryproduct->RelatedProductIds);
-        $firstcatepro = null;
-        if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
-            $firstcatepro=App\Models\Product::with([
-                'sizes' => function ($query) {
-                    $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
-                }
+        $firstcatepro = $categoryproduct->firstpro ?? null;
+        if (!$firstcatepro && !empty($categoryproduct->RelatedProductIds)) {
+            $relatedIds = json_decode($categoryproduct->RelatedProductIds);
+            if (!empty($relatedIds) && isset($relatedIds[0]->productID)) {
+                $firstcatepro = App\Models\Product::with([
+                    'sizes' => function ($query) {
+                        $query->select('id','product_id','Discount','RegularPrice','SalePrice')->take(1);
+                    }
                 ])->where('id', $relatedIds[0]->productID)->select('id','ProductName')->first();
+            }
         }
 
-        $reviewCount = 0;
-        if ($firstcatepro) {
+        $reviewCount = $categoryproduct->review_count ?? 0;
+        if (!isset($categoryproduct->review_count) && $firstcatepro) {
             $reviewCount = App\Models\Review::where('product_id', $firstcatepro->id)->count();
         }
         
-        $dis = 0;
-        if (isset($firstcatepro->sizes[0]) && $firstcatepro->sizes[0]->RegularPrice > 0) {
-            $dis=intval(($firstcatepro->sizes[0]->Discount/$firstcatepro->sizes[0]->RegularPrice)*100);
+        $dis = $categoryproduct->discount_percent ?? 0;
+        if ($dis == 0 && isset($firstcatepro->sizes[0]) && $firstcatepro->sizes[0]->RegularPrice > 0) {
+            $dis = intval(($firstcatepro->sizes[0]->Discount / $firstcatepro->sizes[0]->RegularPrice) * 100);
         }
     @endphp
     @if(isset($firstcatepro))

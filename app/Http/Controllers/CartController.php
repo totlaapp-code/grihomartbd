@@ -27,12 +27,12 @@ class CartController extends Controller
             Cart::add([
                 'id' => $request->product_id,
                 'name' => $cartProduct->ProductName,
-                'code' => $cartProduct->ProductSku,
                 'price' => $price,
                 'qty' => $request->qty,
                 'weight' => 1,
                 'image' => $cartProduct->ProductImage,
                 'options' => [
+                    'code' => $cartProduct->ProductSku,
                     'size' => $request->size,
                     'color' => $request->color,
                     'sigment' => $request->sigment,
@@ -47,12 +47,12 @@ class CartController extends Controller
             Cart::add([
                 'id' => $request->product_id,
                 'name' => $cartProduct->ProductName,
-                'code' => $cartProduct->ProductSku,
                 'price' => $price,
                 'qty' => $request->qty,
                 'weight' => 1,
                 'image' => $cartProduct->ProductImage,
                 'options' => [
+                    'code' => $cartProduct->ProductSku,
                     'size' => $size->size,
                     'color' => $request->color,
                     'sigment' => $request->sigment,

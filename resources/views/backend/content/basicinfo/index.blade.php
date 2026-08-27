@@ -193,9 +193,9 @@
                                     value="{{ $webinfo->refund_rule }}" id="refund_rule" placeholder="Refund Rules">
                                 <label for="floatingPassword">Refund Rules</label>
                             </div>
-                            <div class=" mb-4">
+                            <div class="form-floating mb-3">
                                 <select name="cash_on_delivery" id="cash_on_delivery" required
-                                    class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                                    class="form-select bg-white text-dark" aria-label="Cash on Delivery">
                                     @if ($webinfo->cash_on_delivery == 'ON')
                                         <option value="ON" selected>ON</option>
                                         <option value="OFF">OFF</option>
@@ -203,8 +203,22 @@
                                         <option value="ON">ON</option>
                                         <option value="OFF" selected>OFF</option>
                                     @endif
-
                                 </select>
+                                <label for="cash_on_delivery">Cash on Delivery</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <select name="otp_system" id="otp_system" required
+                                    class="form-select bg-white text-dark" aria-label="OTP System">
+                                    @if ($webinfo->otp_system == 'ON')
+                                        <option value="ON" selected>ON</option>
+                                        <option value="OFF">OFF</option>
+                                    @else
+                                        <option value="ON">ON</option>
+                                        <option value="OFF" selected>OFF</option>
+                                    @endif
+                                </select>
+                                <label for="otp_system">OTP Verification System</label>
                             </div>
                             <div class="mt-3">
                                 <button type="submit" class="btn btn-primary btn-lg w-100">Update</button>
@@ -223,18 +237,20 @@
                     @csrf
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="form-floating mb-3">
+                            <div class="form-floating mb-2">
                                 <textarea class="form-control" placeholder="Facebook Pixel" name="facebook_pixel" id="floatingTextarea"
-                                    style="height: 150px;">{{ $webinfo->facebook_pixel }}</textarea>
-                                <label for="floatingTextarea">Facebook Pixel</label>
+                                    style="height: 120px;" disabled readonly>{{ $webinfo->facebook_pixel }}</textarea>
+                                <label for="floatingTextarea">Facebook Pixel (Managed via .env)</label>
                             </div>
+                            <small class="text-warning d-block mb-3">⚡ Active via Server-side CAPI & .env (Disabled to prevent duplicate tracking)</small>
                         </div>
                         <div class="col-lg-6">
-                            <div class="form-floating mb-3">
+                            <div class="form-floating mb-2">
                                 <textarea class="form-control" placeholder="Google Analytics" name="google_analytics" id="floatingTextarea"
-                                    style="height: 150px;">{{ $webinfo->google_analytics }}</textarea>
-                                <label for="floatingTextarea">Google Analytics</label>
+                                    style="height: 120px;" disabled readonly>{{ $webinfo->google_analytics }}</textarea>
+                                <label for="floatingTextarea">Google Analytics (Managed via .env)</label>
                             </div>
+                            <small class="text-warning d-block mb-3">⚡ Active via GTM & .env configuration</small>
                         </div>
 
                         <div class="col-lg-6">

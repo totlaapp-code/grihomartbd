@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Http;
 use App\Mail\NotificationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Services\FacebookPixelService;
+use App\Services\SmsNetBdService;
 
 class OrderController extends Controller
 {
@@ -63,34 +64,34 @@ class OrderController extends Controller
         $customerPhone = $request->customerPhone;
         $twentyFourHoursAgo = Carbon::now()->subHours(24);
 
-        $excutomer = Customer::where('customerPhone', $customerPhone)->latest()->first();
-        if (isset($excutomer)) {
-            $exorder = Order::where('id', $excutomer->order_id)->first();
-            if ($exorder) {
-                $isPendingStatus = in_array($exorder->status, ['Pending', 'Packaging', 'Ready to Ship', 'Hold']);
-                $isWithin24Hours = $exorder->created_at ? Carbon::parse($exorder->created_at)->gte($twentyFourHoursAgo) : false;
-                if ($isPendingStatus || $isWithin24Hours) {
-                    \Yoeunes\Toastr\Facades\Toastr::warning('দুঃখিত, ২৪ ঘণ্টায় ১টির বেশি অর্ডার অনুমোদিত নয়। আপনার একটি অর্ডার প্রক্রিয়াধীন রয়েছে।', 'Warning', ["positionClass" => "toast-top-center"]);
-                    return redirect('/exist-order');
-                }
-            }
-        }
+        // $excutomer = Customer::where('customerPhone', $customerPhone)->latest()->first();
+        // if (isset($excutomer)) {
+        //     $exorder = Order::where('id', $excutomer->order_id)->first();
+        //     if ($exorder) {
+        //         $isPendingStatus = in_array($exorder->status, ['Pending', 'Packaging', 'Ready to Ship', 'Hold']);
+        //         $isWithin24Hours = $exorder->created_at ? Carbon::parse($exorder->created_at)->gte($twentyFourHoursAgo) : false;
+        //         if ($isPendingStatus || $isWithin24Hours) {
+        //             \Yoeunes\Toastr\Facades\Toastr::warning('দুঃখিত, ২৪ ঘণ্টায় ১টির বেশি অর্ডার অনুমোদিত নয়। আপনার একটি অর্ডার প্রক্রিয়াধীন রয়েছে।', 'Warning', ["positionClass" => "toast-top-center"]);
+        //             return redirect('/exist-order');
+        //         }
+        //     }
+        // }
 
-        if (\Schema::hasColumn('orders', 'ip_address')) {
-            $recentOrderExist = Order::where('created_at', '>=', $twentyFourHoursAgo)
-                ->where(function ($query) use ($userIp, $deviceId) {
-                    $query->where('ip_address', $userIp);
-                    if (!empty($deviceId)) {
-                        $query->orWhere('device_id', $deviceId);
-                    }
-                })
-                ->first();
+        // if (\Schema::hasColumn('orders', 'ip_address')) {
+        //     $recentOrderExist = Order::where('created_at', '>=', $twentyFourHoursAgo)
+        //         ->where(function ($query) use ($userIp, $deviceId) {
+        //             $query->where('ip_address', $userIp);
+        //             if (!empty($deviceId)) {
+        //                 $query->orWhere('device_id', $deviceId);
+        //             }
+        //         })
+        //         ->first();
 
-            if ($recentOrderExist) {
-                \Yoeunes\Toastr\Facades\Toastr::warning('দুঃখিত, আপনার ডিভাইস বা আইপি থেকে ২৪ ঘণ্টায় ১টির বেশি অর্ডার অনুমোদিত নয়।', 'Warning', ["positionClass" => "toast-top-center"]);
-                return redirect('/exist-order');
-            }
-        }
+        //     if ($recentOrderExist) {
+        //         \Yoeunes\Toastr\Facades\Toastr::warning('দুঃখিত, আপনার ডিভাইস বা আইপি থেকে ২৪ ঘণ্টায় ১টির বেশি অর্ডার অনুমোদিত নয়।', 'Warning', ["positionClass" => "toast-top-center"]);
+        //         return redirect('/exist-order');
+        //     }
+        // }
 
         if (!Session::has('cart')) {
             return redirect('/empty-cart');
@@ -206,7 +207,8 @@ class OrderController extends Controller
                     $orderProducts = new Orderproduct();
                     $orderProducts->order_id = $order->id;
                     $orderProducts->product_id = $product->id;
-                    $orderProducts->productCode = $product->code;
+                    $dbProduct = Product::find($product->id);
+                    $orderProducts->productCode = $product->options['code'] ?? ($dbProduct ? $dbProduct->ProductSku : 'N/A');
                     if ($product->options['color'] == 'undefined') {
                     } else {
                         $orderProducts->color = $product->options['color'];
@@ -240,24 +242,42 @@ class OrderController extends Controller
                 $notification->comment =  $order->invoiceID ;
                 $notification->admin_id = $order->admin_id;
                 $notification->save();
-                $capiData = [
-                    'id' => $order->id,
-                    'invoiceID' => $order->invoiceID,
-                    'customerName' => $request->customerName,
-                    'customerPhone' => $request->customerPhone,
-                    'totalAmount' => $order->subTotal + $order->vat,
-                    'cityName' => isset($city) ? $city->cityName : null,
-                ];
-                $this->sendCapiEvent('Purchase', $capiData, Cart::content());
 
-                Cart::destroy();
-                Session::forget('couponcode');
-                Session::forget('availablecoupon');
-                Session::put('ordersubtotal', $request->subTotal);
-                Session::put('orderdeliverycharge', $request->deliveryCharge);
-                Session::put('order_id', $order->id);
-                \Yoeunes\Toastr\Facades\Toastr::info('Order Press Successfully', 'Complete', ["positionClass" => "toast-top-center"]);
-                return redirect('order-received');
+                $basicinfo = \App\Models\Basicinfo::first();
+                
+                if ($basicinfo && $basicinfo->otp_system == 'OFF') {
+                    // OTP is OFF: Fire CAPI and skip OTP page
+                    \App\Services\FacebookPixelService::sendOrderPurchaseEvent($order);
+
+                    Cart::destroy();
+                    Session::forget('couponcode');
+                    Session::forget('availablecoupon');
+                    Session::put('ordersubtotal', $request->subTotal);
+                    Session::put('orderdeliverycharge', $request->deliveryCharge);
+                    Session::put('order_id', $order->id);
+                    Session::put('successfulor', 'successfulor');
+                    return redirect('order-received');
+                } else {
+                    // --- OTP: Generate, save, send SMS ---
+                    $otp = (string) random_int(100000, 999999);
+                    $order->otp = $otp;
+                    $order->otp_verified = false;
+                    $order->otp_attempts = 0;
+                    $order->otp_expires_at = Carbon::now()->addMinutes(15);
+                    $order->save();
+
+                    SmsNetBdService::sendOtp($request->customerPhone, $otp, $order->invoiceID);
+
+                    Cart::destroy();
+                    Session::forget('couponcode');
+                    Session::forget('availablecoupon');
+                    Session::put('ordersubtotal', $request->subTotal);
+                    Session::put('orderdeliverycharge', $request->deliveryCharge);
+                    Session::put('order_id', $order->id);
+                    Session::put('successfulor', 'successfulor');
+                    
+                    return redirect('order-received');
+                }
             } else {
                 Customer::where('order_id', '=', $order->id)->delete();
                 Orderproduct::where('order_id', '=', $order->id)->delete();
@@ -279,6 +299,84 @@ class OrderController extends Controller
         }
 
         return 'GA001' . $orderID;
+    }
+
+    // ─── OTP Verification ────────────────────────────────────────────────────
+
+    public function showOtpPage($orderId)
+    {
+        $order = Order::findOrFail($orderId);
+        $customer = Customer::where('order_id', $orderId)->first();
+        return view('otp-verify', compact('order', 'customer'));
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $order = Order::findOrFail($request->order_id);
+
+        // Already verified
+        if ($order->otp_verified) {
+            if ($request->ajax()) return response()->json(['status' => 'success', 'message' => 'অর্ডার আগেই নিশ্চিত হয়েছে!']);
+            return redirect('order-received')->with('message', 'অর্ডার আগেই নিশ্চিত হয়েছে!');
+        }
+
+        // Max attempts check
+        if ($order->otp_attempts >= 3) {
+            if ($request->ajax()) return response()->json(['status' => 'error', 'message' => 'সর্বোচ্চ ৩টি চেষ্টা শেষ। অনুগ্রহ করে আমাদের সাথে যোগাযোগ করুন।']);
+            return back()->withErrors(['otp' => 'সর্বোচ্চ ৩টি চেষ্টা শেষ। অনুগ্রহ করে আমাদের সাথে যোগাযোগ করুন।']);
+        }
+
+        // OTP expiry check
+        if ($order->otp_expires_at && Carbon::now()->gt($order->otp_expires_at)) {
+            if ($request->ajax()) return response()->json(['status' => 'error', 'message' => 'OTP মেয়াদ শেষ হয়ে গেছে। Resend করুন।']);
+            return back()->withErrors(['otp' => 'OTP মেয়াদ শেষ হয়ে গেছে। Resend করুন।']);
+        }
+
+        // OTP match check
+        if ($request->otp !== $order->otp) {
+            $order->otp_attempts += 1;
+            $order->save();
+            $remaining = 3 - $order->otp_attempts;
+            if ($request->ajax()) return response()->json(['status' => 'error', 'message' => 'OTP সঠিক নয়। আরও ' . $remaining . 'টি সুযোগ বাকি।']);
+            return back()->withErrors(['otp' => 'OTP সঠিক নয়। আরও ' . $remaining . 'টি সুযোগ বাকি।']);
+        }
+
+        // ✅ OTP correct → confirm order
+        $order->otp_verified = true;
+        $order->otp = null; // clear otp for security
+        $order->status = 'Confirmed';
+        $order->save();
+
+        // FB CAPI Purchase event fires on successful OTP verification
+        \App\Services\FacebookPixelService::sendOrderPurchaseEvent($order);
+
+        Session::put('order_id', $order->id);
+        
+        if ($request->ajax()) return response()->json(['status' => 'success', 'message' => 'অর্ডার সফলভাবে নিশ্চিত হয়েছে!']);
+        
+        \Yoeunes\Toastr\Facades\Toastr::success('অর্ডার সফলভাবে নিশ্চিত হয়েছে!', 'Confirmed', ["positionClass" => "toast-top-center"]);
+        return redirect('order-received');
+    }
+
+    public function resendOtp(Request $request)
+    {
+        $order = Order::findOrFail($request->order_id);
+        $customer = Customer::where('order_id', $order->id)->first();
+
+        if ($order->otp_verified) {
+            return response()->json(['status' => 'already_verified']);
+        }
+
+        // Generate fresh OTP
+        $otp = (string) random_int(100000, 999999);
+        $order->otp = $otp;
+        $order->otp_attempts = 0;
+        $order->otp_expires_at = Carbon::now()->addMinutes(15);
+        $order->save();
+
+        SmsNetBdService::sendOtp($customer->customerPhone, $otp, $order->invoiceID);
+
+        return response()->json(['status' => 'sent']);
     }
 
     public function updatepaymentmethood(Request $request)

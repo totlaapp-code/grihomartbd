@@ -31,8 +31,9 @@
     animation: pulse 1.5s ease-in-out infinite;
 }
 .call_now_btn {
-    height: 45px;
-    display: flex;
+    height: auto;
+    padding: 8px 28px;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
 }
@@ -74,10 +75,13 @@
     font-weight: 500;
 }
 @media only screen and (max-width: 600px) {
-
-.description img{
-        width: 260px !important;
-}
+    .description img, #description img, .product-tab img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    .single-product .product-tabs .tab-content .tab-pane {
+        padding: 12px 10px !important;
+    }
 }
 
 .star {
@@ -200,17 +204,46 @@
         padding: 0 10px;
     }
 
+    /* Gallery image height fix */
+    #sync1 {
+        max-height: 420px;
+        overflow: hidden;
+    }
+    #sync1 .items img {
+        width: 100%;
+        height: 420px;
+        object-fit: contain;
+        background: #f8f8f8;
+    }
+    #sync2 .items img {
+        width: 100%;
+        height: 70px;
+        object-fit: contain;
+        background: #f8f8f8;
+    }
+    @media (max-width: 768px) {
+        #sync1 {
+            max-height: 280px;
+        }
+        #sync1 .items img {
+            height: 280px;
+        }
+        #sync2 .items img {
+            height: 55px;
+        }
+    }
+
 </style>
 <!-- Body -->
 
 <div class="mt-2 body-content" id="top-banner-and-menu">
-    <div class='container' id="loadproduct">
+    <div class='container-fluid px-2 px-lg-4' id="loadproduct">
         <div class='row single-product'>
             <div class='p-0 col-md-12'>
                 <div class="detail-block">
                     <div class="row wow fadeInUp">
 
-                        <div class="col-xs-12 col-sm-12 col-md-6 gallery-holder">
+                        <div class="col-12 col-md-5 col-lg-5 gallery-holder">
                             <div class="product-item-holder size-big single-product-gallery small-gallery">
 
                                 @if(json_decode($productdetails->PostImage))
@@ -221,7 +254,7 @@
                                         </div>
                                         @forelse (json_decode($productdetails->PostImage) as $image)
                                             <div class="items">
-                                                <img class="w-100 h-100" src="{{asset('public/images/product/slider')}}/{{$image}}"
+                                                <img class="w-100 h-100" src="{{ asset('images/product/slider/' . $image) }}"
                                                     alt="" style="border-radius: 4px;">
                                             </div>
                                         @empty
@@ -237,7 +270,7 @@
                                             <div class="items">
                                                 <img class="w-100 h-100"
                                                     style="padding:6px;border:1px solid;border-radius: 4px;"
-                                                    src="{{asset('public/images/product/slider')}}/{{$image}}" alt="">
+                                                    src="{{ asset('images/product/slider/' . $image) }}" alt="">
                                             </div>
                                         @empty
                                         @endforelse
@@ -253,7 +286,7 @@
                             <!-- /.single-product-gallery -->
                         </div>
                         <!-- /.gallery-holder -->
-                        <div class="col-sm-12 col-md-6 product-info-block" id="paddingnone">
+                        <div class="col-12 col-md-7 col-lg-7 product-info-block" id="paddingnone">
                             <div class="product-info" id="productinfo">
                                 <h1 class="name" style="margin-top:16px !important;padding-bottom: 6px;font-size: 20px !important; line-height: 25px;"> {{ $productdetails->ProductName }}</h1>
                                 
@@ -336,9 +369,8 @@
                                                         <input type="radio" class="m-0" hidden
                                                             id="size{{ $sizesold->size }}" name="size"
                                                             onclick="getsize('{{ $sizesold->size }}')">
-                                                        <label class="sizetext ms-0" id="sizetext{{ $sizesold->size }}"
+                                                        <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1" id="sizetext{{ $sizesold->size }}"
                                                             for="size{{ $sizesold->size }}"
-                                                            style="border: 1px solid #e4e4e4;font-size:18px;font-weight:bold;padding: 0px 8px;border-radius: 2px;margin-right:4px;margin-bottom:4px;"
                                                             onclick="getsize('{{ $sizesold->size }}')">{{ $sizesold->size }}</label>
                                                         @else
                                                         <input type="hidden" name="regularpriceofsize"
@@ -349,9 +381,9 @@
                                                             value="{{ $sizesold->SalePrice }}">
                                                         <input type="radio" class="m-0" hidden
                                                             id="size{{ $sizesold->size }}" name="size" >
-                                                        <label class="sizetext ms-0" id="sizetext{{ $sizesold->size }}"
+                                                        <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1 disabled" id="sizetext{{ $sizesold->size }}"
                                                             for="size{{ $sizesold->size }}"
-                                                            style="border: 1px solid #e4e4e4;    color: rgb(151 150 150) !important;font-size:18px;font-weight:bold;padding: 0px 8px;border-radius: 2px;margin-right:4px;margin-bottom:4px;" ><del>{{ $sizesold->size }} </del> </label>
+                                                            style="opacity: 0.6;" ><del>{{ $sizesold->size }} </del> </label>
                                                         @endif
     
                                                     @empty
@@ -379,10 +411,9 @@
                                                     <input type="radio" class="m-0" hidden
                                                         id="size{{ $weight->id }}" name="size"
                                                         onclick="getweight('{{ $weight->id }}')">
-                                                    <label class="weighttext ms-0"
+                                                    <label class="weighttext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1"
                                                         id="weighttext{{ $weight->id }}"
                                                         for="size{{ $weight->id }}"
-                                                        style="border: 1px solid #e4e4e4;font-size:16px;font-weight:bold;padding: 0px 6px;border-radius: 2px;margin-right:4px;margin-bottom:4px;"
                                                         onclick="getweight('{{ $weight->id }}')">{{ $weight->weight }}</label>
                                                 @empty
                                                 @endforelse
@@ -458,10 +489,8 @@
                                     </div>
                                   </div>
                                   
-                                  <div class="col-12">
-                                      <div>
-                                          <a class="btn btn-success w-100 call_now_btn" href="tel: {{App\Models\Basicinfo::first()->phone_one}}"><i class="fa-solid fa-phone mx-2"></i> Call Now</a>
-                                      </div>
+                                  <div class="col-12 d-grid d-md-flex justify-content-md-center">
+                                      <a class="btn btn-success px-md-4 call_now_btn" href="tel: {{App\Models\Basicinfo::first()->phone_one}}"><i class="fa-solid fa-phone mx-2"></i> Call Now</a>
                                   </div>
                                   <div class="col-12">
                                       <div class="mt-md-2 mt-2">
@@ -503,15 +532,15 @@
         <div class="row single-product">
             <div class="p-0 col-md-12">
                 <div class="product-tabs inner-bottom-xs wow fadeInUp">
-                    <div class="row">
-                        <div class="col-sm-12">
+                    <div class="row m-0">
+                        <div class="col-12 p-0">
                             <ul id="product-tabs" class="nav nav-tabs nav-tab-cell" style="display: inline-flex;">
                                 <li class="active"><a data-bs-toggle="tab" id="istteb"
                                         href="#description">DESCRIPTION</a></li>
                             </ul>
                             <!-- /.nav-tabs #product-tabs -->
                         </div>
-                        <div class="col-sm-12">
+                        <div class="col-12 p-0">
 
                             <div class="tab-content">
 
@@ -760,7 +789,7 @@
         </script>
 
     </div>
-    <div class="container">
+    <div class="container-fluid px-2 px-lg-4">
         <div class="row">
             <div class="col-12">
                 <!-- ============================================== UPSELL PRODUCTS ============================================== -->
@@ -1102,15 +1131,10 @@
             nav: true,
             dots: false,
             responsive: {
-                0: {
-                    items: 2,
-                },
-                600: {
-                    items: 2,
-                },
-                1000: {
-                    items: 5,
-                }
+                0: { items: 2 },
+                600: { items: 3 },
+                992: { items: 4 },
+                1200: { items: 6 }
             }
         });
 

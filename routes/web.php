@@ -1,11 +1,54 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\WebviewController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\GoogleController;
+
+/*
+|--------------------------------------------------------------------------
+| Shared Hosting Secret Artisan Web Runner
+|--------------------------------------------------------------------------
+*/
+Route::get('/artisan-runner/{secret}/{cmd}', function ($secret, $cmd) {
+    if ($secret !== 'grihomart2026') {
+        return response()->json(['status' => 'error', 'message' => 'Unauthorized Secret Key'], 403);
+    }
+
+    try {
+        $output = '';
+        if ($cmd === 'migrate') {
+            Artisan::call('migrate', ['--force' => true]);
+            $output = Artisan::output();
+        } elseif ($cmd === 'clear-all' || $cmd === 'optimize-clear') {
+            Artisan::call('optimize:clear');
+            Artisan::call('view:clear');
+            Artisan::call('cache:clear');
+            Artisan::call('config:clear');
+            Artisan::call('route:clear');
+            $output = "All caches cleared successfully!";
+        } elseif ($cmd === 'storage-link') {
+            Artisan::call('storage:link');
+            $output = "Storage link created successfully!";
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Invalid Command'], 400);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'command' => $cmd,
+            'output' => trim($output) ?: 'Command executed successfully.'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -77,12 +120,31 @@ Route::get('order/complete', [CartController::class, 'complete']);
 Route::post('/update-cart', [CartController::class, 'updatecart']);
 Route::get('load-cart', [CartController::class, 'loadcart']);
 Route::post('press/order', [OrderController::class, 'pressorder']);
+Route::get('verify-otp/{order_id}', [OrderController::class, 'showOtpPage'])->name('otp.page');
+Route::post('verify-otp', [OrderController::class, 'verifyOtp'])->name('otp.verify');
+Route::post('resend-otp', [OrderController::class, 'resendOtp'])->name('otp.resend');
 Route::post('update/paymentmethood', [OrderController::class, 'updatepaymentmethood']);
 Route::get('/down', function() {Artisan::call('down');return "now Down!";});
 Route::get('get-search-content', [WebviewController::class, 'searchcontent']);
 Route::get('track-order', [WebviewController::class, 'orderTraking']);
 Route::get('order-details/{slug}', [WebviewController::class, 'vieworder']);
 Route::post('track-now', [WebviewController::class, 'orderTrakingNow']);
+Route::match(['get', 'post'], 'webhook-steadfast', [WebviewController::class, 'webhook']);
+Route::match(['get', 'post'], 'steadfast/webhook', [WebviewController::class, 'webhook']);
+
+Route::get('images/{path}', function ($path) {
+    $fullPath = public_path('images/' . $path);
+    if (file_exists($fullPath)) {
+        $mime = str_ends_with(strtolower($fullPath), '.webp') ? 'image/webp' : mime_content_type($fullPath);
+        return response()->file($fullPath, ['Content-Type' => $mime]);
+    }
+    $hostingPath = base_path('public-hosting/public/images/' . $path);
+    if (file_exists($hostingPath)) {
+        $mime = str_ends_with(strtolower($hostingPath), '.webp') ? 'image/webp' : mime_content_type($hostingPath);
+        return response()->file($hostingPath, ['Content-Type' => $mime]);
+    }
+    abort(404);
+})->where('path', '.*');
 
 Route::get('/clear-cache', function() {
     Artisan::call('cache:clear');

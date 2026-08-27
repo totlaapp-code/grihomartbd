@@ -1987,6 +1987,12 @@ button.owl-prev {
     padding: 24px;
 }
 
+@media only screen and (max-width: 767px) {
+    .single-product .product-tabs .tab-content .tab-pane {
+        padding: 12px 10px !important;
+    }
+}
+
 .tab-pane .fade #orderConfirm {
     display: none !important;
 }

@@ -26,18 +26,18 @@ use App\Http\Controllers\Backend\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CourierController;
-use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\Backend\PurchaseController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\ComplainController;
 use App\Http\Controllers\ComplanenoteController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymenttypeController;
-use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\AdminInformation;
 use App\Http\Controllers\FindorderController;
 use App\Http\Controllers\ExpensetypeController;
-use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\PathaoController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\CouponController;
@@ -214,6 +214,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin:admin']], functi
     Route::post('information/update/{slug}', [InformationController::class, 'update']);
     Route::get('menu/page/{slug}', [InformationController::class, 'create']);
     Route::post('menu/page/create/{slug}', [InformationController::class, 'createpage']);
+
+    // SMS Templates
+    Route::get('sms_templates', [\App\Http\Controllers\Backend\BasicinfoController::class, 'smsTemplates'])->name('admin.sms_templates');
+    Route::post('sms_templates/update', [\App\Http\Controllers\Backend\BasicinfoController::class, 'updateSmsTemplates'])->name('admin.sms_templates.update');
 
     // GET CITY
     Route::get('get/city', [PathaoController::class, 'getCities']);
