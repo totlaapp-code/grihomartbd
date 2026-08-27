@@ -36,7 +36,7 @@ if (typeof fbq !== 'undefined') {
 
 @if(env('GTM_ID'))
     @php
-        $gtmHost = env('GTM_SERVER_DOMAIN', 'www.googletagmanager.com');
+        $gtmHost = env('GTM_SERVER_DOMAIN') ?: 'www.googletagmanager.com';
         $gtmHost = preg_replace('/^https?:\/\//i', '', rtrim($gtmHost, '/'));
     @endphp
 <!-- Google Tag Manager (Stape.io / sGTM & Web-GTM Compatible) -->

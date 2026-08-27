@@ -21,8 +21,8 @@
  
    @if(env('GTM_ID'))
        @php
-           $gtmHost = env('GTM_SERVER_DOMAIN', 'www.googletagmanager.com');
-           $gtmHost = preg_replace('/^https?:\/\//i', '', rtrim($gtmHost, '/'));
+            $gtmHost = env('GTM_SERVER_DOMAIN') ?: 'www.googletagmanager.com';
+            $gtmHost = preg_replace('/^https?:\/\//i', '', rtrim($gtmHost, '/'));
        @endphp
    <!-- Google Tag Manager (noscript - Stape.io sGTM Ready) -->
    <noscript><iframe src="https://{{ $gtmHost }}/ns.html?id={{ env('GTM_ID') }}"
