@@ -90,7 +90,9 @@ class SliderController extends Controller
         $slider->slider_btn_name =$request->slider_btn_name;
         $slider->slider_btn_link =$request->slider_btn_link;
         if($request->slider_image){
-            unlink($slider->slider_image);
+            if ($slider->slider_image && file_exists($slider->slider_image)) {
+                unlink($slider->slider_image);
+            }
             $slider_image = $request->file('slider_image');
             $name = time() . "_" . $slider_image->getClientOriginalName();
             $uploadPath = ('public/images/slider/');

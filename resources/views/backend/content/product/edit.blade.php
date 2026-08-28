@@ -199,7 +199,7 @@
                                                                 @if(json_decode($product->PostImage))
                                                                     @forelse(json_decode($product->PostImage) as $image)
                                                                         <div class="postImg" style="width:25%;float:left;position:relative;">
-                                                                            <img src="{{asset('public/images/product/slider')}}/{{$image}}" alt="" id="previewImage"
+                                                                            <img src="{{asset('images/product/slider')}}/{{$image}}" alt="" id="previewImage"
                                                                                 style="border-radius: 10px;width:100%;padding:5px;">
                                                                         </div>
                                                                     @empty

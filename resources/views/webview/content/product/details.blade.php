@@ -210,6 +210,7 @@
     }
     #sync1 .items {
         aspect-ratio: 1 / 1;
+        max-height: 420px;
         overflow: hidden;
         background: #f8f8f8;
         border-radius: 4px;
@@ -234,6 +235,13 @@
         background: #f8f8f8;
     }
 
+    /* Mobile specific adjustments */
+    @media (max-width: 768px) {
+        #sync1 .items {
+            aspect-ratio: auto;
+            height: 320px;
+        }
+    }
 </style>
 <!-- Body -->
 

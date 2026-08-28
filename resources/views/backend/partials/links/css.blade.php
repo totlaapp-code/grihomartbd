@@ -10,14 +10,14 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
 <!-- Libraries Stylesheet -->
-<link href="{{ asset('public/backend/lib/') }}/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-<link href="{{ asset('public/backend/lib/') }}/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+<link href="{{ asset('backend/lib/') }}/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<link href="{{ asset('backend/lib/') }}/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
 
 <!-- Customized Bootstrap Stylesheet -->
-<link href="{{ asset('public/backend/css/') }}/bootstrap.min.css" rel="stylesheet">
+<link href="{{ asset('backend/css/') }}/bootstrap.min.css" rel="stylesheet">
 
 <!-- Template Stylesheet -->
-<link href="{{ asset('public/backend/css/') }}/style.css" rel="stylesheet">
+<link href="{{ asset('backend/css/') }}/style.css" rel="stylesheet">
 
 {{-- //sub css datatable --}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-datatables-checkboxes@1.2.13/css/dataTables.checkboxes.css">

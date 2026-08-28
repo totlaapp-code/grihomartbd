@@ -7,8 +7,8 @@
     <meta content="" name="keywords">
     <meta content="" name="description">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/x-icon" href="{{asset('public/fav.png')}}">
-    <link rel="shortcut icon" type="image/png" href="{{asset('public/fav.png')}}"/>
+    <link rel="icon" type="image/x-icon" href="{{asset('fav.png')}}">
+    <link rel="shortcut icon" type="image/png" href="{{asset('fav.png')}}"/>
     {{-- link include --}}
     @include('backend.partials.links.css')
 

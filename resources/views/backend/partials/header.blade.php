@@ -27,7 +27,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <img class="rounded-circle" src="{{ asset(Auth::guard('admin')->user()->profile) }}" alt=""
                     style="width: 40px; height: 40px; position: relative; z-index: 999999;">
                 @else
-                <img class="rounded-circle" src="{{ asset('public/user.jpg') }}" alt=""
+                <img class="rounded-circle" src="{{ asset('user.jpg') }}" alt=""
                     style="width: 40px; height: 40px; position: relative; z-index: 999999;">
                 @endif
                 <span class="d-none d-lg-inline-flex ms-2" style="position: relative; z-index: 999999; color: #000 !important;">{{ Auth::user()->name }}</span>

@@ -72,7 +72,7 @@
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Courier')}}">
                         <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
-                            <img src="{{asset('public/cash1.png')}}" style="width:50px;">
+                            <img src="{{asset('cash1.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Courier Payment</p>
                                 <h6 class="mb-0"><span id="courierpayment">0</span> TK</h6>
@@ -83,7 +83,7 @@
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Office Sale')}}">
                         <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
-                            <img src="{{asset('public/money.png')}}" style="width:50px;">
+                            <img src="{{asset('money.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Office Sale Payment</p>
                                 <h6 class="mb-0"><span id="officesalepayment">0</span> TK</h6>
@@ -95,7 +95,7 @@
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Wholesale')}}">
                         <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
-                            <img src="{{asset('public/pallete.png')}}" style="width:50px;">
+                            <img src="{{asset('pallete.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Wholesale Payment</p>
                                 <h6 class="mb-0"><span id="wholesalepayment">0</span> TK</h6>
@@ -106,7 +106,7 @@
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Total')}}">
                         <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
-                            <img src="{{asset('public/icon/income.png')}}" style="width:50px;">
+                            <img src="{{asset('icon/income.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Total Payment </p>
                                 <h6 class="mb-0"><span id="totalpayment">0</span> TK</h6>
@@ -123,7 +123,7 @@
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/expense-cost/Boost Cost')}}">
                         <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
-                            <img src="{{asset('public/shuttle.png')}}" style="width:50px;">
+                            <img src="{{asset('shuttle.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Boost Cost</p>
                                 <h6 class="mb-0"><span id="bostcost">0</span> TK</h6>
@@ -134,7 +134,7 @@
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/expense-cost/Office Cost')}}">
                     <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
-                        <img src="{{asset('public/expense.png')}}" style="width:50px;">
+                        <img src="{{asset('expense.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Office Cost</p>
                             <h6 class="mb-0"><span id="officecost">0</span> TK</h6>
@@ -146,7 +146,7 @@
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/expense-cost/Bank Deposit')}}">
                     <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
-                        <img src="{{asset('public/mobile-banking.png')}}" style="width:50px;">
+                        <img src="{{asset('mobile-banking.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Bank Deposit</p>
                             <h6 class="mb-0"><span id="bankcost">0</span> TK</h6>
@@ -157,7 +157,7 @@
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/expense-cost/Total Cost')}}">
                     <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
-                        <img src="{{asset('public/reduction.png')}}" style="width:50px;">
+                        <img src="{{asset('reduction.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Total Cost</p>
                             <h6 class="mb-0"><span id="totalcost">0</span> TK</h6>
@@ -207,7 +207,7 @@
                     <div class="col-sm-6 col-xl-3">
                         <a href="{{ url('admin_order/orderall') }}">
                         <div class="p-4 rounded bg-secondary d-flex align-items-center justify-content-start h-100">
-                            <img src="{{asset('public/icon/order.png')}}" style="width:50px;">
+                            <img src="{{asset('icon/order.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Total</p>
                                 <h6 class="mb-0" id="total">0</h6>
