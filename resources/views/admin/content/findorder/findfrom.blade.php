@@ -28,10 +28,10 @@
                         <form id="invoiceForm" method="POST" action="{{url('admin/change-status')}}" class="pb-4 pt-4">
                             @csrf
                             @if(Session::get('unknownparcel'))
-                                <img src="{{asset('public/icon/warning.jpg')}}" alt="" style="width:200px;padding:0px">
+                                <img src="{{asset('icon/warning.jpg')}}" alt="" style="width:200px;padding:0px">
                                 <h4 style="text-align: center;color: red !important;font-size: 18px;width: 265px;">Opps! Unknown percel we can not identify this please reset and process again.</h4>
                             @elseif(Session::get('repeatparcel'))
-                                <img src="{{asset('public/icon/warning.jpg')}}" alt="" style="width:200px;padding:0px">
+                                <img src="{{asset('icon/warning.jpg')}}" alt="" style="width:200px;padding:0px">
                                 <h4 style="text-align: center;color: red !important;font-size: 18px;width: 265px;">Opps! Repeat parcel. This parcel is already in shipment. Please reset and process again</h4>
                             @else
                                 <label for="invoiceID" style="float: left;">Scan Your Barcode</label>

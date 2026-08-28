@@ -46,13 +46,13 @@ class BasicinfoController extends Controller
         $webinfo->dbbl = $request->dbbl;
         $webinfo->messanger = $request->messanger;
         if ($request->logo) {
-            if ($webinfo->logo == 'public/webview/assets/images/logo.png') {
+            if ($webinfo->logo == 'webview/assets/images/logo.png') {
             } else {
                 //unlink($webinfo->logo);
             }
             $logo = $request->file('logo');
             $name = time() . "_" . $logo->getClientOriginalName();
-            $uploadPath = ('public/images/categorybanner/');
+            $uploadPath = ('images/categorybanner/');
             $logo->move($uploadPath, $name);
             $logoImgUrl = $uploadPath . $name;
             $webinfo->logo = $logoImgUrl;
@@ -61,7 +61,7 @@ class BasicinfoController extends Controller
         if ($request->favicon) { 
             $logof = $request->file('favicon');
             $namef = time() . "_" . $logof->getClientOriginalName();
-            $uploadPathf = ('public/images/categorybanner/');
+            $uploadPathf = ('images/categorybanner/');
             $logof->move($uploadPathf, $namef);
             $logoImgUrlf = $uploadPathf . $namef;
             $webinfo->favicon = $logoImgUrlf;
@@ -70,7 +70,7 @@ class BasicinfoController extends Controller
         if ($request->page_image) { 
             $logop = $request->file('page_image');
             $namep = time() . "_" . $logop->getClientOriginalName();
-            $uploadPathp = ('public/images/categorybanner/');
+            $uploadPathp = ('images/categorybanner/');
             $logop->move($uploadPathp, $namep);
             $logoImgUrlp = $uploadPathp . $namep;
             $webinfo->page_image = $logoImgUrlp;

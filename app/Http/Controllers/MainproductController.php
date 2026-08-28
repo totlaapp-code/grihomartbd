@@ -50,7 +50,7 @@ class MainproductController extends Controller
         $time = microtime('.') * 10000;
         if ($productImg) {
             $imgname = $time . $productImg->getClientOriginalName();
-            $imguploadPath = ('public/images/product/');
+            $imguploadPath = ('images/product/');
             $productImg->move($imguploadPath, $imgname);
             $productImgUrl = $imguploadPath . $imgname;
             $mainproduct->ProductImage = $productImgUrl;
@@ -168,7 +168,7 @@ class MainproductController extends Controller
         $time = microtime('.') * 10000;
         if ($request->hasFile('ProductImage')) {
             $imgname = $time . $productImg->getClientOriginalName();
-            $imguploadPath = ('public/images/product/');
+            $imguploadPath = ('images/product/');
             $productImg->move($imguploadPath, $imgname);
             $productImgUrl = $imguploadPath . $imgname;
             $mainproduct->ProductImage = $productImgUrl;

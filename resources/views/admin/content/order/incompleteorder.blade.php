@@ -291,7 +291,7 @@ $users = Admin::whereHas('roles', function ($q) {
                     <h5 class="modal-title">File Transfer On Progress</h5>
                 </div>
                 <div class="modal-body" style="text-align: center;">
-                    <img src="{{ asset('public/tr.gif') }}" alt="" style="width: 224px;">
+                    <img src="{{ asset('tr.gif') }}" alt="" style="width: 224px;">
                 </div> 
             </div>
         </div>

@@ -24,7 +24,7 @@
                     <div class="row"> 
                         <div class="col-md-5">
                             <div class="profile text-center">
-                                <img src="{{asset($admin->profile)}}" style="border-radius:50%;width:200px;">
+                                <img src="{{asset(str_replace('public/', '', $admin->profile))}}" style="border-radius:50%;width:200px;">
                                 <h4 class="mb-0 mt-3">{{$admin->name}}</h4>
                                 <h5 class="mb-0">{{$admin->quaification}}</h5>
                                 <h6 class="mb-0">{{$admin->designation}}</h6>
@@ -81,7 +81,7 @@
                                 </table>
                                 <div class="form-group mb-3">
                                     <label for="floatingInput" style="color: black;padding: 8px;font-weight:bold;font-size:20px;">Nid</label> 
-                                    <img src="{{asset($admin->nid)}}" style="width:100%;height:160px;padding: 8px;">
+                                    <img src="{{asset(str_replace('public/', '', $admin->nid))}}" style="width:100%;height:160px;padding: 8px;">
                                 </div>
                             </div>
                         </div>
@@ -89,25 +89,25 @@
                         <div class="col-md-5">
                             <div class="form-group mb-3">
                                 <label for="floatingInput" style="color: black;padding: 8px;font-weight:bold;font-size:20px;">Father Nid</label>
-                                <img src="{{asset($admin->father_nid)}}" style="width:100%;height:160px;padding: 8px;">
+                                <img src="{{asset(str_replace('public/', '', $admin->father_nid))}}" style="width:100%;height:160px;padding: 8px;">
                             </div>
                             
                             <div class="form-group mb-3">
                                 <label for="floatingInput" style="color: black;padding: 8px;font-weight:bold;font-size:20px;">Mother Nid</label> 
-                                <img src="{{asset($admin->mother_nid)}}" style="width:100%;height:160px;padding: 8px;">
+                                <img src="{{asset(str_replace('public/', '', $admin->mother_nid))}}" style="width:100%;height:160px;padding: 8px;">
                             </div>
                             <div class="form-group mb-3">
                                 <label for="floatingInput" style="color: black;padding: 8px;font-weight:bold;font-size:20px;">Local Guardian Nid</label> 
-                                <img src="{{asset($admin->localguardian_nid)}}" style="width:100%;height:160px;padding: 8px;">
+                                <img src="{{asset(str_replace('public/', '', $admin->localguardian_nid))}}" style="width:100%;height:160px;padding: 8px;">
                             </div>
                             <div class="form-group mb-3">
                                 <label for="floatingInput" style="color: black;padding: 8px;font-weight:bold;font-size:20px;">House Electricity Bill</label> 
-                                <img src="{{asset($admin->house_electricity_bill)}}" style="width:100%;height:160px;padding: 8px;">
+                                <img src="{{asset(str_replace('public/', '', $admin->house_electricity_bill))}}" style="width:100%;height:160px;padding: 8px;">
                             </div>
                             
                             <div class="form-group mb-3">
                                 <label for="floatingInput" style="color: black;padding: 8px;font-weight:bold;font-size:20px;">CV File</label> 
-                                <img src="{{asset($admin->cv)}}" style="width:100%;height:160px;padding: 8px;">
+                                <img src="{{asset(str_replace('public/', '', $admin->cv))}}" style="width:100%;height:160px;padding: 8px;">
                             </div>
                              
                         </div>

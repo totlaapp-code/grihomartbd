@@ -145,7 +145,7 @@ class WebviewController extends Controller
                             'new',
                             $price . ' BDT',
                             'https://grihomartbd.com/view-product/' . $product->ProductSlug,
-                            'https://grihomartbd.com/' . ltrim(str_replace('public/', '', $product->ProductImage), '/'),
+                            'https://grihomartbd.com/' . ltrim(str_replace('', '', $product->ProductImage), '/'),
                             'Grihomartbd' 
                         ));
                     }
@@ -432,7 +432,7 @@ class WebviewController extends Controller
         if ($request->file) {
             $file = $request->file;
             $name = time() . "_" . $file->getClientOriginalName();
-            $uploadPath = ('public/images/admin/profile/');
+            $uploadPath = ('images/admin/profile/');
             $file->move($uploadPath, $name);
             $imageUrl = $uploadPath . $name;
             $review->file = $imageUrl;
@@ -577,7 +577,7 @@ class WebviewController extends Controller
         $productImg = $request->file('profile');
         if ($productImg) {
             $imgname = $time . $productImg->getClientOriginalName();
-            $imguploadPath = ('public/images/user/profile/');
+            $imguploadPath = ('images/user/profile/');
             $productImg->move($imguploadPath, $imgname);
             $productImgUrl = $imguploadPath . $imgname;
             $userprofile->profile = $productImgUrl;

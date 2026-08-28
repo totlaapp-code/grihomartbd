@@ -39,7 +39,7 @@ class SliderController extends Controller
         $slider->slider_btn_link =$request->slider_btn_link;
         $sliderimage = $request->file('slider_image');
         $name = time() . "_" . $sliderimage->getClientOriginalName();
-        $uploadPath = ('public/images/slider/');
+        $uploadPath = ('images/slider/');
         $sliderimage->move($uploadPath, $name);
         $sliderimageImgUrl = $uploadPath . $name;
         $slider->slider_image = $sliderimageImgUrl;
@@ -95,7 +95,7 @@ class SliderController extends Controller
             }
             $slider_image = $request->file('slider_image');
             $name = time() . "_" . $slider_image->getClientOriginalName();
-            $uploadPath = ('public/images/slider/');
+            $uploadPath = ('images/slider/');
             $slider_image->move($uploadPath, $name);
             $slider_imageImgUrl = $uploadPath . $name;
             $slider->slider_image = $slider_imageImgUrl;

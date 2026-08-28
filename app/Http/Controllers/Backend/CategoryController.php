@@ -34,7 +34,7 @@ class CategoryController extends Controller
         $category->position =$request->position;
         $category_icon = $request->file('category_icon');
         $name = time() . "_" . $category_icon->getClientOriginalName();
-        $uploadPath = ('public/images/category/'); 
+        $uploadPath = ('images/category/'); 
         $category_icon->move($uploadPath, $name);
         $category_iconImgUrl = $uploadPath . $name;
         $webp = $category_iconImgUrl;
@@ -91,7 +91,7 @@ class CategoryController extends Controller
         if($request->category_icon){ 
             $category_icon = $request->file('category_icon');
             $name = time() . "_" . $category_icon->getClientOriginalName();
-            $uploadPath = ('public/images/category/'); 
+            $uploadPath = ('images/category/'); 
             $category_icon->move($uploadPath, $name);
             $category_iconImgUrl = $uploadPath . $name; 
             $webp = $category_iconImgUrl;

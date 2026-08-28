@@ -36,7 +36,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Courier')}}">
                         <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                            <img src="{{asset('public/icon/income.png')}}" style="width:50px;">
+                            <img src="{{asset('icon/income.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Courier Payment</p>
                                 <h6 class="mb-0"><span id="courierpayment">0</span> TK</h6>
@@ -47,7 +47,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Office Sale')}}">
                         <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                            <img src="{{asset('public/icon/income.png')}}" style="width:50px;">
+                            <img src="{{asset('icon/income.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Office Sale Payment</p>
                                 <h6 class="mb-0"><span id="officesalepayment">0</span> TK</h6>
@@ -59,7 +59,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Wholesale')}}">
                         <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                            <img src="{{asset('public/icon/income.png')}}" style="width:50px;">
+                            <img src="{{asset('icon/income.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Wholesale Payment</p>
                                 <h6 class="mb-0"><span id="wholesalepayment">0</span> TK</h6>
@@ -70,7 +70,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/account-deposit/Total')}}">
                         <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                            <img src="{{asset('public/icon/income.png')}}" style="width:50px;">
+                            <img src="{{asset('icon/income.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Total Payment </p>
                                 <h6 class="mb-0"><span id="totalpayment">0</span> TK</h6>
@@ -87,7 +87,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/expense-cost/Boost Cost')}}">
                         <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                            <img src="{{asset('public/icon/income.png')}}" style="width:50px;">
+                            <img src="{{asset('icon/income.png')}}" style="width:50px;">
                             <div class="ms-3">
                                 <p class="mb-2">Boost Cost</p>
                                 <h6 class="mb-0"><span id="bostcost">0</span> TK</h6>
@@ -98,7 +98,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <div class="col-sm-6 col-xl-3"> 
                     <a href="{{url('admin/expense-cost/Office Cost')}}">
                     <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                        <img src="{{asset('public/icon/income.png')}}" style="width:50px;">
+                        <img src="{{asset('icon/income.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Office Cost</p>
                             <h6 class="mb-0"><span id="officecost">0</span> TK</h6>
@@ -110,7 +110,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <div class="col-sm-6 col-xl-3"> 
                     <a href="{{url('admin/expense-cost/Bank Deposit')}}">
                     <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                        <img src="{{asset('public/icon/income.png')}}" style="width:50px;">
+                        <img src="{{asset('icon/income.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Bank Deposit</p>
                             <h6 class="mb-0"><span id="bankcost">0</span> TK</h6>
@@ -121,7 +121,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{url('admin/expense-cost/Total Cost')}}">
                     <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                        <img src="{{asset('public/icon/income.png')}}" style="width:50px;">
+                        <img src="{{asset('icon/income.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Total Cost</p>
                             <h6 class="mb-0"><span id="totalcost">0</span> TK</h6>
@@ -151,7 +151,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{ url('admin_order/orderall') }}">
                     <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                        <img src="{{asset('public/icon/order.png')}}" style="width:50px;">
+                        <img src="{{asset('icon/order.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Total</p>
                             <h6 class="mb-0" id="total">0</h6>
@@ -358,7 +358,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
     <div class="row g-4">
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/category1.png')}}" style="width:50px;">
+                <img src="{{asset('icon/category1.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">Category</p>
                     <h6 class="mb-0">{{ \App\Models\Product::get()->count() }}</h6>
@@ -367,7 +367,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         </div> 
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/products.png')}}" style="width:50px;">
+                <img src="{{asset('icon/products.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">Products</p>
                     <h6 class="mb-0">{{ \App\Models\Product::get()->count() }}</h6>
@@ -376,7 +376,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/varient.png')}}" style="width:50px;">
+                <img src="{{asset('icon/varient.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">Varient</p>
                     <h6 class="mb-0">{{ \App\Models\Product::get()->count() }}</h6>
@@ -385,7 +385,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/category1.png')}}" style="width:50px;">
+                <img src="{{asset('icon/category1.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">Admins</p>
                     <h6 class="mb-0">{{ \App\Models\Product::get()->count() }}</h6>
@@ -394,7 +394,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/user.png')}}" style="width:50px;">
+                <img src="{{asset('icon/user.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">User</p>
                     <h6 class="mb-0">{{ \App\Models\Product::get()->count() }}</h6>
@@ -403,7 +403,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/customer.png')}}" style="width:50px;">
+                <img src="{{asset('icon/customer.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">Customer</p>
                     <h6 class="mb-0">{{ \App\Models\Product::get()->count() }}</h6>
@@ -412,7 +412,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         </div> 
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/retailer.png')}}" style="width:50px;">
+                <img src="{{asset('icon/retailer.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">W-Customer</p>
                     <h6 class="mb-0">{{ \App\Models\Product::get()->count() }}</h6>
@@ -421,7 +421,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         </div> 
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/complain.png')}}" style="width:50px;">
+                <img src="{{asset('icon/complain.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">Complain</p>
                     <h6 class="mb-0">{{ \App\Models\Product::get()->count() }}</h6>
@@ -441,7 +441,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
 
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/buysale.png')}}" style="width:50px;">
+                <img src="{{asset('icon/buysale.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">Total</p>
                     <h6 class="mb-0">{{ \App\Models\Size::get()->sum('total_stock') }} &nbsp;(pics)</h6>
@@ -450,7 +450,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/buysale.png')}}" style="width:50px;">
+                <img src="{{asset('icon/buysale.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">Available</p>
                     <h6 class="mb-0">{{ \App\Models\Size::get()->sum('available_stock') }} &nbsp;(pics)</h6>
@@ -466,7 +466,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         @endphp
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/buysale.png')}}" style="width:50px;">
+                <img src="{{asset('icon/buysale.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">Retail</p>
                     <h6 class="mb-0">{{$orpqty}} &nbsp;(pics)</h6>
@@ -475,7 +475,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <img src="{{asset('public/icon/buysale.png')}}" style="width:50px;">
+                <img src="{{asset('icon/buysale.png')}}" style="width:50px;">
                 <div class="ms-3">
                     <p class="mb-2">Wholesale</p>
                     <h6 class="mb-0">{{ \App\Models\Wsaleproduct::get()->sum('quantity') }}</h6>
@@ -499,7 +499,7 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
                 <div class="col-sm-6 col-xl-3">
                     <a href="{{ url('admin_order/orderall') }}">
                     <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                        <img src="{{asset('public/icon/order.png')}}" style="width:50px;">
+                        <img src="{{asset('icon/order.png')}}" style="width:50px;">
                         <div class="ms-3">
                             <p class="mb-2">Total</p>
                             <h6 class="mb-0" id="total">0</h6>

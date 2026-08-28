@@ -51,7 +51,7 @@ class ExpenseController extends Controller
         $expense->type = $request->type;
         $expense_icon = $request->file('image');
         $name = time() . "_" . $expense_icon->getClientOriginalName();
-        $uploadPath = ('public/images/expense/');
+        $uploadPath = ('images/expense/');
         $expense_icon->move($uploadPath, $name);
         $expense_iconImgUrl = $uploadPath . $name;
         $expense->image = $expense_iconImgUrl;
@@ -157,7 +157,7 @@ class ExpenseController extends Controller
         if ($request->image) {
             $expense_icon = $request->file('image');
             $name = time() . "_" . $expense_icon->getClientOriginalName();
-            $uploadPath = ('public/images/expense/');
+            $uploadPath = ('images/expense/');
             $expense_icon->move($uploadPath, $name);
             $expense_iconImgUrl = $uploadPath . $name;
             $expense->image = $expense_iconImgUrl;

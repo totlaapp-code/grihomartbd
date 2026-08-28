@@ -50,7 +50,7 @@ class AccountController extends Controller
         $account->admin_id = Auth::guard('admin')->user()->id;
         $account_icon = $request->file('file');
         $name = time() . "_" . $account_icon->getClientOriginalName();
-        $uploadPath = ('public/account/');
+        $uploadPath = ('account/');
         $account_icon->move($uploadPath, $name);
         $account_iconImgUrl = $uploadPath . $name;
         $account->file = $account_iconImgUrl;
@@ -165,7 +165,7 @@ class AccountController extends Controller
         if ($request->file) {
             $account_icon = $request->file('file');
             $name = time() . "_" . $account_icon->getClientOriginalName();
-            $uploadPath = ('public/account/');
+            $uploadPath = ('account/');
             $account_icon->move($uploadPath, $name);
             $account_iconImgUrl = $uploadPath . $name;
             $account->file = $account_iconImgUrl;

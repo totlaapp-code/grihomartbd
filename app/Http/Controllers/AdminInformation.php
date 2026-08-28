@@ -33,13 +33,13 @@ class AdminInformation extends Controller
 
         if ($oldimage) {
             $name = time() . "_" . $profileImg->getClientOriginalName();
-            $uploadPath = ('public/images/admin/profile/');
+            $uploadPath = ('images/admin/profile/');
             $profileImg->move($uploadPath, $name);
             $imageUrl = $uploadPath . $name;
             $admin->profile = $imageUrl;
         } else {
             $name = time() . "_" . $profileImg->getClientOriginalName();
-            $uploadPath = ('public/images/admin/profile/');
+            $uploadPath = ('images/admin/profile/');
             $profileImg->move($uploadPath, $name);
             $imageUrl = $uploadPath . $name;
             $admin->profile = $imageUrl;

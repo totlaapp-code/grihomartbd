@@ -49,7 +49,7 @@ class AdminController extends Controller
         $productImgnid = $request->nid;
         if ($productImgnid) {
             $imgnamenid = $time . $productImgnid->getClientOriginalName();
-            $imguploadPathnid = ('public/employee/');
+            $imguploadPathnid = ('employee/');
             $productImgnid->move($imguploadPathnid, $imgnamenid);
             $productImgUrlnid = $imguploadPathnid . $imgnamenid;
             $admin->nid = $productImgUrlnid;
@@ -58,7 +58,7 @@ class AdminController extends Controller
         $productImgletter = $request->join_letter;
         if ($productImgletter) {
             $imgnameletter = $time . $productImgletter->getClientOriginalName();
-            $imguploadPathletter = ('public/employee/');
+            $imguploadPathletter = ('employee/');
             $productImgletter->move($imguploadPathletter, $imgnameletter);
             $productImgUrlletter = $imguploadPathletter . $imgnameletter;
             $admin->join_letter = $productImgUrlletter;
@@ -73,7 +73,7 @@ class AdminController extends Controller
         $productImgprof = $request->profile;
         if ($productImgprof) {
             $imgnameprof = $time . $productImgprof->getClientOriginalName();
-            $imguploadPathprof = ('public/employee/');
+            $imguploadPathprof = ('employee/');
             $productImgprof->move($imguploadPathprof, $imgnameprof);
             $productImgUrlprof = $imguploadPathprof . $imgnameprof;
             $admin->profile = $productImgUrlprof;
@@ -82,7 +82,7 @@ class AdminController extends Controller
         $productImgfn = $request->father_nid;
         if ($productImgfn) {
             $imgnamefn = $time . $productImgfn->getClientOriginalName();
-            $imguploadPathfn = ('public/employee/');
+            $imguploadPathfn = ('employee/');
             $productImgfn->move($imguploadPathfn, $imgnamefn);
             $productImgUrlfn = $imguploadPathfn . $imgnamefn;
             $admin->father_nid = $productImgUrlfn;
@@ -91,7 +91,7 @@ class AdminController extends Controller
         $productImgmn = $request->mother_nid;
         if ($productImgmn) {
             $imgnamemn = $time . $productImgmn->getClientOriginalName();
-            $imguploadPathmn = ('public/employee/');
+            $imguploadPathmn = ('employee/');
             $productImgmn->move($imguploadPathmn, $imgnamemn);
             $productImgUrlmn = $imguploadPathmn . $imgnamemn;
             $admin->mother_nid = $productImgUrlmn;
@@ -100,7 +100,7 @@ class AdminController extends Controller
         $productImglg = $request->localguardian_nid;
         if ($productImglg) {
             $imgnamelg = $time . $productImglg->getClientOriginalName();
-            $imguploadPathlg = ('public/employee/');
+            $imguploadPathlg = ('employee/');
             $productImglg->move($imguploadPathlg, $imgnamelg);
             $productImgUrllg = $imguploadPathlg . $imgnamelg;
             $admin->localguardian_nid = $productImgUrllg;
@@ -110,7 +110,7 @@ class AdminController extends Controller
         $productImgebill = $request->house_electricity_bill;
         if ($productImgebill) {
             $imgnameebill = $time . $productImgebill->getClientOriginalName();
-            $imguploadPathebill = ('public/employee/');
+            $imguploadPathebill = ('employee/');
             $productImgebill->move($imguploadPathebill, $imgnameebill);
             $productImgUrlebill = $imguploadPathebill . $imgnameebill;
             $admin->house_electricity_bill = $productImgUrlebill;
@@ -118,7 +118,7 @@ class AdminController extends Controller
         $productImgecv = $request->cv;
         if ($productImgecv) {
             $imgnameecv = $time . $productImgecv->getClientOriginalName();
-            $imguploadPathecv = ('public/employee/');
+            $imguploadPathecv = ('employee/');
             $productImgecv->move($imguploadPathecv, $imgnameecv);
             $productImgUrlecv = $imguploadPathecv . $imgnameecv;
             $admin->cv = $productImgUrlecv;
@@ -200,7 +200,7 @@ class AdminController extends Controller
         $productImgnid = $request->nid;
         if ($productImgnid) {
             $imgnamenid = $time . $productImgnid->getClientOriginalName();
-            $imguploadPathnid = ('public/employee/');
+            $imguploadPathnid = ('employee/');
             $productImgnid->move($imguploadPathnid, $imgnamenid);
             $productImgUrlnid = $imguploadPathnid . $imgnamenid;
             $admin->nid = $productImgUrlnid;
@@ -209,7 +209,7 @@ class AdminController extends Controller
         $productImgprof = $request->profile;
         if ($productImgprof) {
             $imgnameprof = $time . $productImgprof->getClientOriginalName();
-            $imguploadPathprof = ('public/employee/');
+            $imguploadPathprof = ('employee/');
             $productImgprof->move($imguploadPathprof, $imgnameprof);
             $productImgUrlprof = $imguploadPathprof . $imgnameprof;
             $admin->profile = $productImgUrlprof;
@@ -218,7 +218,7 @@ class AdminController extends Controller
         $productImgletter = $request->join_letter;
         if ($productImgletter) {
             $imgnameletter = $time . $productImgletter->getClientOriginalName();
-            $imguploadPathletter = ('public/employee/');
+            $imguploadPathletter = ('employee/');
             $productImgletter->move($imguploadPathletter, $imgnameletter);
             $productImgUrlletter = $imguploadPathletter . $imgnameletter;
             $admin->join_letter = $productImgUrlletter;
@@ -233,7 +233,7 @@ class AdminController extends Controller
         $productImgfn = $request->father_nid;
         if ($productImgfn) {
             $imgnamefn = $time . $productImgfn->getClientOriginalName();
-            $imguploadPathfn = ('public/employee/');
+            $imguploadPathfn = ('employee/');
             $productImgfn->move($imguploadPathfn, $imgnamefn);
             $productImgUrlfn = $imguploadPathfn . $imgnamefn;
             $admin->father_nid = $productImgUrlfn;
@@ -242,7 +242,7 @@ class AdminController extends Controller
         $productImgmn = $request->mother_nid;
         if ($productImgmn) {
             $imgnamemn = $time . $productImgmn->getClientOriginalName();
-            $imguploadPathmn = ('public/employee/');
+            $imguploadPathmn = ('employee/');
             $productImgmn->move($imguploadPathmn, $imgnamemn);
             $productImgUrlmn = $imguploadPathmn . $imgnamemn;
             $admin->mother_nid = $productImgUrlmn;
@@ -251,7 +251,7 @@ class AdminController extends Controller
         $productImglg = $request->localguardian_nid;
         if ($productImglg) {
             $imgnamelg = $time . $productImglg->getClientOriginalName();
-            $imguploadPathlg = ('public/employee/');
+            $imguploadPathlg = ('employee/');
             $productImglg->move($imguploadPathlg, $imgnamelg);
             $productImgUrllg = $imguploadPathlg . $imgnamelg;
             $admin->localguardian_nid = $productImgUrllg;
@@ -261,7 +261,7 @@ class AdminController extends Controller
         $productImgebill = $request->house_electricity_bill;
         if ($productImgebill) {
             $imgnameebill = $time . $productImgebill->getClientOriginalName();
-            $imguploadPathebill = ('public/employee/');
+            $imguploadPathebill = ('employee/');
             $productImgebill->move($imguploadPathebill, $imgnameebill);
             $productImgUrlebill = $imguploadPathebill . $imgnameebill;
             $admin->house_electricity_bill = $productImgUrlebill;
@@ -269,7 +269,7 @@ class AdminController extends Controller
         $productImgecv = $request->cv;
         if ($productImgecv) {
             $imgnameecv = $time . $productImgecv->getClientOriginalName();
-            $imguploadPathecv = ('public/employee/');
+            $imguploadPathecv = ('employee/');
             $productImgecv->move($imguploadPathecv, $imgnameecv);
             $productImgUrlecv = $imguploadPathecv . $imgnameecv;
             $admin->cv = $productImgUrlecv;

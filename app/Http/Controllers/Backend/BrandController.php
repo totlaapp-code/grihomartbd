@@ -32,7 +32,7 @@ class BrandController extends Controller
         $brand->brand_name =$request->brand_name;
         $brand_icon = $request->file('brand_icon');
         $name = time() . "_" . $brand_icon->getClientOriginalName();
-        $uploadPath = ('public/images/brand/');
+        $uploadPath = ('images/brand/');
         $brand_icon->move($uploadPath, $name);
         $brand_iconImgUrl = $uploadPath . $name;
         $brand->brand_icon = $brand_iconImgUrl;
@@ -79,7 +79,7 @@ class BrandController extends Controller
             unlink($brand->brand_icon);
             $brand_icon = $request->file('brand_icon');
             $name = time() . "_" . $brand_icon->getClientOriginalName();
-            $uploadPath = ('public/images/brand/');
+            $uploadPath = ('images/brand/');
             $brand_icon->move($uploadPath, $name);
             $brand_iconImgUrl = $uploadPath . $name;
             $brand->brand_icon = $brand_iconImgUrl;

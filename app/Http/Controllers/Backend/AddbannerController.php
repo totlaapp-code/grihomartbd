@@ -79,14 +79,14 @@ class AddbannerController extends Controller
         $addbanner =Addbanner::findOrfail($id);
         $addbanner->add_link=$request->add_link;
         if($request->add_image){
-            if($addbanner->add_image=='public/webview/assets/images/banners/home-banner1.jpg'){
+            if($addbanner->add_image=='webview/assets/images/banners/home-banner1.jpg'){
 
             }else{
                 // unlink($addbanner->add_image);
             }
             $add_image = $request->file('add_image');
             $name = time() . "_" . $add_image->getClientOriginalName();
-            $uploadPath = ('public/images/addbanner/');
+            $uploadPath = ('images/addbanner/');
             $add_image->move($uploadPath, $name);
             $add_imageImgUrl = $uploadPath . $name;
             $addbanner->add_image = $add_imageImgUrl;

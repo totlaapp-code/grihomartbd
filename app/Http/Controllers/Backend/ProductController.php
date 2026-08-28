@@ -371,7 +371,7 @@ class ProductController extends Controller
         $productImg = $request->ProductImage;
         if ($productImg) {
             $imgname = $time . $productImg->getClientOriginalName();
-            $imguploadPath = ('public/images/product/');
+            $imguploadPath = ('images/product/');
             $productImg->move($imguploadPath, $imgname);
             $productImgUrl = $imguploadPath . $imgname;
             $product->ProductImage = $productImgUrl;
@@ -396,7 +396,7 @@ class ProductController extends Controller
                     $variantImg = $vr['image'];
                     if ($variantImg) {
                         $imgnamev = $time . $variantImg->getClientOriginalName();
-                        $imguploadPathv = ('public/images/variant/');
+                        $imguploadPathv = ('images/variant/');
                         $variantImg->move($imguploadPathv, $imgnamev);
                         $variantImgUrl = $imguploadPathv . $imgnamev;
                         $variant->Image = $variantImgUrl;
@@ -553,7 +553,7 @@ class ProductController extends Controller
         $productImg = $request->ProductImage;
         if (isset($productImg)) {
             $imgname = $time . $productImg->getClientOriginalName();
-            $imguploadPath = ('public/images/product/');
+            $imguploadPath = ('images/product/');
             $productImg->move($imguploadPath, $imgname);
             $productImgUrl = $imguploadPath . $imgname;
             $product->ProductImage = $productImgUrl;
@@ -588,7 +588,7 @@ class ProductController extends Controller
                         $variantImg = $vr['image'];
                         if ($variantImg) {
                             $imgnamev = $time . $variantImg->getClientOriginalName();
-                            $imguploadPathv = ('public/images/variant/');
+                            $imguploadPathv = ('images/variant/');
                             $variantImg->move($imguploadPathv, $imgnamev);
                             $variantImgUrl = $imguploadPathv . $imgnamev;
                             $variant->Image = $variantImgUrl;
@@ -602,7 +602,7 @@ class ProductController extends Controller
                         $variantImg = $vr['image'];
                         if ($variantImg) {
                             $imgnamev = $time . $variantImg->getClientOriginalName();
-                            $imguploadPathv = ('public/images/variant/');
+                            $imguploadPathv = ('images/variant/');
                             $variantImg->move($imguploadPathv, $imgnamev);
                             $variantImgUrl = $imguploadPathv . $imgnamev;
                             $variant->Image = $variantImgUrl;

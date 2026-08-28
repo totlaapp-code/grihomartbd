@@ -8,9 +8,9 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Invoice</title>
-    <link href="{{ asset('public/admin/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('public/admin/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('public/admin/css/app.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <style>
         * {
             margin: 0px;
@@ -215,10 +215,10 @@
     } ?>
     </div>
 
-    <script src="{{ asset('public/admin/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('public/admin/js/vendor.min.js') }}"></script>
+    <script src="{{ asset('admin/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('admin/js/vendor.min.js') }}"></script>
     <!-- App js -->
-    <script src="{{ asset('public/admin/js/app.min.js') }}"></script>
+    <script src="{{ asset('admin/js/app.min.js') }}"></script>
     <script>
         $(function() {
             window.print();

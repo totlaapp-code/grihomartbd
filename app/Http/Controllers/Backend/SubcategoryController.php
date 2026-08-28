@@ -31,7 +31,7 @@ class SubcategoryController extends Controller
         $subcategory->category_id =$request->category_id;
         $subcategory_icon = $request->file('subcategory_icon');
         $name = time() . "_" . $subcategory_icon->getClientOriginalName();
-        $uploadPath = ('public/images/subcategory/');
+        $uploadPath = ('images/subcategory/');
         $subcategory_icon->move($uploadPath, $name);
         $subcategory_iconImgUrl = $uploadPath . $name;
         $subcategory->subcategory_icon = $subcategory_iconImgUrl;
@@ -82,7 +82,7 @@ class SubcategoryController extends Controller
             }
             $subcategory_icon = $request->file('subcategory_icon');
             $name = time() . "_" . $subcategory_icon->getClientOriginalName();
-            $uploadPath = ('public/images/category/');
+            $uploadPath = ('images/category/');
             $subcategory_icon->move($uploadPath, $name);
             $subcategory_iconImgUrl = $uploadPath . $name;
             $subcategory->subcategory_icon = $subcategory_iconImgUrl;

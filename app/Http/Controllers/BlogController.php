@@ -47,7 +47,7 @@ class BlogController extends Controller
         $productImg = $request->file('image');
         if($productImg){
             $imgname = $time . $productImg->getClientOriginalName();
-            $imguploadPath = ('public/images/blog/image/');
+            $imguploadPath = ('images/blog/image/');
             $productImg->move($imguploadPath, $imgname);
             $productImgUrl = $imguploadPath . $imgname;
             $blog->image = $productImgUrl;
@@ -56,7 +56,7 @@ class BlogController extends Controller
         $productImgb = $request->file('banner');
         if($productImgb){
             $imgnameb = $time . $productImgb->getClientOriginalName();
-            $imguploadPathb = ('public/images/blog/banner/');
+            $imguploadPathb = ('images/blog/banner/');
             $productImgb->move($imguploadPathb, $imgnameb);
             $productImgUrlb = $imguploadPathb . $imgnameb;
             $blog->banner = $productImgUrlb;
@@ -130,7 +130,7 @@ class BlogController extends Controller
         $productImg = $request->file('image');
         if($productImg){ 
             $imgname = $time . $productImg->getClientOriginalName();
-            $imguploadPath = ('public/images/blog/image/');
+            $imguploadPath = ('images/blog/image/');
             $productImg->move($imguploadPath, $imgname);
             $productImgUrl = $imguploadPath . $imgname;
             $blog->image = $productImgUrl;
@@ -139,7 +139,7 @@ class BlogController extends Controller
         $productImgb = $request->file('banner');
         if($productImgb){ 
             $imgnameb = $time . $productImgb->getClientOriginalName();
-            $imguploadPathb = ('public/images/blog/banner/');
+            $imguploadPathb = ('images/blog/banner/');
             $productImgb->move($imguploadPathb, $imgnameb);
             $productImgUrlb = $imguploadPathb . $imgnameb;
             $blog->banner = $productImgUrlb;

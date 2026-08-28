@@ -31,7 +31,7 @@ class PaymenticonController extends Controller
         $paymenticon->payment_type_name =$request->payment_type_name;
         $payment_icon = $request->file('payment_icon');
         $name = time() . "_" . $payment_icon->getClientOriginalName();
-        $uploadPath = ('public/images/paymenticon/');
+        $uploadPath = ('images/paymenticon/');
         $payment_icon->move($uploadPath, $name);
         $payment_iconImgUrl = $uploadPath . $name;
         $paymenticon->payment_icon = $payment_iconImgUrl;
@@ -78,7 +78,7 @@ class PaymenticonController extends Controller
             unlink($paymenticon->payment_icon);
             $payment_icon = $request->file('payment_icon');
             $name = time() . "_" . $payment_icon->getClientOriginalName();
-            $uploadPath = ('public/images/paymenticon/');
+            $uploadPath = ('images/paymenticon/');
             $payment_icon->move($uploadPath, $name);
             $payment_iconImgUrl = $uploadPath . $name;
             $paymenticon->payment_icon = $payment_iconImgUrl;

@@ -24,10 +24,10 @@ $admin=App\Models\Admin::where('id',Auth::guard('admin')->user()->id)->first();
         <div class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 @if(isset($admin->profile))
-                <img class="rounded-circle" src="{{ asset(Auth::guard('admin')->user()->profile) }}" alt=""
+                <img class="rounded-circle" src="{{ asset(str_replace('public/', '', Auth::guard('admin')->user()->profile)) }}" alt=""
                     style="width: 40px; height: 40px;">
                 @else
-                <img class="rounded-circle" src="{{ asset('public/user.jpg') }}" alt=""
+                <img class="rounded-circle" src="{{ asset('user.jpg') }}" alt=""
                     style="width: 40px; height: 40px;">
                 @endif
                 <span class="d-none d-lg-inline-flex">{{ Auth::user()->name }}</span>
