@@ -6,7 +6,7 @@
                     <img src="{{ asset(App\Models\User::where('id', $review->user_id)->first()->profile) }}"
                         style="width:60px;height:60px">
                 @else
-                    <img src="{{ asset('public/profile-user.png') }}" style="width:60px;height:60px">
+                    <img src="{{ asset('profile-user.png') }}" style="width:60px;height:60px">
                 @endif
                 <div class="info ps-2">
                     <h6 class="m-0" style="font-weight: bold;font-size: 18px;">

@@ -204,33 +204,34 @@
         padding: 0 10px;
     }
 
-    /* Gallery image height fix */
+    /* Gallery image - 1:1 square ratio (modern e-commerce standard) */
     #sync1 {
-        max-height: 420px;
+        width: 100%;
+    }
+    #sync1 .items {
+        aspect-ratio: 1 / 1;
         overflow: hidden;
+        background: #f8f8f8;
+        border-radius: 4px;
     }
     #sync1 .items img {
         width: 100%;
-        height: 420px;
+        height: 100%;
         object-fit: contain;
         background: #f8f8f8;
+    }
+    #sync2 .items {
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        background: #f8f8f8;
+        max-width: 80px;
+        border-radius: 4px;
     }
     #sync2 .items img {
         width: 100%;
-        height: 70px;
+        height: 100%;
         object-fit: contain;
         background: #f8f8f8;
-    }
-    @media (max-width: 768px) {
-        #sync1 {
-            max-height: 280px;
-        }
-        #sync1 .items img {
-            height: 280px;
-        }
-        #sync2 .items img {
-            height: 55px;
-        }
     }
 
 </style>
@@ -249,12 +250,12 @@
                                 @if(json_decode($productdetails->PostImage))
                                     <div id="sync1" class="owl-carousel owl-theme">
                                         <div class="items">
-                                            <img class="w-100 h-100" src="{{ asset($productdetails->ProductImage) }}"
+                                            <img class="w-100" src="{{ asset($productdetails->ProductImage) }}"
                                                 alt="" style="border-radius: 4px;">
                                         </div>
                                         @forelse (json_decode($productdetails->PostImage) as $image)
                                             <div class="items">
-                                                <img class="w-100 h-100" src="{{ asset('images/product/slider/' . $image) }}"
+                                                <img class="w-100" src="{{ asset('images/product/slider/' . $image) }}"
                                                     alt="" style="border-radius: 4px;">
                                             </div>
                                         @empty
@@ -262,13 +263,13 @@
                                     </div>
                                     <div id="sync2" class="owl-carousel owl-theme" style="padding-top: 10px;">
                                         <div class="items">
-                                            <img class="w-100 h-100"
+                                            <img class="w-100"
                                                 style="padding:6px;border:1px solid;border-radius: 4px;"
                                                 src="{{ asset($productdetails->ProductImage) }}" alt="">
                                         </div>
                                         @forelse (json_decode($productdetails->PostImage) as $image)
                                             <div class="items">
-                                                <img class="w-100 h-100"
+                                                <img class="w-100"
                                                     style="padding:6px;border:1px solid;border-radius: 4px;"
                                                     src="{{ asset('images/product/slider/' . $image) }}" alt="">
                                             </div>

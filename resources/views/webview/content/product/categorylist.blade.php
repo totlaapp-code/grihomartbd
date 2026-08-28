@@ -30,7 +30,7 @@
                                                                     alt="{{ $ctlist->category_name }}"
                                                                     id="categoryimage">
                                                             @else
-                                                                <img data-original="{{ asset('public/webview/assets/images/categoryimage.jpg') }}"
+                                                                <img data-original="{{ asset('webview/assets/images/categoryimage.jpg') }}"
                                                                     alt="{{ $ctlist->category_name }}"
                                                                     id="categoryimage">
                                                             @endif

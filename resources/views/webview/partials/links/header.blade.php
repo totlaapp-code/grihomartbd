@@ -8,15 +8,15 @@
     integrity="sha512-R+xPS2VPCAFvLRy+I4PgbwkWjw1z5B5gNDYgJN5LfzV4gGNeRQyVrY7Uk59rX+c8tzz63j8DeZPLqmXvBxj8pA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 <!-- carousel -->
-<link rel="stylesheet" href="{{ asset('public/webview/assets') }}/carousel/css/docs.theme.min.css">
-<link rel="stylesheet" href="{{ asset('public/webview/assets') }}/carousel/owlcarousel/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="{{ asset('webview/assets') }}/carousel/css/docs.theme.min.css">
+<link rel="stylesheet" href="{{ asset('webview/assets') }}/carousel/owlcarousel/assets/owl.carousel.min.css">
 <link rel="stylesheet"
-    href="{{ asset('public/webview/assets') }}/carousel/owlcarousel/assets/owl.theme.default.min.css">
+    href="{{ asset('webview/assets') }}/carousel/owlcarousel/assets/owl.theme.default.min.css">
 <!-- Carousel js-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="{{ asset('public/webview/assets') }}/carousel/owlcarousel/owl.carousel.js"></script>
+<script src="{{ asset('webview/assets') }}/carousel/owlcarousel/owl.carousel.js"></script>
 <!-- style.css -->
-<link rel="stylesheet" href="{{ asset('public/webview/assets') }}/css/style.css">
+<link rel="stylesheet" href="{{ asset('webview/assets') }}/css/style.css">
 {{-- toaster --}}
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 

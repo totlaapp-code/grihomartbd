@@ -846,8 +846,7 @@ class OrderController extends Controller
                             }
                         }
 
-                        // FB CAPI Purchase event - শুধু Ready to Ship এ একবারই fire হবে
-                        FacebookPixelService::sendOrderPurchaseEvent($order);
+                        // Purchase pixel removed from Ready to Ship — now fires only on standard order form submit
                     }
                 }
                 if ($request['data']['status'] == 'Packaging') {
@@ -1533,12 +1532,7 @@ class OrderController extends Controller
                     $comment->save();
                 }
             }
-            // FB CAPI Purchase event - fires once when status becomes Ready to Ship
-            try {
-                FacebookPixelService::sendOrderPurchaseEvent($order);
-            } catch (\Exception $e) {
-                // Prevent Facebook CAPI errors from blocking order status save
-            }
+            // Purchase pixel removed from Ready to Ship — now fires only on standard order form submit
         }
 
         $result = $order->save();
@@ -1727,8 +1721,7 @@ class OrderController extends Controller
                             }
                         }
                     }
-                    // FB CAPI Purchase event - fires once when status becomes Ready to Ship
-                    FacebookPixelService::sendOrderPurchaseEvent($order);
+                    // Purchase pixel removed from Ready to Ship — now fires only on standard order form submit
                 }
 
                 if ($order->status == 'Ready to Ship' || $order->status == 'Packaging' || $order->status == 'Shipped' || $order->status == 'Completed' || $order->status == 'Del. Failed') {

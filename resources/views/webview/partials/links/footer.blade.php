@@ -6,9 +6,9 @@
     integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous">
 </script>
 <!--carousel vendors -->
-<script src="{{ asset('public/webview/assets') }}/carousel/vendors/highlight.js"></script>
-<script src="{{ asset('public/webview/assets') }}/carousel/js/app.js"></script>
-<script src="{{ asset('public/webview/assets') }}/js/main.js"></script>
+<script src="{{ asset('webview/assets') }}/carousel/vendors/highlight.js"></script>
+<script src="{{ asset('webview/assets') }}/carousel/js/app.js"></script>
+<script src="{{ asset('webview/assets') }}/js/main.js"></script>
 <!-- font awsam -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/js/fontawesome.min.js"
     integrity="sha512-TXHaOs+47HgWwY4hUqqeD865VIBRoyQMjI27RmbQVeKb1pH1YTq0sbuHkiUzhVa5z0rRxG8UfzwDjIBYdPDM3Q=="

@@ -11,7 +11,7 @@
     @include('webview.partials.links.header')
     <link rel="icon" type="image/x-icon" href="{{asset(App\Models\Basicinfo::first()->favicon)}}">
     <link rel="shortcut icon" type="image/png" href="{{asset(App\Models\Basicinfo::first()->favicon)}}"/>
-    <link rel="stylesheet" href="{{ asset('public/frontend/css/custom-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/custom-style.css') }}">
     @yield('subhead')
 
     @include('webview.partials.tracking')
@@ -65,7 +65,7 @@
 
     {!!$basicinfo->chat_box!!}
 
-    <script src="{{ asset('public/frontend/js/custom-scripts.js') }}"></script>
+    <script src="{{ asset('frontend/js/custom-scripts.js') }}"></script>
 </body>
 
 </html>
