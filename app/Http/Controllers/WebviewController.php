@@ -33,7 +33,6 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Response;
-use App\Services\FacebookPixelService;
 use Illuminate\Support\Facades\File;
 
 class WebviewController extends Controller
@@ -395,17 +394,9 @@ class WebviewController extends Controller
         $sizesolds = Size::where('product_id', $productdetails->id)->where('status', 'Active')->get();
         $weightolds = Weight::where('product_id', $productdetails->id)->get();
 
-        $fbEventId = 'vc_' . $productdetails->id . '_' . uniqid();
+        // CAPI handled by stape.io sGTM
 
-        FacebookPixelService::sendCapiEvent('ViewContent', [], [
-            'currency' => 'BDT',
-            'value' => (float)($productdetails->SalePrice ?? $productdetails->RegularPrice),
-            'content_ids' => [(string)$productdetails->id],
-            'content_type' => 'product',
-            'content_name' => $productdetails->ProductName,
-        ], $fbEventId);
-
-        return view('webview.content.product.datacheck', ['sizesolds' => $sizesolds, 'weightolds' => $weightolds, 'singlemain' => $singlemain, 'varients' => $varients, 'relatedproducts' => $relatedproducts, 'productdetails' => $productdetails, 'fbEventId' => $fbEventId]);
+        return view('webview.content.product.datacheck', ['sizesolds' => $sizesolds, 'weightolds' => $weightolds, 'singlemain' => $singlemain, 'varients' => $varients, 'relatedproducts' => $relatedproducts, 'productdetails' => $productdetails]);
     }
 
     public function resetcoupon(Request $request)
@@ -654,15 +645,7 @@ class WebviewController extends Controller
             ->limit(8)
             ->get();
 
-        $fbEventId = 'vc_' . $productdetails->id . '_' . uniqid();
-
-        FacebookPixelService::sendCapiEvent('ViewContent', [], [
-            'currency' => 'BDT',
-            'value' => (float)($productdetails->SalePrice ?? $productdetails->RegularPrice),
-            'content_ids' => [(string)$productdetails->id],
-            'content_type' => 'product',
-            'content_name' => $productdetails->ProductName,
-        ], $fbEventId);
+        // CAPI handled by stape.io sGTM
 
         return view('webview.content.product.details', [
             'sizesolds' => $sizesolds,
@@ -672,7 +655,7 @@ class WebviewController extends Controller
             'relatedproducts' => $relatedproducts,
             'productdetails' => $productdetails,
             'shipping' => $shipping,
-            'fbEventId' => $fbEventId
+            'fbEventId' => null
         ]);
     }
 
@@ -705,17 +688,9 @@ class WebviewController extends Controller
         $sizesolds = Size::where('product_id', $productdetails->id)->where('status', 'Active')->get();
         $weightolds = Weight::where('product_id', $productdetails->id)->get();
 
-        $fbEventId = 'vc_' . $productdetails->id . '_' . uniqid();
+        // CAPI handled by stape.io sGTM
 
-        FacebookPixelService::sendCapiEvent('ViewContent', [], [
-            'currency' => 'BDT',
-            'value' => (float)($productdetails->SalePrice ?? $productdetails->RegularPrice),
-            'content_ids' => [(string)$productdetails->id],
-            'content_type' => 'product',
-            'content_name' => $productdetails->ProductName,
-        ], $fbEventId);
-
-        return view('webview.content.product.details', ['sizesolds' => $sizesolds, 'weightolds' => $weightolds, 'singlemain' => $singlemain, 'varients' => $varients, 'relatedproducts' => $relatedproducts, 'productdetails' => $productdetails , 'shipping'=>$shipping, 'fbEventId' => $fbEventId]);
+        return view('webview.content.product.details', ['sizesolds' => $sizesolds, 'weightolds' => $weightolds, 'singlemain' => $singlemain, 'varients' => $varients, 'relatedproducts' => $relatedproducts, 'productdetails' => $productdetails , 'shipping'=>$shipping]);
     }
 
     public function loadrelatedpro(Request $request)

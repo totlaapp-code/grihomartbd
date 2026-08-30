@@ -200,17 +200,7 @@
 
             success: function(data) {
             updatecart();
-            if (data && data.fbEventId && typeof fbq !== 'undefined') {
-                fbq('track', 'AddToCart', {
-                    content_name: data.name,
-                    content_ids: [data.product_id.toString()],
-                    content_type: 'product',
-                    value: Number(data.price),
-                    currency: 'BDT'
-                }, {
-                    eventID: data.fbEventId
-                });
-            }
+            // AddToCart handled by GTM Partner Integration + sGTM
             $.ajax({
                 type: 'GET',
                 url: '{{ url('get-cart-content') }}',

@@ -603,25 +603,7 @@
         $hashedName = hash('sha256', strtolower(trim($orders->customers->customerName)));
     ?>
     <script>
-    // Facebook Pixel - Purchase Event with Advanced Matching
-    if (typeof fbq !== 'undefined') {
-        fbq('track', 'Purchase', {
-            value: Number("<?php echo $orders->subTotal ?>"),
-            currency: 'BDT',
-            content_name: 'Checkout',
-            content_type: 'product',
-            external_id: "<?php echo $orders->id ?>",
-            contents: [@foreach ($products as $cartInfo)
-                {
-                    id: "{{$cartInfo->product_id ?? $cartInfo->id}}",
-                    quantity: {{$cartInfo->quantity ?? ($cartInfo->qty ?? 0)}},
-                    item_price: Number("{{$cartInfo->productPrice ?? $cartInfo->price}}")
-                },
-            @endforeach]
-        }, { 
-            eventID: "<?php echo 'TRX45324'.$orders->id ?>"
-        });
-    }
+    // Purchase event handled by GTM Partner Integration + sGTM
 
     // Clear the previous ecommerce object.
     dataLayer.push({ ecommerce: null });

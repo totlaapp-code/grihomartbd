@@ -41,8 +41,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Session;
-use Codeboxr\PathaoCourier\Facade\PathaoCourier;
-use App\Services\FacebookPixelService;
+use App\Services\SteadFastService;
 
 class OrderController extends Controller
 {

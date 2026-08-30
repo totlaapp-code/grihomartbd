@@ -1220,18 +1220,9 @@
     }
 </script>
 
-<script>
-if (typeof fbq !== 'undefined') {
-    fbq('track', 'ViewContent', {
-        content_name: "{{ $productdetails->ProductName }}",
-        content_ids: ["{{ $productdetails->id }}"],
-        content_type: 'product',
-        value: Number("{{ $productdetails->SalePrice ?? $productdetails->RegularPrice }}"),
-        currency: 'BDT'
-    }, {
-        eventID: "{{ $fbEventId ?? '' }}"
-    });
-}
-</script>
+{{-- ViewContent browser tracking removed.
+     GTM Partner Integration → browser-side (fbc, fbp, 13 params) ✅
+     WebviewController CAPI → server-side (same eventID for dedup) ✅
+     Manual fbq() here was causing TRIPLE fire. --}}
 
 @endsection

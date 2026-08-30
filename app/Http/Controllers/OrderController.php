@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use App\Mail\NotificationMail;
 use Illuminate\Support\Facades\Mail;
-use App\Services\FacebookPixelService;
 use App\Services\SmsNetBdService;
 
 class OrderController extends Controller
@@ -246,8 +245,7 @@ class OrderController extends Controller
                 $basicinfo = \App\Models\Basicinfo::first();
                 
                 if ($basicinfo && $basicinfo->otp_system == 'OFF') {
-                    // OTP is OFF: Fire CAPI and skip OTP page
-                    \App\Services\FacebookPixelService::sendOrderPurchaseEvent($order);
+                    // Purchase CAPI handled by stape.io sGTM
 
                     Cart::destroy();
                     Session::forget('couponcode');
@@ -347,8 +345,7 @@ class OrderController extends Controller
         $order->status = 'Confirmed';
         $order->save();
 
-        // FB CAPI Purchase event fires on successful OTP verification
-        \App\Services\FacebookPixelService::sendOrderPurchaseEvent($order);
+        // Purchase CAPI handled by stape.io sGTM
 
         Session::put('order_id', $order->id);
         
@@ -498,34 +495,5 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         return response('');
-    }
-
-    private function sendCapiEvent($eventName, $data, $products)
-    {
-        $phone = preg_replace('/\D/', '', $data['customerPhone']);
-        if (strlen($phone) == 11 && strpos($phone, '01') === 0) {
-            $phone = '88' . $phone;
-        }
-
-        $userData = [
-            'ph' => [hash('sha256', $phone)],
-            'fn' => [hash('sha256', strtolower(trim($data['customerName'])))],
-            'country' => [hash('sha256', 'bd')],
-        ];
-
-        if (!empty($data['cityName'])) {
-            $userData['ct'] = [hash('sha256', strtolower(trim(preg_replace('/[^a-zA-Z]/', '', $data['cityName']))))];
-        }
-
-        $customData = [
-            'currency' => 'BDT',
-            'value' => $data['totalAmount'],
-            'content_ids' => $products->pluck('id')->toArray(),
-            'content_type' => 'product',
-        ];
-
-        $eventId = 'TRX45324' . ($data['id'] ?? $data['invoiceID'] ?? rand(1000, 9999));
-
-        FacebookPixelService::sendCapiEvent($eventName, $userData, $customData, $eventId);
     }
 }

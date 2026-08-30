@@ -63,28 +63,11 @@ class CartController extends Controller
             ]);
         }
 
-        // Send CAPI AddToCart event
-        $fbEventId = 'atc_' . $pid . '_' . uniqid();
-        \App\Services\FacebookPixelService::sendCapiEvent('AddToCart', [], [
-            'currency' => 'BDT',
-            'value' => (float)$price * (int)$request->qty,
-            'content_ids' => [(string)$pid],
-            'content_type' => 'product',
-            'content_name' => $cartProduct->ProductName,
-        ], $fbEventId);
-
-        // Flash to session for browser tracking on redirect
-        Session::flash('fb_add_to_cart_event', [
-            'eventId' => $fbEventId,
-            'product_id' => (string)$pid,
-            'price' => (float)$price,
-            'name' => $cartProduct->ProductName,
-        ]);
+        // CAPI handled by stape.io sGTM
 
         if ($request->ajax()) {
             return response()->json([
                 'status' => 'success',
-                'fbEventId' => $fbEventId,
                 'product_id' => $pid,
                 'price' => $price,
                 'name' => $cartProduct->ProductName,
@@ -226,20 +209,9 @@ class CartController extends Controller
             }
         }
 
-        $fbEventId = 'ic_' . uniqid();
-        $productIds = $cartProducts->pluck('id')->map(function($id) {
-            return (string)$id;
-        })->toArray();
-        $totalAmount = (float)str_replace(',', '', Cart::subtotal());
+        // CAPI handled by stape.io sGTM
 
-        \App\Services\FacebookPixelService::sendCapiEvent('InitiateCheckout', [], [
-            'currency' => 'BDT',
-            'value' => $totalAmount,
-            'content_ids' => $productIds,
-            'content_type' => 'product',
-        ], $fbEventId);
-
-        return view('webview.content.cart.checkout')->with('cartProducts', $cartProducts)->with('fbEventId', $fbEventId);
+        return view('webview.content.cart.checkout')->with('cartProducts', $cartProducts);
     }
     public function payment()
     {
