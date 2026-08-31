@@ -357,7 +357,7 @@
                     <span style="font-size: 12px; color: #888;">{{ $orders->created_at->format('F d, Y') }} ({{ $orders->created_at->diffForHumans() }})</span>
                 </div>
                 <div class="total-badge">
-                    Total ৳{{ number_format($orders->subTotal + $orders->deliveryCharge - $orders->discountCharge, 0) }}
+                    Total ৳{{ number_format($orders->subTotal, 0) }}
                 </div>
             </div>
 
@@ -412,7 +412,7 @@
                     <tfoot style="border-top: 1px solid #eee;">
                         <tr>
                             <td colspan="2" class="text-end font-weight-bold">Subtotal</td>
-                            <td class="text-end text-success" style="font-weight: 700;">৳{{ number_format($orders->subTotal, 0) }}</td>
+                            <td class="text-end text-success" style="font-weight: 700;">৳{{ number_format($orders->subTotal - $orders->deliveryCharge + ($orders->discountCharge ?? 0), 0) }}</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="text-end">Delivery charge</td>
@@ -424,7 +424,7 @@
                         </tr>
                         <tr>
                             <td colspan="2" class="text-end font-weight-bold" style="font-size: 16px;">Total</td>
-                            <td class="text-end text-success" style="font-size: 16px; font-weight: 700;">৳{{ number_format($orders->subTotal + $orders->deliveryCharge - $orders->discountCharge, 0) }}</td>
+                            <td class="text-end text-success" style="font-size: 16px; font-weight: 700;">৳{{ number_format($orders->subTotal, 0) }}</td>
                         </tr>
                     </tfoot>
                 </table>
