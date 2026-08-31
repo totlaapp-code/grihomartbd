@@ -3,8 +3,8 @@
        HEADER-MATCHING MODERN LIGHT FOOTER STYLING
        ============================================== */
     .pro-footer {
-        background-color: #ffffff;
-        color: #475569;
+        background-color: var(--color-topbar-bg, #1a1a1a);
+        color: rgba(255,255,255,0.75);
         font-size: 14px;
         border-top: 3px solid var(--color-primary);
         position: relative;
@@ -12,8 +12,8 @@
     
     /* Top Features Highlight Bar */
     .pro-footer-features {
-        background-color: #f8fafc;
-        border-bottom: 1px solid #e2e8f0;
+        background-color: rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.10);
         padding: 20px 0;
     }
     .pro-feature-item {
@@ -25,35 +25,35 @@
         width: 42px;
         height: 42px;
         border-radius: 50%;
-        background: #ffffff;
+        background: rgba(255,255,255,0.10);
         color: var(--color-primary);
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 18px;
         flex-shrink: 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255,255,255,0.15);
     }
     .pro-feature-title {
         font-weight: 700;
-        color: #1e293b;
+        color: #ffffff;
         font-size: 14px;
         margin: 0;
     }
     .pro-feature-desc {
         font-size: 12px;
-        color: #64748b;
+        color: rgba(255,255,255,0.60);
         margin: 0;
     }
 
     /* Footer Main Body */
     .pro-footer-main {
         padding: 38px 0 20px 0;
-        background-color: #ffffff;
+        background-color: var(--color-topbar-bg, #1a1a1a);
     }
     .pro-footer-title {
-        color: #1e293b;
+        color: #ffffff;
         font-size: 16px;
         font-weight: 700;
         margin-bottom: 16px;
@@ -73,7 +73,7 @@
     
     .pro-footer-text {
         line-height: 1.6;
-        color: #475569;
+        color: rgba(255,255,255,0.65);
         font-size: 13.5px;
     }
 
@@ -86,7 +86,7 @@
         margin-bottom: 10px;
     }
     .pro-footer-links a {
-        color: #475569;
+        color: rgba(255,255,255,0.70);
         text-decoration: none;
         transition: all 0.2s ease;
         display: inline-flex;
@@ -100,7 +100,7 @@
     }
     .pro-footer-links a i {
         font-size: 11px;
-        color: var(--color-primary);
+        color: rgba(255,255,255,0.50);
     }
 
     /* Contact Details */
@@ -114,11 +114,12 @@
         align-items: flex-start;
         gap: 12px;
         margin-bottom: 14px;
-        color: #475569;
+        color: rgba(255,255,255,0.70);
     }
     .pro-contact-icon {
         color: #ffffff;
-        background-color: var(--color-primary);
+        background-color: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.20);
         width: 28px;
         height: 28px;
         border-radius: 50%;
@@ -130,7 +131,7 @@
         margin-top: 2px;
     }
     .pro-contact-item a {
-        color: #475569;
+        color: rgba(255,255,255,0.70);
         text-decoration: none;
         transition: color 0.2s ease;
     }
@@ -148,15 +149,15 @@
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        background: #f1f5f9;
-        color: #1e293b;
+        background: rgba(255,255,255,0.10);
+        color: #ffffff;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         font-size: 15px;
         text-decoration: none !important;
         transition: all 0.25s ease;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(255,255,255,0.20);
     }
     .pro-social-btn:hover {
         background: var(--color-primary);
@@ -263,7 +264,7 @@
                     </p>
                     <!-- Social Links -->
                     <div class="mt-3">
-                        <h6 class="fw-bold mb-2" style="font-size: 13px; color: #1e293b;">Follow Us:</h6>
+                        <h6 class="fw-bold mb-2" style="font-size: 13px; color: #ffffff;">Follow Us:</h6>
                         <div class="pro-social-btns">
                             @if(!empty($basicinfo->facebook))
                                 <a href="{{ $basicinfo->facebook }}" target="_blank" class="pro-social-btn" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
@@ -292,7 +293,7 @@
                             <li class="pro-contact-item">
                                 <span class="pro-contact-icon"><i class="fa-solid fa-location-dot"></i></span>
                                 <div>
-                                    <strong class="d-block mb-1" style="font-size: 13px; color: #1e293b;">Address:</strong>
+                                    <strong class="d-block mb-1" style="font-size: 13px; color: #ffffff;">Address:</strong>
                                     <span>{{ $basicinfo->address }}</span>
                                 </div>
                             </li>
@@ -301,7 +302,7 @@
                             <li class="pro-contact-item">
                                 <span class="pro-contact-icon"><i class="fa-solid fa-phone"></i></span>
                                 <div>
-                                    <strong class="d-block mb-1" style="font-size: 13px; color: #1e293b;">Phone:</strong>
+                                    <strong class="d-block mb-1" style="font-size: 13px; color: #ffffff;">Phone:</strong>
                                     @if(!empty($basicinfo->phone_one))
                                         <a href="tel:+88{{ $basicinfo->phone_one }}" class="d-block">+(88) {{ $basicinfo->phone_one }}</a>
                                     @endif
@@ -315,7 +316,7 @@
                             <li class="pro-contact-item">
                                 <span class="pro-contact-icon"><i class="fa-solid fa-envelope"></i></span>
                                 <div>
-                                    <strong class="d-block mb-1" style="font-size: 13px; color: #1e293b;">Email:</strong>
+                                    <strong class="d-block mb-1" style="font-size: 13px; color: #ffffff;">Email:</strong>
                                     <a href="mailto:{{ $basicinfo->email }}">{{ $basicinfo->email }}</a>
                                 </div>
                             </li>

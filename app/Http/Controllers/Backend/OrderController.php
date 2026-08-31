@@ -2524,10 +2524,12 @@ class OrderController extends Controller
                         $order = Order::find($id);
                         $order->courier_tracking_link = $res->consignment->tracking_link ?? ('https://steadfast.com.bd/t' . '/' . $res->consignment->tracking_code);
                         $order->consigment_id = $res->consignment->consignment_id;
+                        $order->status = 'Shipped';
+                        $order->deliveryDate = date('Y-m-d');
                         $order->update();
                         $comment = new Comment();
                         $comment->order_id = $id;
-                        $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Send To #GA00' . $id . ' Order to ' . $courier->courierName;
+                        $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Send To #GA00' . $id . ' Order to ' . $courier->courierName . ' - Status changed to Shipped';
                         $comment->admin_id = Auth::guard('admin')->user()->id;
                         $comment->status = 1;
                         $comment->save();
@@ -2539,9 +2541,23 @@ class OrderController extends Controller
                     $response['status'] = 'failed';
                     $response['message'] = 'This courier do not have permission for auto entry';
                 }
+                // For couriers without API integration, still set status to Shipped
+                $orderFallback = Order::find($id);
+                if ($orderFallback && $orderFallback->status !== 'Shipped') {
+                    $orderFallback->courier_id = $courier_id;
+                    $orderFallback->status = 'Shipped';
+                    $orderFallback->deliveryDate = date('Y-m-d');
+                    $orderFallback->update();
+                    $comment = new Comment();
+                    $comment->order_id = $id;
+                    $comment->comment = Auth::guard('admin')->user()->name . ' Assigned courier and changed status to Shipped for Order #' . $id;
+                    $comment->admin_id = Auth::guard('admin')->user()->id;
+                    $comment->status = 1;
+                    $comment->save();
+                }
             }
             $response['status'] = 'success';
-            $response['message'] = 'Successfully Assign Courier to this Order';
+            $response['message'] = 'Successfully Assign Courier to this Order - Status changed to Shipped';
         } else {
             $response['status'] = 'failed';
             $response['message'] = 'Unsuccessful to Assign Courier to this Order';

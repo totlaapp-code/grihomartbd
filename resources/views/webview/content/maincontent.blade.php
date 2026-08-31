@@ -263,40 +263,101 @@
             font-weight: 600;
         }
     }
+    /* Desktop Sidebar Categories */
+    @media (min-width: 992px) {
+        .cat-container-mobile {
+            position: relative;
+        }
+        .desktop-sidebar-cat {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: calc(100% - 16px); /* Adjusting for right padding */
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            padding-right: 6px;
+            flex-wrap: nowrap !important;
+        }
+        .desktop-sidebar-cat::-webkit-scrollbar {
+            width: 4px;
+        }
+        .desktop-sidebar-cat::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 4px;
+        }
+        .desktop-sidebar-cat::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .desktop-sidebar-cat::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .desktop-sidebar-cat .cat-grid-item {
+            flex: 0 0 auto;
+            max-width: 100%;
+        }
+        .desktop-sidebar-cat .cat-circle-card {
+            flex-direction: row;
+            justify-content: flex-start;
+            padding: 8px 12px;
+            height: auto;
+            border-radius: 8px;
+        }
+        .desktop-sidebar-cat .cat-icon-wrapper {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 0;
+            margin-right: 12px;
+            background: transparent;
+        }
+        .desktop-sidebar-cat .cat-icon-wrapper img {
+            width: 24px;
+            height: 24px;
+        }
+        .desktop-sidebar-cat .cat-card-title {
+            font-size: 13px;
+            font-weight: 500;
+            text-align: left;
+        }
+    }
 </style>
 
-<!-- Full-Width Hero Slider -->
-<div class="container-fluid px-2 px-lg-4 pt-2" style="overflow: hidden;">
+<!-- Full-Width Hero Slider & Categories -->
+<div class="container-fluid px-2 px-lg-4 pt-2 mb-3 mb-lg-4" style="overflow: hidden;">
     <div class="row m-0">
-        <div class="col-12 p-0">
-            <div class="owl-carousel owl-theme" id="slider">
-                @forelse ($sliders as $slider)
-                    <div class="hero-slider-item" style="margin: 0 !important;">
-                        <a href="{{ $slider->slider_btn_link }}">
-                            <img src="{{ asset($slider->slider_image) }}" alt="Slider Image" @if($loop->first) loading="eager" fetchpriority="high" @endif>
+        <!-- Categories: Desktop Left (col-lg-3), Mobile Order 2 -->
+        <div class="col-12 col-lg-3 p-0 pe-lg-3 order-2 order-lg-1 cat-container-mobile pt-3 pt-lg-0">
+            <div class="cat-grid-wrapper desktop-sidebar-cat">
+                @forelse ($categories as $category)
+                    <div class="cat-grid-item">
+                        <a href="{{ url('products/category/' . $category->slug) }}" class="cat-circle-card">
+                            <div class="cat-icon-wrapper">
+                                <img src="{{ asset($category->category_icon) }}" alt="{{ $category->category_name }}">
+                            </div>
+                            <p class="cat-card-title">{{ \Illuminate\Support\Str::limit($category->category_name, 25) }}</p>
                         </a>
                     </div>
                 @empty
                 @endforelse
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Modern Circular Categories Grid (2-Row Horizontal Swipe on Mobile) -->
-<div class="container-fluid px-2 px-lg-4 py-2 cat-container-mobile">
-    <div class="cat-grid-wrapper">
-        @forelse ($categories as $category)
-            <div class="cat-grid-item">
-                <a href="{{ url('products/category/' . $category->slug) }}" class="cat-circle-card">
-                    <div class="cat-icon-wrapper">
-                        <img src="{{ asset($category->category_icon) }}" alt="{{ $category->category_name }}">
+        <!-- Banner: Desktop Right (col-lg-9), Mobile Order 1 -->
+        <div class="col-12 col-lg-9 p-0 order-1 order-lg-2">
+            <div class="owl-carousel owl-theme" id="slider">
+                @forelse ($sliders as $slider)
+                    <div class="hero-slider-item" style="margin: 0 !important; border-radius: 8px; overflow: hidden;">
+                        <a href="{{ $slider->slider_btn_link }}">
+                            <img src="{{ asset($slider->slider_image) }}" alt="Slider Image" @if($loop->first) loading="eager" fetchpriority="high" @endif style="border-radius: 8px;">
+                        </a>
                     </div>
-                    <p class="cat-card-title">{{ \Illuminate\Support\Str::limit($category->category_name, 16) }}</p>
-                </a>
+                @empty
+                @endforelse
             </div>
-        @empty
-        @endforelse
+        </div>
     </div>
 </div>
 
