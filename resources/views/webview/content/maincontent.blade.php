@@ -147,216 +147,155 @@
         }
     }
 
-    /* Modern Category Card Styling */
-    .cat-grid-wrapper {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        padding: 6px 0;
-    }
-    .cat-grid-item {
-        flex: 1 1 calc(16.666667% - 10px);
-        max-width: calc(16.666667% - 10px);
-    }
-    @media (max-width: 992px) {
-        .cat-grid-item {
-            flex: 1 1 calc(25% - 9px);
-            max-width: calc(25% - 9px);
-        }
-    }
-    .cat-circle-card {
+
+    /* ── Category Section ── */
+    .cat-section-below {
         background: #ffffff;
-        border: 1px solid #f1f5f9;
-        border-radius: 12px;
-        padding: 14px 8px;
-        text-align: center;
-        transition: all 0.25s ease;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        border-radius: 18px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+        padding: 24px 20px 20px;
+    }
+    .cat-section-below .cat-grid-wrapper {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 6px;
+    }
+    /* Hide items after 12th on large screen */
+    .cat-section-below .cat-grid-item:nth-child(n+13) {
+        display: none;
+    }
+    .cat-section-below .cat-grid-item {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        height: 100%;
+    }
+    .cat-section-below .cat-circle-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         text-decoration: none !important;
+        transition: all 0.22s ease;
+        width: 100%;
+        padding: 14px 8px 12px;
+        background: transparent;
+        border: none;
+        border-radius: 14px;
     }
-    .cat-circle-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 16px rgba(255, 107, 0, 0.18);
-        border-color: var(--color-primary);
+    .cat-section-below .cat-circle-card:hover {
+        background: #f8f4ff;
+        transform: translateY(-4px);
+        box-shadow: 0 6px 20px rgba(100,60,200,0.08);
     }
-    .cat-icon-wrapper {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        background: #f8fafc;
+    .cat-section-below .cat-icon-wrapper {
+        width: 90px;
+        height: 90px;
+        background: transparent;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 8px;
-        transition: background 0.25s ease;
+        margin-bottom: 10px;
+        transition: transform 0.22s ease;
+        flex-shrink: 0;
     }
-    .cat-circle-card:hover .cat-icon-wrapper {
-        background: #eef8e3;
+    .cat-section-below .cat-circle-card:hover .cat-icon-wrapper {
+        transform: scale(1.08);
     }
-    .cat-icon-wrapper img {
-        width: 44px;
-        height: 44px;
+    .cat-section-below .cat-icon-wrapper img {
+        width: 100%;
+        height: 100%;
         object-fit: contain;
     }
-    .cat-card-title {
-        font-size: 11px;
-        font-weight: 700;
+    .cat-section-below .cat-card-title {
+        font-size: 12px;
+        font-weight: 600;
         color: #1e293b;
+        text-align: center;
+        line-height: 1.35;
         margin: 0;
-        line-height: 1.2;
-        width: 100%;
-        white-space: nowrap;
+        word-break: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis;
-        display: block;
+        width: 100%;
     }
-
-    /* Mobile: 2-Row Horizontal Swipe Layout (Shopee/Daraz Style) */
-    @media (max-width: 768px) {
-        .cat-container-mobile {
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-        }
-        .cat-grid-wrapper {
-            display: grid;
-            grid-template-rows: repeat(2, 1fr);
-            grid-auto-flow: column;
-            grid-auto-columns: calc(25% - 6px);
+    /* Tablet: 6 per row */
+    @media (max-width: 992px) {
+        .cat-section-below .cat-grid-wrapper {
+            grid-template-columns: repeat(6, 1fr);
             gap: 8px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: 6px 12px 10px 12px;
-            margin: 0;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
         }
-        .cat-grid-wrapper::-webkit-scrollbar {
+        .cat-section-below .cat-grid-item:nth-child(n+13) {
+            display: flex;
+        }
+        .cat-section-below .cat-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 8px;
+        }
+    }
+    /* Mobile: 3 per row (2 rows = 6 visible), rest hidden */
+    @media (max-width: 576px) {
+        .cat-section-below {
+            border-radius: 14px;
+            padding: 14px 10px 14px;
+        }
+        .cat-section-below .cat-grid-wrapper {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px 8px;
+        }
+        .cat-section-below .cat-grid-item {
+            padding: 0;
+        }
+        /* Hide items after 6th on mobile */
+        .cat-section-below .cat-grid-item:nth-child(n+7) {
             display: none;
         }
-        .cat-grid-item {
-            padding: 0;
-            flex: none;
-            max-width: none;
-            scroll-snap-align: start;
+        .cat-section-below .cat-circle-card {
+            padding: 8px 4px 10px;
+            border-radius: 12px;
         }
-        .cat-circle-card {
-            padding: 8px 4px;
-            border-radius: 10px;
+        .cat-section-below .cat-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 7px;
         }
-        .cat-icon-wrapper {
-            width: 52px;
-            height: 52px;
-            margin-bottom: 4px;
-        }
-        .cat-icon-wrapper img {
-            width: 32px;
-            height: 32px;
-        }
-        .cat-card-title {
-            font-size: 10px;
+        .cat-section-below .cat-card-title {
+            font-size: 11px;
             font-weight: 600;
-        }
-    }
-    /* Desktop Sidebar Categories */
-    @media (min-width: 992px) {
-        .cat-container-mobile {
-            position: relative;
-        }
-        .desktop-sidebar-cat {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: calc(100% - 16px); /* Adjusting for right padding */
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            overflow-y: auto;
-            padding-right: 6px;
-            flex-wrap: nowrap !important;
-        }
-        .desktop-sidebar-cat::-webkit-scrollbar {
-            width: 4px;
-        }
-        .desktop-sidebar-cat::-webkit-scrollbar-track {
-            background: #f1f5f9; 
-            border-radius: 4px;
-        }
-        .desktop-sidebar-cat::-webkit-scrollbar-thumb {
-            background: #cbd5e1; 
-            border-radius: 4px;
-        }
-        .desktop-sidebar-cat::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; 
-        }
-        .desktop-sidebar-cat .cat-grid-item {
-            flex: 0 0 auto;
-            max-width: 100%;
-        }
-        .desktop-sidebar-cat .cat-circle-card {
-            flex-direction: row;
-            justify-content: flex-start;
-            padding: 8px 12px;
-            height: auto;
-            border-radius: 8px;
-        }
-        .desktop-sidebar-cat .cat-icon-wrapper {
-            width: 32px;
-            height: 32px;
-            margin-bottom: 0;
-            margin-right: 12px;
-            background: transparent;
-        }
-        .desktop-sidebar-cat .cat-icon-wrapper img {
-            width: 24px;
-            height: 24px;
-        }
-        .desktop-sidebar-cat .cat-card-title {
-            font-size: 13px;
-            font-weight: 500;
-            text-align: left;
         }
     }
 </style>
 
-<!-- Full-Width Hero Slider & Categories -->
-<div class="container-fluid px-2 px-lg-4 pt-2 mb-3 mb-lg-4" style="overflow: hidden;">
-    <div class="row m-0">
-        <!-- Categories: Desktop Left (col-lg-3), Mobile Order 2 -->
-        <div class="col-12 col-lg-3 p-0 pe-lg-3 order-2 order-lg-1 cat-container-mobile pt-3 pt-lg-0">
-            <div class="cat-grid-wrapper desktop-sidebar-cat">
-                @forelse ($categories as $category)
-                    <div class="cat-grid-item">
-                        <a href="{{ url('products/category/' . $category->slug) }}" class="cat-circle-card">
-                            <div class="cat-icon-wrapper">
-                                <img src="{{ asset($category->category_icon) }}" alt="{{ $category->category_name }}">
-                            </div>
-                            <p class="cat-card-title">{{ \Illuminate\Support\Str::limit($category->category_name, 25) }}</p>
-                        </a>
-                    </div>
-                @empty
-                @endforelse
+<!-- Full-Width Hero Slider -->
+<div class="container-fluid px-2 px-lg-4 pt-2" style="overflow: hidden;">
+    <div class="owl-carousel owl-theme" id="slider">
+        @forelse ($sliders as $slider)
+            <div class="hero-slider-item" style="margin: 0 !important; border-radius: 12px; overflow: hidden;">
+                <a href="{{ $slider->slider_btn_link }}">
+                    <img src="{{ asset($slider->slider_image) }}" alt="Slider Image" @if($loop->first) loading="eager" fetchpriority="high" @endif style="border-radius: 12px;">
+                </a>
             </div>
-        </div>
+        @empty
+        @endforelse
+    </div>
+</div>
 
-        <!-- Banner: Desktop Right (col-lg-9), Mobile Order 1 -->
-        <div class="col-12 col-lg-9 p-0 order-1 order-lg-2">
-            <div class="owl-carousel owl-theme" id="slider">
-                @forelse ($sliders as $slider)
-                    <div class="hero-slider-item" style="margin: 0 !important; border-radius: 8px; overflow: hidden;">
-                        <a href="{{ $slider->slider_btn_link }}">
-                            <img src="{{ asset($slider->slider_image) }}" alt="Slider Image" @if($loop->first) loading="eager" fetchpriority="high" @endif style="border-radius: 8px;">
-                        </a>
-                    </div>
-                @empty
-                @endforelse
-            </div>
+<!-- Categories Below Hero (Rounded) -->
+<div class="container-fluid px-2 px-lg-4 pt-2 mb-3 mb-lg-4">
+    <div class="cat-section-below">
+        <div class="cat-grid-wrapper">
+            @forelse ($categories as $category)
+                <div class="cat-grid-item">
+                    <a href="{{ url('products/category/' . $category->slug) }}" class="cat-circle-card">
+                        <div class="cat-icon-wrapper">
+                            <img src="{{ asset($category->category_icon) }}" alt="{{ $category->category_name }}">
+                        </div>
+                        <p class="cat-card-title">{{ \Illuminate\Support\Str::limit($category->category_name, 30) }}</p>
+                    </a>
+                </div>
+            @empty
+            @endforelse
         </div>
     </div>
 </div>
