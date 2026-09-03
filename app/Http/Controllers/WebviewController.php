@@ -682,6 +682,11 @@ class WebviewController extends Controller
                 $query->select('id', 'product_id', 'Discount', 'RegularPrice', 'SalePrice');
             }
         ])->where('id', $id)->first();
+
+        if (!$productdetails) {
+            return redirect()->back()->with('error', 'Product details not available.');
+        }
+
         $varients = Varient::where('product_id', $productdetails->id)->get();
 
         $relatedproducts = Mainproduct::where('category_id', $singlemain->category_id)->where('status', 'Active')->orderByRaw('ISNULL(`position`), `position` ASC')->select('id', 'ProductName', 'ProductSlug', 'ProductImage', 'status', 'position', 'top_rated', 'RelatedProductIds')->inRandomOrder()->limit(8)->get();
