@@ -190,7 +190,24 @@ class WebviewController extends Controller
         $order = $query->first();
 
         if ($order) {
-            $newStatus = $order->status;
+            $currentStatus = $order->status;
+
+            // Status priority — higher index = more advanced stage
+            // Never let webhook DOWNGRADE an order to a lower status
+            $statusPriority = [
+                'Pending'          => 0,
+                'Hold'             => 0,
+                'Courier Pending'  => 1,
+                'Ready to Ship'    => 2,
+                'Packaging'        => 2,
+                'Shipped'          => 3,
+                'In Transit'       => 3,
+                'Partial Delivered'=> 4,
+                'Del. Failed'      => 4,
+                'Completed'        => 5,
+            ];
+
+            $newStatus = $currentStatus; // default: keep existing
 
             if ($rawStatus === 'delivered') {
                 $newStatus = 'Completed';
@@ -202,12 +219,26 @@ class WebviewController extends Controller
                 $newStatus = 'Partial Delivered';
             } elseif (in_array($rawStatus, ['cancelled', 'delivery_failed', 'cancel'])) {
                 $newStatus = 'Del. Failed';
-            } elseif (in_array($rawStatus, ['pending', 'hold'])) {
-                $newStatus = 'Courier Pending';
             } elseif (in_array($rawStatus, ['in_transit', 'out_for_delivery', 'delivery_in_progress'])) {
                 $newStatus = 'In Transit';
+            } elseif (in_array($rawStatus, ['pending', 'hold', 'in_review'])) {
+                // Steadfast sends 'pending' right after order creation.
+                // ONLY set Courier Pending if the order hasn't been shipped yet.
+                // Never downgrade from Shipped / In Transit / Completed.
+                $currentPriority = $statusPriority[$currentStatus] ?? 0;
+                if ($currentPriority < 3) {
+                    $newStatus = 'Courier Pending';
+                }
+                // else: keep the current higher status (Shipped, In Transit, Completed, etc.)
             } elseif (!empty($rawStatus)) {
                 $newStatus = ucfirst($rawStatus);
+            }
+
+            // Final guard: never downgrade to a lower priority status
+            $currentPriority = $statusPriority[$currentStatus] ?? 0;
+            $newPriority     = $statusPriority[$newStatus]     ?? 0;
+            if ($newPriority < $currentPriority) {
+                $newStatus = $currentStatus; // keep the higher status
             }
 
             $order->status = $newStatus;
@@ -221,7 +252,7 @@ class WebviewController extends Controller
             $comment->save();
 
             return response()->json([
-                'status' => 'success',
+                'status'  => 'success',
                 'message' => 'Order status updated successfully to ' . $newStatus
             ], 200);
         }
