@@ -261,15 +261,14 @@ class OrderController extends Controller
                     Session::put('successfulor', 'successfulor');
                     return redirect('order-received');
                 } else {
-                    // --- OTP: Generate, save, send SMS ---
-                    $otp = (string) random_int(100000, 999999);
-                    $order->otp = $otp;
+                    // --- OTP: Wait for customer to click Re-Confirm button on order-received page ---
+                    $order->otp = null;
                     $order->otp_verified = false;
                     $order->otp_attempts = 0;
-                    $order->otp_expires_at = Carbon::now()->addMinutes(15);
+                    $order->otp_expires_at = null;
                     $order->save();
 
-                    SmsNetBdService::sendOtp($request->customerPhone, $otp, $order->invoiceID);
+                    // Do NOT send OTP automatically upon order submit; OTP sends only when Re-Confirm is clicked
 
                     Cart::destroy();
                     Session::forget('couponcode');
@@ -336,7 +335,7 @@ class OrderController extends Controller
         }
 
         // OTP match check
-        if ($request->otp !== $order->otp) {
+        if (empty($order->otp) || $request->otp !== $order->otp) {
             $order->otp_attempts += 1;
             $order->save();
             $remaining = 3 - $order->otp_attempts;
@@ -377,7 +376,7 @@ class OrderController extends Controller
         $customer = Customer::where('order_id', $order->id)->first();
 
         if ($order->otp_verified) {
-            return response()->json(['status' => 'already_verified']);
+            return response()->json(['status' => 'already_verified', 'message' => 'অর্ডার আগেই নিশ্চিত হয়েছে!']);
         }
 
         // Generate fresh OTP
@@ -387,9 +386,12 @@ class OrderController extends Controller
         $order->otp_expires_at = Carbon::now()->addMinutes(15);
         $order->save();
 
-        SmsNetBdService::sendOtp($customer->customerPhone, $otp, $order->invoiceID);
+        $phone = $customer->customerPhone ?? ($order->customers->customerPhone ?? null);
+        if (!empty($phone)) {
+            SmsNetBdService::sendOtp($phone, $otp, $order->invoiceID);
+        }
 
-        return response()->json(['status' => 'sent']);
+        return response()->json(['status' => 'sent', 'message' => 'আপনার মোবাইলে OTP পাঠানো হয়েছে।']);
     }
 
     public function updatepaymentmethood(Request $request)

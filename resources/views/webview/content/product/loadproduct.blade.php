@@ -1,3 +1,34 @@
+<style>
+    .sizeinfo, .colorinfo {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+    }
+    .sizetext, .weighttext {
+        font-size: 13px !important;
+        padding: 4px 12px !important;
+        line-height: 1.3 !important;
+        border-radius: 20px !important;
+        margin: 0 !important;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ced4da;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+    }
+    @media (max-width: 576px) {
+        .sizetext, .weighttext {
+            font-size: 12px !important;
+            padding: 3px 10px !important;
+        }
+        .sizeinfo, .colorinfo {
+            gap: 5px;
+        }
+    }
+</style>
 <div class='row single-product'>
     <div class='p-0 col-md-12'>
         <div class="detail-block">
@@ -93,9 +124,8 @@
                             @if (!$has_colors)
                             @else
                                 <div class="mb-2 col-12 col-md-12 colorpart">
-                                    <div class="d-flex my-2">
-                                    <h4 id="productselect" class="m-0"><b style="font-size:14px">Select Color: </b></h4>
-                                    <div class="d-flex">
+                                    <div class="d-flex align-items-center flex-wrap gap-2">
+                                        <span class="m-0 fw-bold" style="font-size:14px; color:#111; white-space:nowrap;">Select Color:</span>
                                         <div class="colorinfo">
                                             @forelse (json_decode($singlemain->RelatedProductIds) as $key=>$ids)
                                                 @php
@@ -108,7 +138,6 @@
                                             @empty
                                             @endforelse
                                         </div>
-                                     </div>
                                     </div>
                                 </div>
                             @endif
@@ -116,75 +145,77 @@
                           
                             @if (count($sizes) < 1)
                             @else
-                                <div class="col-12 col-md-12 colorpart">
-                                    <div class="d-flex my-2">
-                                    <h4 id="resellerprice" class="m-0"><b style="font-size:14px">Select Size: </b></h4>
-                                    <div class="sizeinfo">
-                                        @forelse ($sizes as $size)
-                                            @if($size->available_stock>2)
-                                            <input type="hidden" name="regularpriceofsize"
-                                                id="regularpriceofsize{{ $size->id }}"
-                                                value="{{ $size->RegularPrice }}">
-                                            <input type="hidden" name="salepriceofsize"
-                                                id="salepriceofsize{{ $size->id }}"
-                                                value="{{ $size->SalePrice }}">
-                                            <input type="hidden" name="sizesigmrnt"
-                                                id="sizesigmrnt{{ $size->id }}"
-                                                value="{{ $size->size }}">
-                                            <input type="radio" class="m-0" hidden
-                                                id="size{{ $size->id }}" name="size"
-                                                onclick="getsize('{{ $size->id }}')">
-                                            <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1" id="sizetext{{ $size->id }}"
-                                                for="size{{ $size->id }}"
-                                                onclick="getsize('{{ $size->id }}')"
-                                                @if($loop->first) style="color:#fff; background:#613EEA;" @endif>{{ $size->size }}</label>
-                                            @else
-                                            <input type="hidden" name="regularpriceofsize"
-                                                id="regularpriceofsize{{ $size->id }}"
-                                                value="{{ $size->RegularPrice }}">
-                                            <input type="hidden" name="salepriceofsize"
-                                                id="salepriceofsize{{ $size->id }}"
-                                                value="{{ $size->SalePrice }}">
-                                            <input type="hidden" name="sizesigmrnt"
-                                                id="sizesigmrnt{{ $size->id }}"
-                                                value="{{ $size->size }}">
-                                            <input type="radio" class="m-0" hidden
-                                                id="size{{ $size->id }}" name="size" >
-                                            <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1 disabled" id="sizetext{{ $size->id }}"
-                                                for="size{{ $size->id }}"
-                                                style="opacity: 0.6;" ><del>{{ $size->size }} </del> </label>
-                                            @endif
+                                <div class="col-12 col-md-12 colorpart mb-2">
+                                    <div class="d-flex align-items-center flex-wrap gap-2">
+                                        <span class="m-0 fw-bold" style="font-size:14px; color:#111; white-space:nowrap;">Select Size:</span>
+                                        <div class="sizeinfo">
+                                            @forelse ($sizes as $size)
+                                                @if($size->available_stock>2)
+                                                <input type="hidden" name="regularpriceofsize"
+                                                    id="regularpriceofsize{{ $size->id }}"
+                                                    value="{{ $size->RegularPrice }}">
+                                                <input type="hidden" name="salepriceofsize"
+                                                    id="salepriceofsize{{ $size->id }}"
+                                                    value="{{ $size->SalePrice }}">
+                                                <input type="hidden" name="sizesigmrnt"
+                                                    id="sizesigmrnt{{ $size->id }}"
+                                                    value="{{ $size->size }}">
+                                                <input type="radio" class="m-0" hidden
+                                                    id="size{{ $size->id }}" name="size"
+                                                    onclick="getsize('{{ $size->id }}')">
+                                                <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold" id="sizetext{{ $size->id }}"
+                                                    for="size{{ $size->id }}"
+                                                    onclick="getsize('{{ $size->id }}')"
+                                                    @if($loop->first) style="color:#fff; background:#613EEA;" @endif>{{ $size->size }}</label>
+                                                @else
+                                                <input type="hidden" name="regularpriceofsize"
+                                                    id="regularpriceofsize{{ $size->id }}"
+                                                    value="{{ $size->RegularPrice }}">
+                                                <input type="hidden" name="salepriceofsize"
+                                                    id="salepriceofsize{{ $size->id }}"
+                                                    value="{{ $size->SalePrice }}">
+                                                <input type="hidden" name="sizesigmrnt"
+                                                    id="sizesigmrnt{{ $size->id }}"
+                                                    value="{{ $size->size }}">
+                                                <input type="radio" class="m-0" hidden
+                                                    id="size{{ $size->id }}" name="size" >
+                                                <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold disabled" id="sizetext{{ $size->id }}"
+                                                    for="size{{ $size->id }}"
+                                                    style="opacity: 0.6;" ><del>{{ $size->size }} </del> </label>
+                                                @endif
 
-                                        @empty
-                                        @endforelse
+                                            @empty
+                                            @endforelse
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             @endif
                             @if (count($weights) < 1)
                             @else
-                                <div class="col-12 col-md-12 colorpart">
-                                    <h4 id="resellerprice" class="m-0"><b style="font-size:14px">সিলেক্ট করে কনফার্ম করুনঃ</b></h4>
-                                    <div class="sizeinfo">
-                                        @forelse ($weights as $weight)
-                                            <input type="hidden" name="regularpriceofsize"
-                                                id="regularpriceofsize{{ $weight->id }}"
-                                                value="{{ $weight->RegularPrice }}">
-                                            <input type="hidden" name="salepriceofsize"
-                                                id="salepriceofsize{{ $weight->id }}"
-                                                value="{{ $weight->SalePrice }}">
-                                            <input type="hidden" name="weightsigmrnt"
-                                                id="weightsigmrnt{{ $weight->id }}"
-                                                value="{{ $weight->weight }}">
-                                            <input type="radio" class="m-0" hidden
-                                                id="size{{ $weight->id }}" name="size"
-                                                onclick="getweight('{{ $weight->id }}')">
-                                            <label class="weighttext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1"
-                                                id="weighttext{{ $weight->id }}"
-                                                for="size{{ $weight->id }}"
-                                                onclick="getweight('{{ $weight->id }}')">{{ $weight->weight }}</label>
-                                        @empty
-                                        @endforelse
+                                <div class="col-12 col-md-12 colorpart mb-2">
+                                    <div class="d-flex align-items-center flex-wrap gap-2">
+                                        <span class="m-0 fw-bold" style="font-size:14px; color:#111; white-space:nowrap;">সিলেক্ট করে কনফার্ম করুনঃ</span>
+                                        <div class="sizeinfo">
+                                            @forelse ($weights as $weight)
+                                                <input type="hidden" name="regularpriceofsize"
+                                                    id="regularpriceofsize{{ $weight->id }}"
+                                                    value="{{ $weight->RegularPrice }}">
+                                                <input type="hidden" name="salepriceofsize"
+                                                    id="salepriceofsize{{ $weight->id }}"
+                                                    value="{{ $weight->SalePrice }}">
+                                                <input type="hidden" name="weightsigmrnt"
+                                                    id="weightsigmrnt{{ $weight->id }}"
+                                                    value="{{ $weight->weight }}">
+                                                <input type="radio" class="m-0" hidden
+                                                    id="size{{ $weight->id }}" name="size"
+                                                    onclick="getweight('{{ $weight->id }}')">
+                                                <label class="weighttext btn btn-outline-secondary rounded-pill fw-bold"
+                                                    id="weighttext{{ $weight->id }}"
+                                                    for="size{{ $weight->id }}"
+                                                    onclick="getweight('{{ $weight->id }}')">{{ $weight->weight }}</label>
+                                            @empty
+                                            @endforelse
+                                        </div>
                                     </div>
                                 </div>
                             @endif

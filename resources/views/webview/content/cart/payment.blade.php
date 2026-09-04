@@ -347,8 +347,10 @@
             <h2><i class="far fa-clock"></i> কলের অপেক্ষা নয়, এখনই রি-কনফার্ম করুন আপনি নিজেই!</h2>
             <p>দ্রুত ডেলিভারি পেতে নিচের বাটনে ক্লিক করুন।</p>
             
-            <button class="btn btn-reconfirm" data-bs-toggle="modal" data-bs-target="#otpModal">
-                <i class="fas fa-shopping-bag"></i> Re-Confirm Order
+            <button type="button" class="btn btn-reconfirm" id="btnReconfirmOrder" onclick="triggerReconfirmOtp()">
+                <i class="fas fa-shopping-bag" id="reconfirmBtnIcon"></i>
+                <span id="reconfirmBtnSpinner" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
+                <span id="reconfirmBtnText">Re-Confirm Order</span>
             </button>
 
             <div class="reconfirm-notes">
@@ -639,6 +641,81 @@
         updateModalHidden();
     }
 
+    let otpSentOnce = false;
+
+    function triggerReconfirmOtp() {
+        const btn = document.getElementById('btnReconfirmOrder');
+        const btnIcon = document.getElementById('reconfirmBtnIcon');
+        const btnSpinner = document.getElementById('reconfirmBtnSpinner');
+        const btnText = document.getElementById('reconfirmBtnText');
+
+        if (otpSentOnce) {
+            var myModalEl = document.getElementById('otpModal');
+            var myModal = bootstrap.Modal.getOrCreateInstance(myModalEl);
+            myModal.show();
+            setTimeout(() => {
+                if (mBoxes.length > 0) mBoxes[0].focus();
+            }, 400);
+            return;
+        }
+
+        btn.disabled = true;
+        if(btnIcon) btnIcon.style.display = 'none';
+        if(btnSpinner) btnSpinner.style.display = 'inline-block';
+        if(btnText) btnText.textContent = 'OTP পাঠানো হচ্ছে...';
+
+        fetch("{{ route('otp.resend') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ order_id: {{ $orders->id }} })
+        })
+        .then(r => r.json())
+        .then(data => {
+            btn.disabled = false;
+            if(btnIcon) btnIcon.style.display = 'inline-block';
+            if(btnSpinner) btnSpinner.style.display = 'none';
+            if(btnText) btnText.textContent = 'Re-Confirm Order';
+
+            if(data.status === 'already_verified') {
+                document.getElementById('reconfirmSection').style.display = 'none';
+                document.getElementById('successVerifiedSection').style.display = 'block';
+                if(typeof toastr !== 'undefined') toastr.success('অর্ডার আগেই নিশ্চিত হয়েছে!');
+                return;
+            }
+
+            otpSentOnce = true;
+
+            var myModalEl = document.getElementById('otpModal');
+            var myModal = bootstrap.Modal.getOrCreateInstance(myModalEl);
+            myModal.show();
+
+            const errEl = document.getElementById('otpErrorMsg');
+            if (errEl) errEl.style.display = 'none';
+
+            setTimeout(() => {
+                if (mBoxes.length > 0) mBoxes[0].focus();
+            }, 400);
+
+            if(typeof toastr !== 'undefined') {
+                toastr.success('আপনার মোবাইলে ৬ ডিজিটের OTP পাঠানো হয়েছে!');
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            if(btnIcon) btnIcon.style.display = 'inline-block';
+            if(btnSpinner) btnSpinner.style.display = 'none';
+            if(btnText) btnText.textContent = 'Re-Confirm Order';
+
+            var myModalEl = document.getElementById('otpModal');
+            var myModal = bootstrap.Modal.getOrCreateInstance(myModalEl);
+            myModal.show();
+        });
+    }
+
     function resendOtpAjax() {
         const rBtn = document.getElementById('ajaxResendBtn');
         rBtn.disabled = true;
@@ -648,19 +725,29 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify({ order_id: {{ $orders->id }} })
         })
         .then(r => r.json())
         .then(data => {
+            otpSentOnce = true;
             rBtn.textContent = 'পাঠানো হয়েছে!';
             rBtn.style.color = '#2e7d32';
+            if(typeof toastr !== 'undefined') {
+                toastr.success('আপনার মোবাইলে পুনরায় OTP পাঠানো হয়েছে!');
+            }
             setTimeout(() => {
                 rBtn.disabled = false;
                 rBtn.textContent = 'পুনরায় পাঠান';
                 rBtn.style.color = '';
             }, 30000);
+        })
+        .catch(err => {
+            rBtn.disabled = false;
+            rBtn.textContent = 'পুনরায় পাঠান';
+            rBtn.style.color = '';
         });
     }
 </script>
