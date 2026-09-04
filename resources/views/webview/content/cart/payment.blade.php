@@ -532,7 +532,15 @@
                 // Hide modal and reconfirm section
                 var myModalEl = document.getElementById('otpModal');
                 var modal = bootstrap.Modal.getInstance(myModalEl);
-                modal.hide();
+                if (modal) {
+                    modal.hide();
+                }
+                
+                // Force remove backdrop and body classes (Bootstrap bug fix)
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
                 
                 document.getElementById('reconfirmSection').style.display = 'none';
                 document.getElementById('successVerifiedSection').style.display = 'block';

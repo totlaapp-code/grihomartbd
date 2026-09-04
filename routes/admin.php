@@ -107,6 +107,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin:admin']], functi
     Route::post('/pixel/analytics/{id}', [BasicinfoController::class, 'pixelanalytics']);
     Route::post('/basicinfo/update/{id}', [BasicinfoController::class, 'sociallink']);
     Route::put('/shippinginfo/update/{id}', [BasicinfoController::class, 'shippinginfo'])->name('admin.shipping.update');
+    Route::post('/order-security/update', [BasicinfoController::class, 'updateOrderSecurity'])->name('admin.order_security.update');
     //payment icon
     Route::resource('paymenticons', PaymenticonController::class, ['names' => 'admin.paymenticons']);
     Route::get('paymenticon/get/data', [PaymenticonController::class, 'paymenticondata'])->name('admin.paymenticon.data');

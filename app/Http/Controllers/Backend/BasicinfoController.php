@@ -16,7 +16,9 @@ class BasicinfoController extends Controller
     public function index()
     {
         $webinfo = Basicinfo::first();
-        return view('backend.content.basicinfo.index', ['webinfo' => $webinfo]);
+        $orderSecurityStatus = \App\Models\Information::where('key', 'duplicate_order_check')->first()->value ?? 'ON';
+        $orderSecurityHours = \App\Models\Information::where('key', 'duplicate_order_hours')->first()->value ?? '24';
+        return view('backend.content.basicinfo.index', compact('webinfo', 'orderSecurityStatus', 'orderSecurityHours'));
     }
 
 
@@ -220,7 +222,13 @@ class BasicinfoController extends Controller
             'shipped' => \App\Models\Information::where('key', 'sms_template_shipped')->first()->value ?? '',
         ];
 
-        return view('backend.content.basicinfo.sms_templates', compact('templates'));
+        $statuses = [
+            'otp' => \App\Models\Information::where('key', 'sms_status_otp')->first()->value ?? 'ON',
+            'confirmed' => \App\Models\Information::where('key', 'sms_status_confirmed')->first()->value ?? 'ON',
+            'shipped' => \App\Models\Information::where('key', 'sms_status_shipped')->first()->value ?? 'ON',
+        ];
+
+        return view('backend.content.basicinfo.sms_templates', compact('templates', 'statuses'));
     }
 
     public function updateSmsTemplates(Request $request)
@@ -229,6 +237,27 @@ class BasicinfoController extends Controller
         \App\Models\Information::updateOrCreate(['key' => 'sms_template_confirmed'], ['value' => $request->sms_template_confirmed]);
         \App\Models\Information::updateOrCreate(['key' => 'sms_template_shipped'], ['value' => $request->sms_template_shipped]);
 
-        return redirect()->back()->with('message', 'SMS Templates updated successfully');
+        \App\Models\Information::updateOrCreate(['key' => 'sms_status_otp'], ['value' => $request->has('sms_status_otp') ? 'ON' : 'OFF']);
+        \App\Models\Information::updateOrCreate(['key' => 'sms_status_confirmed'], ['value' => $request->has('sms_status_confirmed') ? 'ON' : 'OFF']);
+        \App\Models\Information::updateOrCreate(['key' => 'sms_status_shipped'], ['value' => $request->has('sms_status_shipped') ? 'ON' : 'OFF']);
+
+        return redirect()->back()->with('message', 'SMS Templates & Statuses updated successfully');
+    }
+
+    public function updateOrderSecurity(Request $request)
+    {
+        $status = $request->has('duplicate_order_check') ? 'ON' : 'OFF';
+        $hours = max(1, (int) $request->input('duplicate_order_hours', 24));
+
+        \App\Models\Information::updateOrCreate(
+            ['key' => 'duplicate_order_check'],
+            ['value' => $status]
+        );
+        \App\Models\Information::updateOrCreate(
+            ['key' => 'duplicate_order_hours'],
+            ['value' => $hours]
+        );
+
+        return redirect()->back()->with('message', 'Order security settings updated successfully');
     }
 }

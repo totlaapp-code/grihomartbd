@@ -61,34 +61,38 @@ class OrderController extends Controller
         $userIp = \Request::ip();
         $deviceId = $request->input('device_id');
         $customerPhone = $request->customerPhone;
-        $twentyFourHoursAgo = Carbon::now()->subHours(24);
+        // Dynamic Duplicate Order Protection
+        $duplicateCheck = \App\Models\Information::where('key', 'duplicate_order_check')->first()->value ?? 'ON';
+        if ($duplicateCheck === 'ON') {
+            $checkHours = max(1, (int) (\App\Models\Information::where('key', 'duplicate_order_hours')->first()->value ?? 24));
+            $checkPeriodAgo = Carbon::now()->subHours($checkHours);
 
-        $excutomer = Customer::where('customerPhone', $customerPhone)->latest()->first();
-        if (isset($excutomer)) {
-            $exorder = Order::where('id', $excutomer->order_id)->first();
-            if ($exorder) {
-                $isPendingStatus = in_array($exorder->status, ['Pending', 'Packaging', 'Ready to Ship', 'Hold']);
-                $isWithin24Hours = $exorder->created_at ? Carbon::parse($exorder->created_at)->gte($twentyFourHoursAgo) : false;
-                if ($isPendingStatus || $isWithin24Hours) {
-                    \Yoeunes\Toastr\Facades\Toastr::warning('দুঃখিত, ২৪ ঘণ্টায় ১টির বেশি অর্ডার অনুমোদিত নয়। আপনার একটি অর্ডার প্রক্রিয়াধীন রয়েছে।', 'Warning', ["positionClass" => "toast-top-center"]);
-                    return redirect('/exist-order');
+            $excutomer = Customer::where('customerPhone', $customerPhone)->latest()->first();
+            if (isset($excutomer)) {
+                $exorder = Order::where('id', $excutomer->order_id)->first();
+                if ($exorder) {
+                    $isPendingStatus = in_array($exorder->status, ['Pending', 'Packaging', 'Ready to Ship', 'Hold']);
+                    $isWithinPeriod = $exorder->created_at ? Carbon::parse($exorder->created_at)->gte($checkPeriodAgo) : false;
+                    if ($isWithinPeriod && $isPendingStatus) {
+                        return redirect('/exist-order');
+                    }
                 }
             }
-        }
 
-        if (\Schema::hasColumn('orders', 'ip_address')) {
-            $recentOrderExist = Order::where('created_at', '>=', $twentyFourHoursAgo)
-                ->where(function ($query) use ($userIp, $deviceId) {
-                    $query->where('ip_address', $userIp);
-                    if (!empty($deviceId)) {
-                        $query->orWhere('device_id', $deviceId);
-                    }
-                })
-                ->first();
+            if (\Schema::hasColumn('orders', 'ip_address')) {
+                $recentOrderExist = Order::where('created_at', '>=', $checkPeriodAgo)
+                    ->where(function ($query) use ($userIp, $deviceId) {
+                        $query->where('ip_address', $userIp);
+                        if (!empty($deviceId)) {
+                            $query->orWhere('device_id', $deviceId);
+                        }
+                    })
+                    ->whereIn('status', ['Pending', 'Packaging', 'Ready to Ship', 'Hold'])
+                    ->first();
 
-            if ($recentOrderExist) {
-                \Yoeunes\Toastr\Facades\Toastr::warning('দুঃখিত, আপনার ডিভাইস বা আইপি থেকে ২৪ ঘণ্টায় ১টির বেশি অর্ডার অনুমোদিত নয়।', 'Warning', ["positionClass" => "toast-top-center"]);
-                return redirect('/exist-order');
+                if ($recentOrderExist) {
+                    return redirect('/exist-order');
+                }
             }
         }
 
@@ -124,6 +128,7 @@ class OrderController extends Controller
             $order->store_id = 1;
             $order->web_id = 'Website';
             $order->invoiceID = $this->uniqueID();
+            $order->status = 'Pending';
             if (\Schema::hasColumn('orders', 'ip_address')) {
                 $order->ip_address = $userIp;
                 $order->device_id = $deviceId;
@@ -342,7 +347,18 @@ class OrderController extends Controller
         // ✅ OTP correct → confirm order
         $order->otp_verified = true;
         $order->otp = null; // clear otp for security
-        $order->status = 'Confirmed';
+        $order->status = 'Pending';
+
+        // Send Order Confirmed SMS
+        $customer = Customer::where('order_id', $order->id)->first();
+        if ($customer && !empty($customer->customerPhone)) {
+            $smsResult = SmsNetBdService::sendOrderConfirmed($customer->customerPhone, $order->invoiceID, $order->subTotal);
+            if ($smsResult === 'sent') {
+                $order->sms_status = 'Sent';
+            } elseif ($smsResult === 'failed') {
+                $order->sms_status = 'Failed';
+            }
+        }
         $order->save();
 
         // Purchase CAPI handled by stape.io sGTM

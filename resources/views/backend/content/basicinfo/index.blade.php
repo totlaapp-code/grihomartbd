@@ -282,6 +282,60 @@
             </div>
         </div>
 
+        <div class="col-sm-12 col-md-12 col-xl-12 mb-4">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h2 class="mb-3 text-center text-danger">
+                    <i class="fas fa-shield-alt me-2"></i>ডুপ্লিকেট অর্ডার সিকিউরিটি (Duplicate Order Protection)
+                </h2>
+                
+                <div class="alert alert-info py-2 px-3 mb-4" style="font-size: 13.5px; border-left: 4px solid #0dcaf0; background: #e8f4f8; color: #1e3a5f;">
+                    <i class="fas fa-info-circle text-primary me-2"></i>
+                    একই কাস্টমার ফোন নম্বর অথবা একই আইপি/ডিভাইস থেকে নির্ধারিত সময়ের মধ্যে বারবার ফেইক বা ডাবল অর্ডার রোধ করার সিস্টেম।
+                    <strong>পূর্ববর্তী অর্ডারটি Cancel বা Delivered হয়ে গেলে কাস্টমার পুনরায় নতুন অর্ডার করতে পারবেন।</strong>
+                </div>
+
+                <form action="{{ route('admin.order_security.update') }}" method="POST">
+                    @csrf
+                    <div class="row align-items-center g-3">
+                        <div class="col-md-5 col-lg-4">
+                            <div class="card p-3 border shadow-sm" style="background: #ffffff;">
+                                <label class="form-label fw-bold text-dark mb-2">
+                                    <i class="fas fa-toggle-on text-primary me-1"></i> সিকিউরিটি স্ট্যাটাস:
+                                </label>
+                                <div class="form-check form-switch m-0 d-flex align-items-center">
+                                    <input class="form-check-input" type="checkbox" name="duplicate_order_check" value="ON" id="duplicate_order_check" 
+                                           style="width: 48px; height: 25px; cursor: pointer;"
+                                           {{ $orderSecurityStatus == 'ON' ? 'checked' : '' }}
+                                           onchange="const l = document.getElementById('secStatusLabel'); l.textContent = this.checked ? 'Active (চালু)' : 'Disabled (বন্ধ)'; l.className = this.checked ? 'badge bg-success ms-2' : 'badge bg-danger ms-2';">
+                                    <span id="secStatusLabel" class="badge {{ $orderSecurityStatus == 'ON' ? 'bg-success' : 'bg-danger' }} ms-2" style="font-size: 13px; font-weight: 600;">
+                                        {{ $orderSecurityStatus == 'ON' ? 'Active (চালু)' : 'Disabled (বন্ধ)' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 col-lg-5">
+                            <div class="card p-3 border shadow-sm" style="background: #ffffff;">
+                                <label class="form-label fw-bold text-dark mb-2">
+                                    <i class="fas fa-clock text-primary me-1"></i> রেস্ট্রিকশন লক টাইম:
+                                </label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="duplicate_order_hours" value="{{ $orderSecurityHours }}" min="1" max="720" required placeholder="24" style="font-weight: 600; font-size: 15px;">
+                                    <span class="input-group-text bg-light text-dark fw-bold">ঘণ্টা (Hours)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-lg-3">
+                            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3" style="font-size: 15px;">
+                                <i class="fas fa-save me-1"></i> আপডেট করুন
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="bg-secondary rounded h-100 p-4">
                 <h2 class="mb-4" style="text-align: center;color:red">Social Links Update</h2>

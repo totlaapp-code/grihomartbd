@@ -583,7 +583,22 @@ class OrderController extends Controller
 
         return Datatables::of($orders->orderBy('orders.id', 'DESC'))
             ->addColumn('customerInfo', function ($orders) {
-                return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">' . $orders->customerPhone . '</button><br>' . $orders->customerAddress . '</span>';
+                $otpBadge = '';
+                if ($orders->web_id == 'Website') {
+                    $otpBadge = $orders->otp_verified 
+                        ? '<br><span class="badge" style="background-color: #d1e7dd; color: #0f5132; font-size:11px; padding: 4px 8px; margin-top: 5px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-check-circle" style="color: #198754;"></i> OTP Verified</span>' 
+                        : '<br><span class="badge" style="background-color: #fff3cd; color: #664d03; font-size:11px; padding: 4px 8px; margin-top: 5px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> Unverified</span>';
+
+                    if (isset($orders->sms_status)) {
+                        if ($orders->sms_status == 'Sent') {
+                            $otpBadge .= '<br><span class="badge" style="background-color: #d1e7dd; color: #0f5132; font-size:10px; padding: 3px 6px; margin-top: 3px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-sms" style="color: #198754;"></i> SMS Sent</span>';
+                        } elseif ($orders->sms_status == 'Failed') {
+                            $otpBadge .= '<br><span class="badge" style="background-color: #f8d7da; color: #842029; font-size:10px; padding: 3px 6px; margin-top: 3px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-exclamation-circle" style="color: #dc3545;"></i> SMS Failed</span>';
+                        }
+                    }
+                }
+
+                return '<span style="font-weight:bold;color:black">' . $orders->customerName . '<br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">' . $orders->customerPhone . '</button><br>' . $orders->customerAddress . '</span>' . $otpBadge;
             })
             ->addColumn('invoice', function ($orders) {
                 return '<span style="font-weight:bold;color:black">' . $orders->invoiceID . '</span><br>' . $orders->web_ID . '<br>' . $orders->created_at->diffForhumans() . '<br>' . $orders->created_at;
@@ -716,6 +731,8 @@ class OrderController extends Controller
         $order->invoiceID = $this->uniqueID();
         $order->web_id = $request['data']['web_id'];
         $order->store_id = $request['data']['storeID'];
+        $order->status = 'Pending';
+        $order->otp_verified = true;
         $order->subTotal = $request['data']['total'];
         if (isset($request['data']['customerNote'])) {
             $order->customerNote = $request['data']['customerNote'];
@@ -975,7 +992,22 @@ class OrderController extends Controller
 
         return Datatables::of($orders->orderBy('orders.id', 'DESC'))
             ->addColumn('customerInfo', function ($orders) {
-                return $orders->customerName . '<br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">' . $orders->customerPhone . '</button><br>' . $orders->customerAddress . '<br>' . $orders->entry_complete;
+                $otpBadge = '';
+                if ($orders->web_id == 'Website') {
+                    $otpBadge = $orders->otp_verified 
+                        ? '<br><span class="badge" style="background-color: #d1e7dd; color: #0f5132; font-size:11px; padding: 4px 8px; margin-top: 5px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-check-circle" style="color: #198754;"></i> OTP Verified</span>' 
+                        : '<br><span class="badge" style="background-color: #fff3cd; color: #664d03; font-size:11px; padding: 4px 8px; margin-top: 5px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> Unverified</span>';
+
+                    if (isset($orders->sms_status)) {
+                        if ($orders->sms_status == 'Sent') {
+                            $otpBadge .= '<br><span class="badge" style="background-color: #d1e7dd; color: #0f5132; font-size:10px; padding: 3px 6px; margin-top: 3px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-sms" style="color: #198754;"></i> SMS Sent</span>';
+                        } elseif ($orders->sms_status == 'Failed') {
+                            $otpBadge .= '<br><span class="badge" style="background-color: #f8d7da; color: #842029; font-size:10px; padding: 3px 6px; margin-top: 3px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-exclamation-circle" style="color: #dc3545;"></i> SMS Failed</span>';
+                        }
+                    }
+                }
+
+                return $orders->customerName . '<br><button class="btn btn-success btn-sm" style="margin: 4px;padding: 0px 4px;" data-num="' . $orders->customerPhone . '" data-inv="' . $orders->invoiceID . '" id="checkfraud">' . $orders->customerPhone . '</button><br>' . $orders->customerAddress . $otpBadge . '<br>' . $orders->entry_complete;
             })
             ->addColumn('invoice', function ($orders) {
                 return $orders->invoiceID . '<br>' . $orders->web_ID . '<br>' . $orders->created_at->diffForhumans();
@@ -1159,9 +1191,20 @@ class OrderController extends Controller
 
         return Datatables::of($orders->orderBy('orders.id', 'DESC'))
             ->addColumn('customerInfo', function ($orders) {
-                $otpBadge = $orders->otp_verified 
-                    ? '<br><span class="badge bg-soft-success text-success" style="font-size:11px; padding: 4px 6px; margin-top: 5px;"><i class="fas fa-check-circle"></i> OTP Verified</span>' 
-                    : '<br><span class="badge bg-soft-warning text-warning" style="font-size:11px; padding: 4px 6px; margin-top: 5px;"><i class="fas fa-exclamation-triangle"></i> Unverified</span>';
+                $otpBadge = '';
+                if ($orders->web_id == 'Website') {
+                    $otpBadge = $orders->otp_verified 
+                        ? '<br><span class="badge" style="background-color: #d1e7dd; color: #0f5132; font-size:11px; padding: 4px 8px; margin-top: 5px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-check-circle" style="color: #198754;"></i> OTP Verified</span>' 
+                        : '<br><span class="badge" style="background-color: #fff3cd; color: #664d03; font-size:11px; padding: 4px 8px; margin-top: 5px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> Unverified</span>';
+
+                    if (isset($orders->sms_status)) {
+                        if ($orders->sms_status == 'Sent') {
+                            $otpBadge .= '<br><span class="badge" style="background-color: #d1e7dd; color: #0f5132; font-size:10px; padding: 3px 6px; margin-top: 3px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-sms" style="color: #198754;"></i> SMS Sent</span>';
+                        } elseif ($orders->sms_status == 'Failed') {
+                            $otpBadge .= '<br><span class="badge" style="background-color: #f8d7da; color: #842029; font-size:10px; padding: 3px 6px; margin-top: 3px; border-radius: 4px; display: inline-block; font-weight: 600;"><i class="fas fa-exclamation-circle" style="color: #dc3545;"></i> SMS Failed</span>';
+                        }
+                    }
+                }
 
                 if ($orders->store_id == '1') {
                     if ($orders->web_id == 'Website') {
@@ -1490,22 +1533,19 @@ class OrderController extends Controller
         if ($request['status'] == 'Shipped') {
             $cu = Customer::where('order_id', $order->id)->first();
             if ($cu) {
-                $sendstatus = true;
-                try {
-                    $template = \App\Models\Information::where('key', 'sms_template_shipped')->first()->value ?? ' অভিনন্দন,আপনার অর্ডারটি [invoice_id] কুরিয়ার করা হয়েছে।মোটঃ[sub_total] টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ [tracking_link] , Hotline: 01888173003';
-                    $message = str_replace(['[invoice_id]', '[sub_total]', '[tracking_link]'], [$order->invoiceID, $order->subTotal, $order->courier_tracking_link], $template);
-                    \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
-                } catch (\Exception $e) {
-                    $sendstatus = false;
-                }
-
-                if ($sendstatus) {
+                $smsResult = \App\Services\SmsNetBdService::sendOrderShipped($cu->customerPhone, $order->invoiceID, $order->subTotal, $order->courier_tracking_link);
+                if ($smsResult === 'sent') {
+                    $order->sms_status = 'Sent';
+                    $order->save();
                     $comment = new Comment();
                     $comment->order_id = $id;
-                    $comment->comment = 'Successfully send a sms to this customer';
+                    $comment->comment = 'Successfully sent Shipped/Courier SMS to customer';
                     $comment->admin_id = Auth::guard('admin')->user()->id;
                     $comment->status = 1;
                     $comment->save();
+                } elseif ($smsResult === 'failed') {
+                    $order->sms_status = 'Failed';
+                    $order->save();
                 }
             }
         }
@@ -1513,22 +1553,19 @@ class OrderController extends Controller
         if ($request['status'] == 'Ready to Ship') {
             $cu = Customer::where('order_id', $order->id)->first();
             if ($cu) {
-                $sendstatus = true;
-                try {
-                    $template = \App\Models\Information::where('key', 'sms_template_confirmed')->first()->value ?? 'ধন্যবাদ, আপনার অর্ডারটি ID:[invoice_id] কনফার্ম হয়েছে - মোটঃ [sub_total] টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003';
-                    $message = str_replace(['[invoice_id]', '[sub_total]'], [$order->invoiceID, $order->subTotal], $template);
-                    \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
-                } catch (\Exception $e) {
-                    $sendstatus = false;
-                }
-
-                if ($sendstatus) {
+                $smsResult = \App\Services\SmsNetBdService::sendOrderConfirmed($cu->customerPhone, $order->invoiceID, $order->subTotal);
+                if ($smsResult === 'sent') {
+                    $order->sms_status = 'Sent';
+                    $order->save();
                     $comment = new Comment();
                     $comment->order_id = $id;
-                    $comment->comment = 'Successfully send a sms to this customer';
+                    $comment->comment = 'Successfully sent Confirmed SMS to customer';
                     $comment->admin_id = Auth::guard('admin')->user()->id;
                     $comment->status = 1;
                     $comment->save();
+                } elseif ($smsResult === 'failed') {
+                    $order->sms_status = 'Failed';
+                    $order->save();
                 }
             }
             // Purchase pixel removed from Ready to Ship — now fires only on standard order form submit
@@ -1771,6 +1808,11 @@ class OrderController extends Controller
                         "icon" => "fe-tag",
                         "color" => " bg-light"
                     ),
+                    "Confirmed" => array(
+                        "name" => "Confirmed",
+                        "icon" => "fe-check-circle",
+                        "color" => " bg-primary"
+                    ),
                     "Ready to Ship" => array(
                         "name" => "Ready to Ship",
                         "icon" => "fe-tag",
@@ -1836,6 +1878,11 @@ class OrderController extends Controller
                         "icon" => "fe-tag",
                         "color" => " bg-light"
                     ),
+                    "Confirmed" => array(
+                        "name" => "Confirmed",
+                        "icon" => "fe-check-circle",
+                        "color" => " bg-primary"
+                    ),
                     "Ready to Ship" => array(
                         "name" => "Ready to Ship",
                         "icon" => "fe-tag",
@@ -1856,6 +1903,11 @@ class OrderController extends Controller
         } elseif ($admin->hasRole('accounts')) {
             $allStatus = array(
                 'order' => array(
+                    "Confirmed" => array(
+                        "name" => "Confirmed",
+                        "icon" => "fe-check-circle",
+                        "color" => " bg-primary"
+                    ),
                     "Ready to Ship" => array(
                         "name" => "Ready to Ship",
                         "icon" => "fe-tag",
@@ -1876,6 +1928,11 @@ class OrderController extends Controller
                         "name" => "Packaging",
                         "icon" => "far fa-stop-circle",
                         "color" => " bg-dark"
+                    ),
+                    "Confirmed" => array(
+                        "name" => "Confirmed",
+                        "icon" => "fe-check-circle",
+                        "color" => " bg-primary"
                     ),
                     "Ready to Ship" => array(
                         "name" => "Ready to Ship",
@@ -1926,6 +1983,11 @@ class OrderController extends Controller
                         "name" => "Pending",
                         "icon" => "fe-tag",
                         "color" => " bg-light"
+                    ),
+                    "Confirmed" => array(
+                        "name" => "Confirmed",
+                        "icon" => "fe-check-circle",
+                        "color" => " bg-primary"
                     ),
                     "Ready to Ship" => array(
                         "name" => "Ready to Ship",

@@ -15,7 +15,6 @@
 
     @yield('subcss')
     <style>
-
         .scrollable-element {
           scrollbar-color: red yellow !important;
         }
@@ -25,6 +24,70 @@
         .dataTables_wrapper .dataTables_processing,
         .dataTables_wrapper .dataTables_paginate {
             color: red;
+        }
+
+        /* Fix profile dropdown — prevent white flicker on hover */
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255,255,255,0.9);
+        }
+        .navbar-dark .navbar-nav .nav-link:hover,
+        .navbar-dark .navbar-nav .nav-link:focus {
+            color: #fff;
+            background: transparent;
+        }
+        /* Sidebar toggler */
+        .sidebar-toggler {
+            color: rgba(255,255,255,0.85) !important;
+        }
+        .sidebar-toggler:hover {
+            color: #fff !important;
+        }
+        /* Profile pill button */
+        .profile-btn:hover {
+            background: rgba(0,0,0,0.4) !important;
+            border-color: rgba(255,255,255,0.3) !important;
+        }
+        /* Dark dropdown menu — override Bootstrap light hover */
+        .admin-dropdown {
+            background: #2d3748 !important;
+        }
+        .admin-dropdown .dropdown-item {
+            color: #e2e8f0 !important;
+            background: transparent !important;
+            font-size: 14px;
+        }
+        .admin-dropdown .dropdown-item:hover,
+        .admin-dropdown .dropdown-item:focus {
+            background: rgba(255,255,255,0.1) !important;
+            color: #fff !important;
+        }
+        .admin-dropdown .logout-item {
+            color: #fc8181 !important;
+        }
+        .admin-dropdown .logout-item:hover {
+            color: #fff !important;
+            background: rgba(252,129,129,0.2) !important;
+        }
+        .admin-dropdown .dropdown-divider {
+            border-color: #4a5568 !important;
+        }
+
+        /* Mobile Responsive Container & Spacing Optimization */
+        @media (max-width: 768px) {
+            /* Reduce global excessive container padding on mobile */
+            .container-fluid.pt-4.px-4 {
+                padding-top: 12px !important;
+                padding-left: 8px !important;
+                padding-right: 8px !important;
+            }
+            .bg-secondary.rounded.h-100.p-4,
+            .bg-secondary.rounded.p-4 {
+                padding: 14px 10px !important;
+                border-radius: 10px !important;
+            }
+            .card-body {
+                padding: 12px 10px !important;
+            }
         }
     </style>
 </head>

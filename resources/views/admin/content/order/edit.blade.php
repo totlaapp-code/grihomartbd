@@ -38,7 +38,24 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <label for="customerPhone">Customer Phone</label>
+                            <label for="customerPhone">Customer Phone
+                                @if(isset($order->web_id) && $order->web_id == 'Website')
+                                    @if(isset($order->otp_verified) && $order->otp_verified)
+                                        <span class="badge ms-1" style="background-color: #d1e7dd; color: #0f5132; font-size: 11px; padding: 3px 6px; border-radius: 4px;"><i class="fas fa-check-circle" style="color: #198754;"></i> OTP Verified</span>
+                                    @else
+                                        <span class="badge ms-1" style="background-color: #fff3cd; color: #664d03; font-size: 11px; padding: 3px 6px; border-radius: 4px;"><i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> Unverified</span>
+                                    @endif
+                                    @if(isset($order->sms_status))
+                                        @if($order->sms_status == 'Sent')
+                                            <span class="badge ms-1" style="background-color: #d1e7dd; color: #0f5132; font-size: 11px; padding: 3px 6px; border-radius: 4px;"><i class="fas fa-sms" style="color: #198754;"></i> SMS Sent</span>
+                                        @elseif($order->sms_status == 'Failed')
+                                            <span class="badge ms-1" style="background-color: #f8d7da; color: #842029; font-size: 11px; padding: 3px 6px; border-radius: 4px;"><i class="fas fa-exclamation-circle" style="color: #dc3545;"></i> SMS Failed</span>
+                                        @endif
+                                    @endif
+                                @else
+                                    <span class="badge ms-1" style="background-color: #cfe2ff; color: #084298; font-size: 11px; padding: 3px 6px; border-radius: 4px;"><i class="fas fa-user-edit"></i> Manual ({{ $order->web_id ?? 'Admin' }})</span>
+                                @endif
+                            </label>
                             <input type="text" class="form-control" id="customerPhone"
                                 value="{{ $order->customerPhone }}">
                         </div>
