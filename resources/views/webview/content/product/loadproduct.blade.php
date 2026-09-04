@@ -3,12 +3,12 @@
         display: inline-flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
     }
     .sizetext, .weighttext {
-        font-size: 13px !important;
-        padding: 4px 12px !important;
-        line-height: 1.3 !important;
+        font-size: 14px !important;
+        padding: 6px 14px !important;
+        line-height: 1.4 !important;
         border-radius: 20px !important;
         margin: 0 !important;
         cursor: pointer;
@@ -17,15 +17,17 @@
         justify-content: center;
         border: 1px solid #ced4da;
         white-space: nowrap;
+        font-weight: 600;
         transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
     @media (max-width: 576px) {
         .sizetext, .weighttext {
-            font-size: 12px !important;
-            padding: 3px 10px !important;
+            font-size: 13.5px !important;
+            padding: 5px 13px !important;
         }
         .sizeinfo, .colorinfo {
-            gap: 5px;
+            gap: 6px;
         }
     }
 </style>
