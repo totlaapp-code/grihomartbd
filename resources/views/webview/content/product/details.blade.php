@@ -374,28 +374,35 @@
                                                     @forelse ($sizesolds as $sizesold)
                                                         @if($sizesold->available_stock>2)
                                                         <input type="hidden" name="regularpriceofsize"
-                                                            id="regularpriceofsize{{ $sizesold->size }}"
+                                                            id="regularpriceofsize{{ $sizesold->id }}"
                                                             value="{{ $sizesold->RegularPrice }}">
                                                         <input type="hidden" name="salepriceofsize"
-                                                            id="salepriceofsize{{ $sizesold->size }}"
+                                                            id="salepriceofsize{{ $sizesold->id }}"
                                                             value="{{ $sizesold->SalePrice }}">
+                                                        <input type="hidden" name="sizesigmrnt"
+                                                            id="sizesigmrnt{{ $sizesold->id }}"
+                                                            value="{{ $sizesold->size }}">
                                                         <input type="radio" class="m-0" hidden
-                                                            id="size{{ $sizesold->size }}" name="size"
-                                                            onclick="getsize('{{ $sizesold->size }}')">
-                                                        <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1" id="sizetext{{ $sizesold->size }}"
-                                                            for="size{{ $sizesold->size }}"
-                                                            onclick="getsize('{{ $sizesold->size }}')">{{ $sizesold->size }}</label>
+                                                            id="size{{ $sizesold->id }}" name="size"
+                                                            onclick="getsize('{{ $sizesold->id }}')">
+                                                        <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1" id="sizetext{{ $sizesold->id }}"
+                                                            for="size{{ $sizesold->id }}"
+                                                            onclick="getsize('{{ $sizesold->id }}')"
+                                                            @if($loop->first) style="color:#fff; background:#613EEA;" @endif>{{ $sizesold->size }}</label>
                                                         @else
                                                         <input type="hidden" name="regularpriceofsize"
-                                                            id="regularpriceofsize{{ $sizesold->size }}"
+                                                            id="regularpriceofsize{{ $sizesold->id }}"
                                                             value="{{ $sizesold->RegularPrice }}">
                                                         <input type="hidden" name="salepriceofsize"
-                                                            id="salepriceofsize{{ $sizesold->size }}"
+                                                            id="salepriceofsize{{ $sizesold->id }}"
                                                             value="{{ $sizesold->SalePrice }}">
+                                                        <input type="hidden" name="sizesigmrnt"
+                                                            id="sizesigmrnt{{ $sizesold->id }}"
+                                                            value="{{ $sizesold->size }}">
                                                         <input type="radio" class="m-0" hidden
-                                                            id="size{{ $sizesold->size }}" name="size" >
-                                                        <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1 disabled" id="sizetext{{ $sizesold->size }}"
-                                                            for="size{{ $sizesold->size }}"
+                                                            id="size{{ $sizesold->id }}" name="size" >
+                                                        <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1 disabled" id="sizetext{{ $sizesold->id }}"
+                                                            for="size{{ $sizesold->id }}"
                                                             style="opacity: 0.6;" ><del>{{ $sizesold->size }} </del> </label>
                                                         @endif
     
@@ -1189,15 +1196,18 @@
         $('.sizetext').css('background', '#fff');
     }
 
-    function getsize(size) {
-        $('.product_sizeorder').val(size);
-        var sale = $('#salepriceofsize' + size).val();
-        $('#product_price').val(sale);
-        $('.product_priceorder').val(sale);
-        $('#salePrice').html(sale);
+    function getsize(sizeId) {
+        var sizeName = $('#sizesigmrnt' + sizeId).length ? $('#sizesigmrnt' + sizeId).val() : sizeId;
+        $('.product_sizeorder').val(sizeName);
+        var sale = $('#salepriceofsize' + sizeId).length ? $('#salepriceofsize' + sizeId).val() : null;
+        if (sale) {
+            $('#product_price').val(sale);
+            $('.product_priceorder').val(sale);
+            $('#salePrice').html(sale);
+        }
 
         $('.sizetext').css({'color': '#000', 'background': '#fff'});
-        $('#sizetext' + size).css({'color': '#fff', 'background': '#613EEA'});
+        $('#sizetext' + sizeId).css({'color': '#fff', 'background': '#613EEA'});
         $('.product_sigmentorder').val('');
     }
 

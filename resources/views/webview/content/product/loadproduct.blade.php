@@ -123,28 +123,35 @@
                                         @forelse ($sizes as $size)
                                             @if($size->available_stock>2)
                                             <input type="hidden" name="regularpriceofsize"
-                                                id="regularpriceofsize{{ $size->size }}"
+                                                id="regularpriceofsize{{ $size->id }}"
                                                 value="{{ $size->RegularPrice }}">
                                             <input type="hidden" name="salepriceofsize"
-                                                id="salepriceofsize{{ $size->size }}"
+                                                id="salepriceofsize{{ $size->id }}"
                                                 value="{{ $size->SalePrice }}">
+                                            <input type="hidden" name="sizesigmrnt"
+                                                id="sizesigmrnt{{ $size->id }}"
+                                                value="{{ $size->size }}">
                                             <input type="radio" class="m-0" hidden
-                                                id="size{{ $size->size }}" name="size"
-                                                onclick="getsize('{{ $size->size }}')">
-                                            <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1" id="sizetext{{ $size->size }}"
-                                                for="size{{ $size->size }}"
-                                                onclick="getsize('{{ $size->size }}')">{{ $size->size }}</label>
+                                                id="size{{ $size->id }}" name="size"
+                                                onclick="getsize('{{ $size->id }}')">
+                                            <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1" id="sizetext{{ $size->id }}"
+                                                for="size{{ $size->id }}"
+                                                onclick="getsize('{{ $size->id }}')"
+                                                @if($loop->first) style="color:#fff; background:#613EEA;" @endif>{{ $size->size }}</label>
                                             @else
                                             <input type="hidden" name="regularpriceofsize"
-                                                id="regularpriceofsize{{ $size->size }}"
+                                                id="regularpriceofsize{{ $size->id }}"
                                                 value="{{ $size->RegularPrice }}">
                                             <input type="hidden" name="salepriceofsize"
-                                                id="salepriceofsize{{ $size->size }}"
+                                                id="salepriceofsize{{ $size->id }}"
                                                 value="{{ $size->SalePrice }}">
+                                            <input type="hidden" name="sizesigmrnt"
+                                                id="sizesigmrnt{{ $size->id }}"
+                                                value="{{ $size->size }}">
                                             <input type="radio" class="m-0" hidden
-                                                id="size{{ $size->size }}" name="size" >
-                                            <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1 disabled" id="sizetext{{ $size->size }}"
-                                                for="size{{ $size->size }}"
+                                                id="size{{ $size->id }}" name="size" >
+                                            <label class="sizetext btn btn-outline-secondary rounded-pill fw-bold mb-2 me-1 disabled" id="sizetext{{ $size->id }}"
+                                                for="size{{ $size->id }}"
                                                 style="opacity: 0.6;" ><del>{{ $size->size }} </del> </label>
                                             @endif
 
