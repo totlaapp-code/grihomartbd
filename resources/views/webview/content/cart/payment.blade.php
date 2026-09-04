@@ -6,33 +6,39 @@
 
 @section('subhead')
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap');
     
     .success-wrapper {
-        font-family: 'Hind Siliguri', sans-serif;
-        padding: 30px 15px;
+        font-family: 'Hind Siliguri', 'Noto Sans Bengali', system-ui, -apple-system, sans-serif;
+        padding: 45px 15px 35px;
         background-color: #fff;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
     }
     
     /* Top Banner */
     .success-header {
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 35px;
     }
     .success-header h1 {
         font-size: 26px;
         font-weight: 700;
-        color: #000;
-        margin-bottom: 10px;
+        color: #0f172a;
+        margin-bottom: 12px;
+        line-height: 1.4;
     }
     .success-header .leaf-icon {
         font-size: 24px;
-        color: #388e3c;
+        color: #16a34a;
         margin-bottom: 10px;
     }
     .success-header p {
         font-size: 18px;
-        color: #555;
+        color: #334155;
+        font-weight: 500;
+        line-height: 1.6;
     }
 
     /* Reconfirm Box */
@@ -48,12 +54,14 @@
     .reconfirm-box h2 {
         font-size: 22px;
         font-weight: 700;
-        color: #000;
+        color: #0f172a;
         margin-bottom: 10px;
+        line-height: 1.4;
     }
     .reconfirm-box p {
         font-size: 16px;
-        color: #333;
+        color: #334155;
+        font-weight: 500;
         margin-bottom: 20px;
     }
     .btn-reconfirm {
@@ -75,44 +83,76 @@
     }
     .reconfirm-notes {
         margin-top: 20px;
-        font-size: 14px;
-        color: #2e7d32;
+        font-size: 15px;
+        color: #15803d;
         text-align: left;
         max-width: 500px;
         margin-left: auto;
         margin-right: auto;
     }
     .reconfirm-notes p {
-        margin-bottom: 5px;
-        font-size: 14px;
-        color: #2e7d32;
+        margin-bottom: 6px;
+        font-size: 15px;
+        color: #15803d;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    #successVerifiedSection h3 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #15803d !important;
+        margin-bottom: 10px;
+    }
+    #successVerifiedSection p {
+        font-size: 17px;
+        color: #334155;
+        font-weight: 500;
     }
 
     /* Policy Section */
     .policy-section {
         text-align: center;
-        max-width: 800px;
+        max-width: 820px;
         margin: 0 auto 40px;
     }
-    .policy-section h3 {
-        color: #2e7d32;
-        font-size: 22px;
-        font-weight: 700;
-        margin-bottom: 5px;
-    }
     .policy-section h4 {
-        color: #2e7d32;
-        font-size: 16px;
-        margin-bottom: 20px;
+        color: #15803d;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        letter-spacing: 0.3px;
     }
     .policy-box {
-        background-color: #f1f8e9;
-        border-left: 4px solid #388e3c;
-        padding: 15px;
+        background-color: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-left: 5px solid #16a34a;
+        border-radius: 10px;
+        padding: 22px 26px;
         text-align: center;
-        color: #555;
-        font-style: italic;
-        font-size: 14px;
+        color: #1e293b;
+        font-style: normal !important;
+        font-size: 16px;
+        line-height: 1.85;
+        font-weight: 500;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+    .policy-box p {
+        margin-bottom: 12px;
+        color: #1e293b;
+        font-size: 16px;
+        line-height: 1.85;
+        font-style: normal !important;
+        font-weight: 500;
+    }
+    .policy-box p:last-child {
+        margin-bottom: 0;
+    }
+    .policy-box .source-tag {
+        display: inline-block;
+        color: #15803d;
+        font-weight: 700;
+        margin-left: 6px;
     }
 
     /* Contact Section */
@@ -121,10 +161,15 @@
         margin-bottom: 40px;
     }
     .contact-section h3 {
-        color: #7cb342;
-        font-size: 22px;
+        color: #15803d;
+        font-size: 24px;
         font-weight: 700;
-        margin-bottom: 5px;
+        margin-bottom: 6px;
+    }
+    .contact-section p {
+        font-size: 15px;
+        color: #475569;
+        font-weight: 500;
     }
     .contact-buttons {
         display: flex;
@@ -319,13 +364,18 @@
         </div>
 
 
-          <!-- Policy Section -->
+        <!-- Policy Section -->
         <div class="policy-section">
-           
             <h4>বিসমিল্লাহির রাহমানির রাহীম</h4>
             <div class="policy-box">
-                "হে ঈমানদারগণ! তোমরা পরস্পরের সম্পদ অন্যায়ভাবে ভক্ষণ করো না; তবে পারস্পরিক সম্মতির ভিত্তিতে ব্যবসা হলে ভিন্ন কথা।" — সূরা আন-নিসা: ২৯<br><br>
-                "যে ব্যক্তি কোনো অনুতপ্ত ক্রেতার সঙ্গে তার ক্রয়-বিক্রয় বাতিল করে দেয়, আল্লাহ তা'আলা কিয়ামতের দিন তার ভুলত্রুটি ক্ষমা করে দেবেন।" — সুনানে আবু দাউদ ৩৪৬০
+                <p>
+                    "হে ঈমানদারগণ! তোমরা পরস্পরের সম্পদ অন্যায়ভাবে ভক্ষণ করো না; তবে পারস্পরিক সম্মতির ভিত্তিতে ব্যবসা হলে ভিন্ন কথা।"
+                    <span class="source-tag">— সূরা আন-নিসা: ২৯</span>
+                </p>
+                <p>
+                    "যে ব্যক্তি কোনো অনুতপ্ত ক্রেতার সঙ্গে তার ক্রয়-বিক্রয় বাতিল করে দেয়, আল্লাহ তা'আলা কিয়ামতের দিন তার ভুলত্রুটি ক্ষমা করে দেবেন।"
+                    <span class="source-tag">— সুনানে আবু দাউদ ৩৪৬০</span>
+                </p>
             </div>
         </div>
         <!-- Contact Section -->
@@ -478,8 +528,6 @@
   </div>
 </div>
 
-<!-- Require Bootstrap JS if not already loaded globally -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const mBoxes = document.querySelectorAll('.modal-otp-box');
     const mHidden = document.getElementById('otpHiddenModal');
@@ -502,6 +550,15 @@
 
     function updateModalHidden() {
         mHidden.value = Array.from(mBoxes).map(b => b.value).join('');
+    }
+
+    function forceUnlockScroll() {
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        document.documentElement.style.overflow = '';
+        document.documentElement.style.paddingRight = '';
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
     }
 
     document.getElementById('ajaxOtpForm').addEventListener('submit', function(e) {
@@ -529,22 +586,31 @@
         .then(r => r.json())
         .then(data => {
             if(data.status === 'success') {
-                // Hide modal and reconfirm section
                 var myModalEl = document.getElementById('otpModal');
                 var modal = bootstrap.Modal.getInstance(myModalEl);
+
+                // Wait for Bootstrap's hide animation to finish, THEN clean up
+                myModalEl.addEventListener('hidden.bs.modal', function() {
+                    forceUnlockScroll();
+                    document.getElementById('reconfirmSection').style.display = 'none';
+                    document.getElementById('successVerifiedSection').style.display = 'block';
+                }, { once: true });
+
                 if (modal) {
                     modal.hide();
+                } else {
+                    // Fallback if modal wasn't initialized via JS
+                    myModalEl.classList.remove('show');
+                    myModalEl.setAttribute('aria-hidden', 'true');
+                    myModalEl.style.display = 'none';
+                    forceUnlockScroll();
+                    document.getElementById('reconfirmSection').style.display = 'none';
+                    document.getElementById('successVerifiedSection').style.display = 'block';
                 }
-                
-                // Force remove backdrop and body classes (Bootstrap bug fix)
-                document.body.classList.remove('modal-open');
-                document.body.style.overflow = '';
-                document.body.style.paddingRight = '';
-                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-                
-                document.getElementById('reconfirmSection').style.display = 'none';
-                document.getElementById('successVerifiedSection').style.display = 'block';
-                
+
+                // Safety net — runs after Bootstrap's 300ms hide animation
+                setTimeout(forceUnlockScroll, 500);
+
                 // Show success toast (if toastr is available)
                 if(typeof toastr !== 'undefined') toastr.success(data.message);
             } else {
@@ -729,5 +795,15 @@
         vertical-align: middle;
     }
 </style>
+
+<script>
+    // Ensure body scroll is never locked on order received page
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    });
+</script>
 
 @endsection
