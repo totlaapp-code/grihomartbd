@@ -141,14 +141,11 @@
             $products = DB::table('orderproducts')->where('order_id', '=', $orderID)->get();
             foreach ($products as $product) { ?>
             <tr>
-                <td><img src="{{asset(App\Models\Product::where('id',$product->product_id)->first()->ProductImage)}}" style="width:60px"></td>
+                <td><img src="{{ asset(optional(App\Models\Product::where('id', $product->product_id)->first())->ProductImage) }}" style="width:60px"></td>
                 <td>{{ $product->productName }}</td>
-                <td style="text-align:center">{{ $product->size }}</td>
+                <td style="text-align:center">{{ $product->size ?: ($product->sigment && !$product->color ? $product->sigment : '') }}</td>
                 <td style="text-align:center">
-                    @if ($product->color && $product->sigment)
-                        {{ $product->color }}, {{$product->sigment}}
-                    @else
-                    @endif
+                    {{ implode(', ', array_filter([$product->color, $product->sigment])) }}
                 </td>
                 <td style="text-align:center">{{ $product->quantity }}</td>
                 <td style="text-align:center;">{{ $product->productPrice }} Tk</td>

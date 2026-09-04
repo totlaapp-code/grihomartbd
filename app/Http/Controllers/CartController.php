@@ -10,6 +10,7 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Models\Order;
 use Illuminate\Support\Facades\Session;
 use App\Models\Size;
+use App\Models\Weight;
 use App\Models\Zone;
 
 class CartController extends Controller
@@ -19,49 +20,73 @@ class CartController extends Controller
 
     public function addtocart(Request $request)
     {
-      
-      $pid = $request->product_id;
-      $cartProduct = Product::find($pid); 
-        if ($request->price > 0) {
-            $price = $request->price;
-            Cart::add([
-                'id' => $request->product_id,
-                'name' => $cartProduct->ProductName,
-                'price' => $price,
-                'qty' => $request->qty,
-                'weight' => 1,
-                'options' => [
-                    'image' => $cartProduct->ProductImage,
-                    'code' => $cartProduct->ProductSku,
-                    'size' => $request->size,
-                    'color' => $request->color,
-                    'sigment' => $request->sigment,
-                    'inside_dhaka' => $cartProduct->inside_dhaka,
-                    'outside_dhaka' => $cartProduct->outside_dhaka,
-                ],
+        $pid = $request->product_id;
+        $cartProduct = Product::find($pid);
 
-            ]);
-        } else {
-            $size = Size::where('product_id', $cartProduct->id)->first();
-            $price = $size ? $size->SalePrice : $cartProduct->ProductSalePrice;
-            Cart::add([
-                'id' => $request->product_id,
-                'name' => $cartProduct->ProductName,
-                'price' => $price,
-                'qty' => $request->qty,
-                'weight' => 1,
-                'options' => [
-                    'image' => $cartProduct->ProductImage,
-                    'code' => $cartProduct->ProductSku,
-                    'size' => $size ? $size->size : null,
-                    'color' => $request->color,
-                    'sigment' => $request->sigment,
-                    'inside_dhaka' => $cartProduct->inside_dhaka,
-                    'outside_dhaka' => $cartProduct->outside_dhaka,
-                ],
-
-            ]);
+        if (!$cartProduct) {
+            if ($request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => 'Product not found.'], 404);
+            }
+            return redirect()->back()->with('error', 'Product not found.');
         }
+
+        $price = null;
+        if ($request->filled('price') && is_numeric($request->price) && floatval($request->price) > 0) {
+            $price = floatval($request->price);
+        }
+
+        $size = null;
+        $weight = null;
+
+        if ($request->filled('size')) {
+            $size = Size::where('product_id', $cartProduct->id)
+                ->where('size', $request->size)
+                ->first();
+        }
+
+        if (!$size) {
+            $size = Size::where('product_id', $cartProduct->id)->where('status', 'Active')->first()
+                 ?? Size::where('product_id', $cartProduct->id)->first();
+        }
+
+        if (!$size) {
+            $weight = Weight::where('product_id', $cartProduct->id)->first();
+        }
+
+        if (!$price) {
+            if ($size && is_numeric($size->SalePrice) && floatval($size->SalePrice) > 0) {
+                $price = floatval($size->SalePrice);
+            } elseif ($weight && is_numeric($weight->SalePrice) && floatval($weight->SalePrice) > 0) {
+                $price = floatval($weight->SalePrice);
+            }
+        }
+
+        if (!$price || $price <= 0) {
+            if ($request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => 'Please select a valid size/variant or set a valid price.'], 422);
+            }
+            return redirect()->back()->with('error', 'Please select a valid size/variant or set a valid price.');
+        }
+
+        $selectedSize = $request->size ?: ($size ? $size->size : ($weight ? $weight->weight : null));
+        $qty = ($request->filled('qty') && intval($request->qty) > 0) ? intval($request->qty) : 1;
+
+        Cart::add([
+            'id' => $cartProduct->id,
+            'name' => $cartProduct->ProductName,
+            'price' => $price,
+            'qty' => $qty,
+            'weight' => 1,
+            'options' => [
+                'image' => $cartProduct->ProductImage,
+                'code' => $cartProduct->ProductSku,
+                'size' => $selectedSize,
+                'color' => $request->color,
+                'sigment' => $request->sigment,
+                'inside_dhaka' => $cartProduct->inside_dhaka,
+                'outside_dhaka' => $cartProduct->outside_dhaka,
+            ],
+        ]);
 
         // CAPI handled by stape.io sGTM
 

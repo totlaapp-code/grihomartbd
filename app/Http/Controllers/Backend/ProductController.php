@@ -580,8 +580,7 @@ class ProductController extends Controller
         if ($result) {
             if (!empty($variants)) {
                 foreach ($variants as $vr) {
-                    if (isset($vr['mID'])) {
-                        $variant = Varient::where('id', $vr['mID'])->first();
+                    if (isset($vr['mID']) && ($variant = Varient::where('id', $vr['mID'])->first())) {
                         $variant->product_id = $product->id;
                         $variant->color_id = $vr['mediaID'];
                         $variant->color = $vr['color'];
@@ -613,8 +612,7 @@ class ProductController extends Controller
             }
             if (!empty($sizes)) {
                 foreach ($sizes as $si) {
-                    if (isset($si['sID'])) {
-                        $size = Size::where('id', $si['sID'])->first();
+                    if (isset($si['sID']) && ($size = Size::where('id', $si['sID'])->first())) {
                         $size->product_id = $product->id;
                         $size->size_id = $si['sizeID'];
                         $size->size = $si['size'];
@@ -636,8 +634,7 @@ class ProductController extends Controller
             }
             if (!empty($weights)) {
                 foreach ($weights as $we) {
-                    if (isset($we['wID'])) {
-                        $weight = Weight::where('id', $we['wID'])->first();
+                    if (isset($we['wID']) && ($weight = Weight::where('id', $we['wID'])->first())) {
                         $weight->product_id = $product->id;
                         $weight->weight_id = $we['weightID'];
                         $weight->weight = $we['weight'];

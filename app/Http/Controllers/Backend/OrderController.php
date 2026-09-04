@@ -720,7 +720,7 @@ class OrderController extends Controller
         $excutomer = Customer::where('customerPhone', $request['data']['customerPhone'])->latest()->first();
         if (isset($excutomer)) {
             $exorder = Order::where('id', $excutomer->order_id)->first();
-            if ($exorder->status == 'Pending' || $exorder->status == 'Packaging' || $exorder->status == 'Ready to Ship' || $exorder->status == 'Hold') {
+            if ($exorder && ($exorder->status == 'Pending' || $exorder->status == 'Packaging' || $exorder->status == 'Ready to Ship' || $exorder->status == 'Hold')) {
                 $response['status'] = 'failed';
                 $response['message'] = 'Opps! already have an order to this number.please try again';
                 return json_encode($response);
@@ -808,15 +808,17 @@ class OrderController extends Controller
                     $ops = Orderproduct::where('order_id', $order->id)->get();
                     foreach ($ops as $op) {
                         $size = Size::where('product_id', $op->product_id)->where('size', $op->size)->first();
-                        if ($size->available_stock >= $op->quantity) {
-                            $size->sold += $op->quantity;
-                            $size->available_stock -= $op->quantity;
-                            $size->update();
-                        } else {
-                            $response['status'] = 'failed';
-                            $response['message'] = 'You don not have enough stock in your store for Ready to Ship Please check the parcel again !';
-                            return json_encode($response);
-                            break;
+                        if ($size) {
+                            if ($size->available_stock >= $op->quantity) {
+                                $size->sold += $op->quantity;
+                                $size->available_stock -= $op->quantity;
+                                $size->update();
+                            } else {
+                                $response['status'] = 'failed';
+                                $response['message'] = 'You don not have enough stock in your store for Ready to Ship Please check the parcel again !';
+                                return json_encode($response);
+                                break;
+                            }
                         }
                     }
                 }
@@ -827,9 +829,11 @@ class OrderController extends Controller
                     $ops = Orderproduct::where('order_id', $order->id)->get();
                     foreach ($ops as $op) {
                         $size = Size::where('product_id', $op->product_id)->where('size', $op->size)->first();
-                        $size->sold -= $op->quantity;
-                        $size->available_stock += $op->quantity;
-                        $size->update();
+                        if ($size) {
+                            $size->sold -= $op->quantity;
+                            $size->available_stock += $op->quantity;
+                            $size->update();
+                        }
                     }
                 }
             }
@@ -842,23 +846,20 @@ class OrderController extends Controller
                         $order->admin_id = Auth::guard('admin')->user()->id;
                     }
                     if ($request['data']['status'] == 'Ready to Ship') {
-                        $cu = Customer::where('order_id', $order->id)->first();
-                        if ($cu) {
-                            try {
-                                $template = \App\Models\Information::where('key', 'sms_template_confirmed')->first()->value ?? 'ধন্যবাদ, আপনার অর্ডারটি ID:[invoice_id] কনফার্ম হয়েছে - মোটঃ [sub_total] টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003';
-                                $message = str_replace(['[invoice_id]', '[sub_total]'], [$order->invoiceID, $order->subTotal], $template);
-                                \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
-                            } catch (\Exception $e) {
-                                $sendstatus = false;
-                            }
-
-                            if ($sendstatus) {
-                                $comment = new Comment();
-                                $comment->order_id = $order->id;
-                                $comment->comment = 'Successfully send a sms to this customer';
-                                $comment->admin_id = Auth::guard('admin')->user()->id;
-                                $comment->status = 1;
-                                $comment->save();
+                        if ($order->sms_status != 'Sent') {
+                            $cu = Customer::where('order_id', $order->id)->first();
+                            if ($cu) {
+                                $smsResult = \App\Services\SmsNetBdService::sendOrderConfirmed($cu->customerPhone, $order->invoiceID, $order->subTotal);
+                                if ($smsResult === 'sent') {
+                                    $order->sms_status = 'Sent';
+                                    $order->save();
+                                    $comment = new Comment();
+                                    $comment->order_id = $order->id;
+                                    $comment->comment = 'Successfully send confirmed sms to this customer';
+                                    $comment->admin_id = Auth::guard('admin')->user()->id;
+                                    $comment->status = 1;
+                                    $comment->save();
+                                }
                             }
                         }
 
@@ -1551,21 +1552,23 @@ class OrderController extends Controller
         }
 
         if ($request['status'] == 'Ready to Ship') {
-            $cu = Customer::where('order_id', $order->id)->first();
-            if ($cu) {
-                $smsResult = \App\Services\SmsNetBdService::sendOrderConfirmed($cu->customerPhone, $order->invoiceID, $order->subTotal);
-                if ($smsResult === 'sent') {
-                    $order->sms_status = 'Sent';
-                    $order->save();
-                    $comment = new Comment();
-                    $comment->order_id = $id;
-                    $comment->comment = 'Successfully sent Confirmed SMS to customer';
-                    $comment->admin_id = Auth::guard('admin')->user()->id;
-                    $comment->status = 1;
-                    $comment->save();
-                } elseif ($smsResult === 'failed') {
-                    $order->sms_status = 'Failed';
-                    $order->save();
+            if ($order->sms_status != 'Sent') {
+                $cu = Customer::where('order_id', $order->id)->first();
+                if ($cu) {
+                    $smsResult = \App\Services\SmsNetBdService::sendOrderConfirmed($cu->customerPhone, $order->invoiceID, $order->subTotal);
+                    if ($smsResult === 'sent') {
+                        $order->sms_status = 'Sent';
+                        $order->save();
+                        $comment = new Comment();
+                        $comment->order_id = $id;
+                        $comment->comment = 'Successfully sent Confirmed SMS to customer';
+                        $comment->admin_id = Auth::guard('admin')->user()->id;
+                        $comment->status = 1;
+                        $comment->save();
+                    } elseif ($smsResult === 'failed') {
+                        $order->sms_status = 'Failed';
+                        $order->save();
+                    }
                 }
             }
             // Purchase pixel removed from Ready to Ship — now fires only on standard order form submit
@@ -1685,23 +1688,20 @@ class OrderController extends Controller
                         if (isset($order->packing_by)) {
                         } else {
                             $order->packing_by = Auth::guard('admin')->user()->id;
-                            $cu = Customer::where('order_id', $order->id)->first();
-                            if ($cu) {
-                                try {
-                                    $template = \App\Models\Information::where('key', 'sms_template_confirmed')->first()->value ?? 'ধন্যবাদ, আপনার অর্ডারটি ID:[invoice_id] কনফার্ম হয়েছে - মোটঃ [sub_total] টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003';
-                                $message = str_replace(['[invoice_id]', '[sub_total]'], [$order->invoiceID, $order->subTotal], $template);
-                                \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
-                                } catch (\Exception $e) {
-                                    $sendstatus = false;
-                                }
-
-                                if ($sendstatus) {
-                                    $comment = new Comment();
-                                    $comment->order_id = $order->id;
-                                    $comment->comment = 'Successfully send a sms to this customer';
-                                    $comment->admin_id = Auth::guard('admin')->user()->id;
-                                    $comment->status = 1;
-                                    $comment->save();
+                            if ($order->sms_status != 'Sent') {
+                                $cu = Customer::where('order_id', $order->id)->first();
+                                if ($cu) {
+                                    $smsResult = \App\Services\SmsNetBdService::sendOrderConfirmed($cu->customerPhone, $order->invoiceID, $order->subTotal);
+                                    if ($smsResult === 'sent') {
+                                        $order->sms_status = 'Sent';
+                                        $order->save();
+                                        $comment = new Comment();
+                                        $comment->order_id = $order->id;
+                                        $comment->comment = 'Successfully send confirmed sms to this customer';
+                                        $comment->admin_id = Auth::guard('admin')->user()->id;
+                                        $comment->status = 1;
+                                        $comment->save();
+                                    }
                                 }
                             }
                         }
@@ -1712,18 +1712,11 @@ class OrderController extends Controller
                             $order->shipped_by = Auth::guard('admin')->user()->id;
                             $cu = Customer::where('order_id', $order->id)->first();
                             if ($cu) {
-                                try {
-                                    $template = \App\Models\Information::where('key', 'sms_template_shipped')->first()->value ?? ' অভিনন্দন,আপনার অর্ডারটি [invoice_id] কুরিয়ার করা হয়েছে।মোটঃ[sub_total] টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ [tracking_link] , Hotline: 01888173003';
-                                $message = str_replace(['[invoice_id]', '[sub_total]', '[tracking_link]'], [$order->invoiceID, $order->subTotal, $order->courier_tracking_link], $template);
-                                \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
-                                } catch (\Exception $e) {
-                                    $sendstatus = false;
-                                }
-
-                                if ($sendstatus) {
+                                $smsResult = \App\Services\SmsNetBdService::sendOrderShipped($cu->customerPhone, $order->invoiceID, $order->subTotal, $order->courier_tracking_link);
+                                if ($smsResult === 'sent') {
                                     $comment = new Comment();
                                     $comment->order_id = $order->id;
-                                    $comment->comment = 'Successfully send a sms to this customer';
+                                    $comment->comment = 'Successfully send shipped sms to this customer';
                                     $comment->admin_id = Auth::guard('admin')->user()->id;
                                     $comment->status = 1;
                                     $comment->save();
@@ -2852,23 +2845,23 @@ class OrderController extends Controller
                     $order->admin_id = Auth::guard('admin')->user()->id;
                 }
                 if ($request['data']['status'] == 'Ready to Ship') {
-                    $cu = Customer::where('order_id', $order->id)->first();
-                    if ($cu) {
-                        try {
-                            $template = \App\Models\Information::where('key', 'sms_template_confirmed')->first()->value ?? 'ধন্যবাদ, আপনার অর্ডারটি ID:[invoice_id] কনফার্ম হয়েছে - মোটঃ [sub_total] টাকা।প্যাকেজিং এর জন্য প্রস্তুত , Hotline: 01888173003';
-                    $message = str_replace(['[invoice_id]', '[sub_total]'], [$order->invoiceID, $order->subTotal], $template);
-                    \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
-                        } catch (\Exception $e) {
-                            $sendstatus = false;
-                        }
-
-                        if ($sendstatus) {
-                            $comment = new Comment();
-                            $comment->order_id = $order->id;
-                            $comment->comment = 'Successfully send a sms to this customer';
-                            $comment->admin_id = Auth::guard('admin')->user()->id;
-                            $comment->status = 1;
-                            $comment->save();
+                    if ($order->sms_status != 'Sent') {
+                        $cu = Customer::where('order_id', $order->id)->first();
+                        if ($cu) {
+                            $smsResult = \App\Services\SmsNetBdService::sendOrderConfirmed($cu->customerPhone, $order->invoiceID, $order->subTotal);
+                            if ($smsResult === 'sent') {
+                                $order->sms_status = 'Sent';
+                                $order->save();
+                                $comment = new Comment();
+                                $comment->order_id = $order->id;
+                                $comment->comment = 'Successfully sent Confirmed SMS to customer';
+                                $comment->admin_id = Auth::guard('admin')->user()->id;
+                                $comment->status = 1;
+                                $comment->save();
+                            } elseif ($smsResult === 'failed') {
+                                $order->sms_status = 'Failed';
+                                $order->save();
+                            }
                         }
                     }
                 }
@@ -2886,21 +2879,19 @@ class OrderController extends Controller
                     $order->shipped_by = Auth::guard('admin')->user()->id;
                     $cu = Customer::where('order_id', $order->id)->first();
                     if ($cu) {
-                        try {
-                            $template = \App\Models\Information::where('key', 'sms_template_shipped')->first()->value ?? ' অভিনন্দন,আপনার অর্ডারটি [invoice_id] কুরিয়ার করা হয়েছে।মোটঃ[sub_total] টাকা। ডেলিভারির সময়ঃ ২-৩ দিন। ট্র্যাক পার্সেলঃ [tracking_link] , Hotline: 01888173003';
-                    $message = str_replace(['[invoice_id]', '[sub_total]', '[tracking_link]'], [$order->invoiceID, $order->subTotal, $order->courier_tracking_link], $template);
-                    \App\Services\SmsNetBdService::sendNotification($cu->customerPhone, $message);
-                        } catch (\Exception $e) {
-                            $sendstatus = false;
-                        }
-
-                        if ($sendstatus) {
+                        $smsResult = \App\Services\SmsNetBdService::sendOrderShipped($cu->customerPhone, $order->invoiceID, $order->subTotal, $order->courier_tracking_link);
+                        if ($smsResult === 'sent') {
+                            $order->sms_status = 'Sent';
+                            $order->save();
                             $comment = new Comment();
                             $comment->order_id = $order->id;
-                            $comment->comment = 'Successfully send a sms to this customer';
+                            $comment->comment = 'Successfully sent Shipped/Courier SMS to customer';
                             $comment->admin_id = Auth::guard('admin')->user()->id;
                             $comment->status = 1;
                             $comment->save();
+                        } elseif ($smsResult === 'failed') {
+                            $order->sms_status = 'Failed';
+                            $order->save();
                         }
                     }
                 }
@@ -2931,7 +2922,7 @@ class OrderController extends Controller
                 $orderProducts->product_id = $product['productID'];
                 $orderProducts->productCode = $product['productCode'];
                 $orderProducts->productName = optional(Product::where('id', $product['productID'])->first())->ProductName;
-                $orderProducts->color = optional(Varient::where('product_id', $product['productID'])->first())->color;
+                $orderProducts->color = !empty($product['productColor']) ? $product['productColor'] : optional(Varient::where('product_id', $product['productID'])->first())->color;
                 $orderProducts->size = $product['productSize'];
                 $orderProducts->sigment = $product['sigment'];
                 $orderProducts->quantity = $product['productQuantity'];

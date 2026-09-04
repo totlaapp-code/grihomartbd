@@ -236,8 +236,11 @@ $users = Admin::whereHas('roles', function ($q) {
                                                 <td>
                                                     @foreach ($order->orderproducts as $product)
                                                         {{ $product->quantity }} x {{ $product->productName }}
-                                                        <br><span style="color:blue;"> Colour: {{ $product->color }} ,
-                                                            Size: {{ $product->size }}</span>'
+                                                        <br><span style="color:blue;">
+                                                            @if($product->color) Colour: {{ $product->color }} @endif
+                                                            @if($product->size) , Size: {{ $product->size }} @endif
+                                                            @if($product->sigment) , Segment: {{ $product->sigment }} @endif
+                                                        </span>
                                                     @endforeach
                                                 </td>
                                                 <td>{{ $order->subTotal }}</td>

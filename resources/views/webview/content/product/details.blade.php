@@ -299,20 +299,24 @@
                             <div class="product-info" id="productinfo">
                                 <h1 class="name" style="margin-top:16px !important;padding-bottom: 6px;font-size: 20px !important; line-height: 25px;"> {{ $productdetails->ProductName }}</h1>
                                 
+                                @php
+                                    $defaultSizeObj = App\Models\Size::where('product_id', $productdetails->id)->where('status', 'Active')->first() ?? App\Models\Size::where('product_id', $productdetails->id)->first();
+                                    $defaultWeightObj = !$defaultSizeObj ? App\Models\Weight::where('product_id', $productdetails->id)->first() : null;
+                                    $defaultPrice = $defaultSizeObj ? $defaultSizeObj->SalePrice : ($defaultWeightObj ? $defaultWeightObj->SalePrice : 0);
+                                    $defaultSizeName = $defaultSizeObj ? $defaultSizeObj->size : '';
+                                    $defaultSigmentName = $defaultWeightObj ? $defaultWeightObj->weight : '';
+                                @endphp
                                  <div class="col-6">
-                                    @if (App\Models\Size::where('product_id', $productdetails->id)->first())
-                                        <div class="product-price strong-700"
-                                            style="color:black;font-weight:bold;padding-top: 6px;" id="productPriceAmount">
-                                            <span id="salePrice">{{ App\Models\Size::where('product_id', $productdetails->id)->first()->SalePrice }}</span> TK
-                                            @if(App\Models\Size::where('product_id', $productdetails->id)->first()->Discount>0) &nbsp;<del class="old-product-price strong-400" style="color: #797474;font-size: 22px;">{{ round(App\Models\Size::where('product_id',$productdetails->id)->first()->RegularPrice) }}</del>@endif
-                                        </div>
-                                    @else
-                                        <div class="product-price strong-700"
-                                            style="color:black;font-weight:bold;padding-top: 6px;" id="productPriceAmount">
-                                            <span id="salePrice" style="color:black;font-weight:bold;">{{ App\Models\Weight::where('product_id', $productdetails->id)->first()->SalePrice }}</span> TK
-                                        </div>
-                                    @endif
-                                </div>
+                                     <div class="product-price strong-700"
+                                         style="color:black;font-weight:bold;padding-top: 6px;" id="productPriceAmount">
+                                         <span id="salePrice">{{ $defaultPrice }}</span> TK
+                                         @if($defaultSizeObj && $defaultSizeObj->Discount > 0)
+                                             &nbsp;<del class="old-product-price strong-400" style="color: #797474;font-size: 22px;">{{ round($defaultSizeObj->RegularPrice) }}</del>
+                                         @elseif($defaultWeightObj && $defaultWeightObj->Discount > 0)
+                                             &nbsp;<del class="old-product-price strong-400" style="color: #797474;font-size: 22px;">{{ round($defaultWeightObj->RegularPrice) }}</del>
+                                         @endif
+                                     </div>
+                                 </div>
 
                                 <div class="mt-2 mb-2 row">
                                     @php
@@ -460,13 +464,13 @@
                                         style="text-align: center;">
                                         @method('POST')
                                         @csrf
-                                        <input type="hidden" name="color" id="product_colororder" value="{{ isset($varients[0]) ? $varients[0]->color : '' }}">
-                                        <input type="hidden" name="size" id="product_sizeorder" value="">
-                                        <input type="hidden" name="sigment" id="product_sigmentorder" value="">
-                                        <input type="hidden" name="price" id="product_priceorder" value="">
+                                        <input type="hidden" name="color" class="product_colororder" id="product_colororder" value="{{ isset($varients[0]) ? $varients[0]->color : '' }}">
+                                        <input type="hidden" name="size" class="product_sizeorder" id="product_sizeorder" value="{{ $defaultSizeName }}">
+                                        <input type="hidden" name="sigment" class="product_sigmentorder" id="product_sigmentorder" value="{{ $defaultSigmentName }}">
+                                        <input type="hidden" name="price" class="product_priceorder" id="product_priceorder" value="{{ $defaultPrice }}">
 
                                         <input type="hidden" name="product_id" value=" {{ $productdetails->id }}" hidden>
-                                        <input type="hidden" name="qty" value="1" id="qtyoror">
+                                        <input type="hidden" name="qty" class="qty_input" value="1" id="qtyoror">
                                         <button type="submit"
                                             class="mb-0 ml-2 btn btn-styled btn-base-1 btn-icon-left strong-700 hov-bounce hov-shaddow buy-now"
                                             style="background:var(--color-secondary);color:white;width: 100%;font-size: 17px;">
@@ -482,13 +486,13 @@
                                         style="text-align: center;">
                                         @method('POST')
                                         @csrf
-                                        <input type="hidden" name="color" id="product_colororder" value="{{ isset($varients[0]) ? $varients[0]->color : '' }}">
-                                        <input type="hidden" name="size" id="product_sizeorder" value="">
-                                        <input type="hidden" name="sigment" id="product_sigmentorder" value="">
-                                        <input type="hidden" name="price" id="product_priceorder" value="">
+                                        <input type="hidden" name="color" class="product_colororder" id="product_colororder2" value="{{ isset($varients[0]) ? $varients[0]->color : '' }}">
+                                        <input type="hidden" name="size" class="product_sizeorder" id="product_sizeorder2" value="{{ $defaultSizeName }}">
+                                        <input type="hidden" name="sigment" class="product_sigmentorder" id="product_sigmentorder2" value="{{ $defaultSigmentName }}">
+                                        <input type="hidden" name="price" class="product_priceorder" id="product_priceorder2" value="{{ $defaultPrice }}">
 
                                         <input type="hidden" name="product_id" value=" {{ $productdetails->id }}" hidden>
-                                        <input type="hidden" name="qty" value="1" id="qtyoror">
+                                        <input type="hidden" name="qty" class="qty_input" value="1" id="qtyoror2">
                                         <button type="submit"
                                             class="order_now_btn mb-0 ml-2 btn btn-styled btn-base-1 btn-icon-left strong-700 hov-bounce hov-shaddow buy-now"
                                             style="background: #ff4e00;color:white;width: 100%;font-size: 17px;">
@@ -1152,27 +1156,23 @@
 
     function minus() {
         var avqty = $('#qtyval').val();
-        if (avqty == 1) {
-
-        } else {
+        if (avqty > 1) {
             qty = Number(avqty) - 1;
             $('#qtyval').val(qty);
             $('#qtyor').val(qty);
-            $('#qtyoror').val(qty);
             $('#qtyad').val(qty);
+            $('input[name="qty"]').val(qty);
         }
     }
 
     function plus() {
         var avqty = $('#qtyval').val();
-        if (avqty == 10) {
-
-        } else {
+        if (avqty < 10) {
             qty = Number(avqty) + 1;
             $('#qtyval').val(qty);
             $('#qtyor').val(qty);
-            $('#qtyoror').val(qty);
             $('#qtyad').val(qty);
+            $('input[name="qty"]').val(qty);
         }
     }
 
@@ -1190,33 +1190,28 @@
     }
 
     function getsize(size) {
-        $('#product_sizeorder').val(size);
-        var reg = $('#regularpriceofsize' + size).val();
+        $('.product_sizeorder').val(size);
         var sale = $('#salepriceofsize' + size).val();
         $('#product_price').val(sale);
-        $('#product_priceorder').val(sale);
+        $('.product_priceorder').val(sale);
         $('#salePrice').html(sale);
 
-        $('.sizetext').css('color', '#000');
-        $('.sizetext').css('background', '#fff');
-        $('#sizetext' + size).css('color', '#fff');
-        $('#sizetext' + size).css('background', '#613EEA');
-        $('#product_sigmentorder').val('');
+        $('.sizetext').css({'color': '#000', 'background': '#fff'});
+        $('#sizetext' + size).css({'color': '#fff', 'background': '#613EEA'});
+        $('.product_sigmentorder').val('');
     }
 
     function getweight(weight) {
-        var sig=$('#weightsigmrnt' + weight).val();
-        $('#product_sigmentorder').val(sig);
-        var reg = $('#regularpriceofsize' + weight).val();
+        var sig = $('#weightsigmrnt' + weight).val();
+        $('.product_sigmentorder').val(sig);
         var sale = $('#salepriceofsize' + weight).val();
         $('#product_price').val(sale);
-        $('#product_priceorder').val(sale);
+        $('.product_priceorder').val(sale);
         $('#salePrice').html(sale);
 
-        $('.weighttext').css('color', '#000');
-        $('.weighttext').css('background', '#fff');
-        $('#weighttext' + weight).css('color', '#fff');
-        $('#weighttext' + weight).css('background', '#613EEA');
+        $('.weighttext').css({'color': '#000', 'background': '#fff'});
+        $('#weighttext' + weight).css({'color': '#fff', 'background': '#613EEA'});
+        $('.product_sizeorder').val('');
     }
 </script>
 
