@@ -2550,69 +2550,76 @@ class OrderController extends Controller
                 $orders->products = $products;
                 $orders->id = $id;
                 
-                $api_key = 'e8vcw0kyecj6wju6nasjyuww9rvskz7p';
-                $secret_key = 'adxp4v8lwfuggdrq8imkfvg2';
+                $api_key = config('services.steadfast.api_key', 'e8vcw0kyecj6wju6nasjyuww9rvskz7p');
+                $secret_key = config('services.steadfast.secret_key', 'adxp4v8lwfuggdrq8imkfvg2');
                 
                 $postData = [
-                'invoice' => $orders->invoiceID,
-                'recipient_name' => $orders->customerName,
-                'recipient_address' => $orders->customerAddress,
-                'recipient_phone' => $orders->customerPhone,
-                'cod_amount' => $orders->subTotal,
-                'note' => $orders->customerNote ?? '',
-                'parcel_detail' => 'Clothing', 
-                'payment_method' => 'COD',     
-                'requested_delivery_time' => now()->addDays(2)->toDateString(),
-               ];
+                    'invoice' => $orders->invoiceID,
+                    'recipient_name' => $orders->customerName,
+                    'recipient_address' => $orders->customerAddress,
+                    'recipient_phone' => $orders->customerPhone,
+                    'cod_amount' => $orders->subTotal,
+                    'note' => $orders->customerNote ?? '',
+                    'parcel_detail' => 'Clothing', 
+                    'payment_method' => 'COD',     
+                    'requested_delivery_time' => now()->addDays(2)->toDateString(),
+                ];
 
-                $ress = Http::withHeaders([
-                    'Api-Key' => $api_key,
-                    'Secret-Key' => $secret_key,
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
-                ])->post('https://portal.packzy.com/api/v1/create_order', $postData);
-         
-                 
-                $res = json_decode($ress->getBody()->getContents());
-                if (isset($res->consignment)) {
-                    if ($res->consignment->status == 'in_review') {
-                        $order = Order::find($id);
-                        $order->courier_tracking_link = $res->consignment->tracking_link ?? ('https://steadfast.com.bd/t' . '/' . $res->consignment->tracking_code);
-                        $order->consigment_id = $res->consignment->consignment_id;
-                        $order->status = 'Shipped';
-                        $order->deliveryDate = date('Y-m-d');
-                        $order->update();
+                $assignedViaApi = false;
+
+                try {
+                    $ress = Http::withHeaders([
+                        'Api-Key' => $api_key,
+                        'Secret-Key' => $secret_key,
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json'
+                    ])->post('https://portal.packzy.com/api/v1/create_order', $postData);
+             
+                    $res = json_decode($ress->getBody()->getContents());
+                    if (isset($res->consignment)) {
+                        if ($res->consignment->status == 'in_review' || !empty($res->consignment->consignment_id)) {
+                            $order = Order::find($id);
+                            $order->courier_id = $courier_id;
+                            $order->courier_tracking_link = $res->consignment->tracking_link ?? ('https://steadfast.com.bd/t' . '/' . $res->consignment->tracking_code);
+                            $order->consigment_id = $res->consignment->consignment_id;
+                            $order->status = 'Ready to Ship';
+                            $order->deliveryDate = date('Y-m-d');
+                            $order->update();
+
+                            $comment = new Comment();
+                            $comment->order_id = $id;
+                            $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Assigned Courier to #GA00' . $id . ' (Status: Ready to Ship)';
+                            $comment->admin_id = Auth::guard('admin')->user()->id;
+                            $comment->status = 1;
+                            $comment->save();
+
+                            $assignedViaApi = true;
+                        }
+                    }
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error("Courier assignment API error for order #{$id}: " . $e->getMessage());
+                }
+
+                // Fallback for couriers without API integration or if API response was non-standard
+                if (!$assignedViaApi) {
+                    $orderFallback = Order::find($id);
+                    if ($orderFallback) {
+                        $orderFallback->courier_id = $courier_id;
+                        $orderFallback->status = 'Ready to Ship';
+                        $orderFallback->deliveryDate = date('Y-m-d');
+                        $orderFallback->update();
+
                         $comment = new Comment();
                         $comment->order_id = $id;
-                        $comment->comment = Auth::guard('admin')->user()->name . ' Successfully Send To #GA00' . $id . ' Order to ' . $courier->courierName . ' - Status changed to Shipped';
+                        $comment->comment = Auth::guard('admin')->user()->name . ' Assigned courier to Order #' . $id . ' (Status: Ready to Ship)';
                         $comment->admin_id = Auth::guard('admin')->user()->id;
                         $comment->status = 1;
                         $comment->save();
-                    } else {
-                        $response['status'] = 'failed';
-                        $response['message'] = 'This courier do not have permission for auto entry';
                     }
-                } else {
-                    $response['status'] = 'failed';
-                    $response['message'] = 'This courier do not have permission for auto entry';
-                }
-                // For couriers without API integration, still set status to Shipped
-                $orderFallback = Order::find($id);
-                if ($orderFallback && $orderFallback->status !== 'Shipped') {
-                    $orderFallback->courier_id = $courier_id;
-                    $orderFallback->status = 'Shipped';
-                    $orderFallback->deliveryDate = date('Y-m-d');
-                    $orderFallback->update();
-                    $comment = new Comment();
-                    $comment->order_id = $id;
-                    $comment->comment = Auth::guard('admin')->user()->name . ' Assigned courier and changed status to Shipped for Order #' . $id;
-                    $comment->admin_id = Auth::guard('admin')->user()->id;
-                    $comment->status = 1;
-                    $comment->save();
                 }
             }
             $response['status'] = 'success';
-            $response['message'] = 'Successfully Assign Courier to this Order - Status changed to Shipped';
+            $response['message'] = 'Successfully Assigned Courier to Order(s) - Status kept in Ready to Ship';
         } else {
             $response['status'] = 'failed';
             $response['message'] = 'Unsuccessful to Assign Courier to this Order';

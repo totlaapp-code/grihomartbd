@@ -193,17 +193,17 @@ class WebviewController extends Controller
             $currentStatus = $order->status;
 
             // Status priority — higher index = more advanced stage
-            // Never let webhook DOWNGRADE an order to a lower status
+            // Allows valid progression: Ready to Ship (1) -> Shipped (2) -> Courier Pending (3) / Completed (5)
             $statusPriority = [
                 'Pending'          => 0,
                 'Hold'             => 0,
-                'Courier Pending'  => 1,
-                'Ready to Ship'    => 2,
-                'Packaging'        => 2,
-                'Shipped'          => 3,
-                'In Transit'       => 3,
+                'Ready to Ship'    => 1,
+                'Packaging'        => 1,
+                'Shipped'          => 2,
+                'In Transit'       => 2,
+                'Courier Pending'  => 3,
+                'Del. Failed'      => 3,
                 'Partial Delivered'=> 4,
-                'Del. Failed'      => 4,
                 'Completed'        => 5,
             ];
 
@@ -217,39 +217,42 @@ class WebviewController extends Controller
                 }
             } elseif ($rawStatus === 'partial_delivered') {
                 $newStatus = 'Partial Delivered';
-            } elseif (in_array($rawStatus, ['cancelled', 'delivery_failed', 'cancel'])) {
-                $newStatus = 'Del. Failed';
-            } elseif (in_array($rawStatus, ['in_transit', 'out_for_delivery', 'delivery_in_progress'])) {
-                $newStatus = 'In Transit';
-            } elseif (in_array($rawStatus, ['pending', 'hold', 'in_review'])) {
-                // Steadfast sends 'pending' right after order creation.
-                // ONLY set Courier Pending if the order hasn't been shipped yet.
-                // Never downgrade from Shipped / In Transit / Completed.
-                $currentPriority = $statusPriority[$currentStatus] ?? 0;
-                if ($currentPriority < 3) {
-                    $newStatus = 'Courier Pending';
+            } elseif (in_array($rawStatus, ['cancelled', 'delivery_failed', 'cancel', 'return', 'returned', 'cancelled_by_courier'])) {
+                // When courier fails/returns the parcel, move to Courier Pending
+                $newStatus = 'Courier Pending';
+            } elseif (in_array($rawStatus, ['in_transit', 'out_for_delivery', 'delivery_in_progress', 'picked_up', 'picked', 'transit', 'shipped', 'received_by_courier', 'intransit', 'delivering'])) {
+                // When courier receives/picks up the parcel, move to Shipped
+                $newStatus = 'Shipped';
+                if (empty($order->shipped_by)) {
+                    $order->shipped_by = 1;
                 }
-                // else: keep the current higher status (Shipped, In Transit, Completed, etc.)
+            } elseif (in_array($rawStatus, ['pending', 'hold', 'in_review'])) {
+                // Initial creation status from courier portal - keep in Ready to Ship if not yet shipped
+                if (($statusPriority[$currentStatus] ?? 0) <= 1) {
+                    $newStatus = 'Ready to Ship';
+                }
             } elseif (!empty($rawStatus)) {
                 $newStatus = ucfirst($rawStatus);
             }
 
-            // Final guard: never downgrade to a lower priority status
+            // Guard: never downgrade to a lower priority status
             $currentPriority = $statusPriority[$currentStatus] ?? 0;
             $newPriority     = $statusPriority[$newStatus]     ?? 0;
             if ($newPriority < $currentPriority) {
                 $newStatus = $currentStatus; // keep the higher status
             }
 
-            $order->status = $newStatus;
-            $order->save();
+            if ($newStatus !== $currentStatus || $order->isDirty()) {
+                $order->status = $newStatus;
+                $order->save();
 
-            $comment = new Comment();
-            $comment->order_id = $order->id;
-            $comment->comment = 'Steadfast Webhook Auto-Update: Status changed to [' . $newStatus . '] (Courier Status: ' . $rawStatus . ')';
-            $comment->admin_id = 1;
-            $comment->status = 1;
-            $comment->save();
+                $comment = new Comment();
+                $comment->order_id = $order->id;
+                $comment->comment = 'Steadfast Webhook Auto-Update: Status updated to [' . $newStatus . '] (Courier Status: ' . $rawStatus . ')';
+                $comment->admin_id = 1;
+                $comment->status = 1;
+                $comment->save();
+            }
 
             return response()->json([
                 'status'  => 'success',
