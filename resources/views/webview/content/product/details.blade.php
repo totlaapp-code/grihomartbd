@@ -233,55 +233,72 @@
         padding: 0 10px;
     }
 
-    /* Gallery image - 1:1 square ratio (modern e-commerce standard) */
+    /* Gallery image - full width, no blank sides */
     #sync1 {
         width: 100%;
     }
     #sync1 .items {
+        position: relative;
+        width: 100%;
+        height: auto;
         aspect-ratio: 1 / 1;
-        max-height: 420px;
         overflow: hidden;
         background: #f8f8f8;
         border-radius: 4px;
     }
     #sync1 .items img {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        display: block;
+        object-fit: cover;
         background: #f8f8f8;
     }
+    /* Thumbnail carousel */
+    #sync2 {
+        width: 100%;
+    }
+    #sync2 .owl-item {
+        /* owl handles width automatically */
+    }
     #sync2 .items {
+        position: relative;
+        width: 100%;
+        height: auto;
         aspect-ratio: 1 / 1;
         overflow: hidden;
         background: #f8f8f8;
-        max-width: 80px;
         border-radius: 4px;
     }
     #sync2 .items img {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
+        display: block;
         object-fit: contain;
-        background: #f8f8f8;
+        background: #ffffff;
+        padding: 3px;
     }
 
     /* Mobile specific adjustments */
     @media (max-width: 768px) {
-        #sync1 .items {
-            aspect-ratio: auto;
-            height: 320px;
-        }
+        /* aspect-ratio handles height automatically now */
     }
 </style>
 <!-- Body -->
 
-<div class="mt-2 body-content" id="top-banner-and-menu">
+<div class="body-content" id="top-banner-and-menu">
     <div class='container-fluid px-2 px-lg-4' id="loadproduct">
         <div class='row single-product'>
             <div class='p-0 col-md-12'>
                 <div class="detail-block">
-                    <div class="row wow fadeInUp">
+                    <div class="row g-0 wow fadeInUp">
 
-                        <div class="col-12 col-md-5 col-lg-5 gallery-holder">
+                        <div class="col-12 col-md-4 col-lg-4 gallery-holder pe-md-2">
                             <div class="product-item-holder size-big single-product-gallery small-gallery">
 
                                 @if(json_decode($productdetails->PostImage))
@@ -298,16 +315,16 @@
                                         @empty
                                         @endforelse
                                     </div>
-                                    <div id="sync2" class="owl-carousel owl-theme" style="padding-top: 10px;">
+                                    <div id="sync2" class="owl-carousel owl-theme" style="padding-top: 6px;">
                                         <div class="items">
                                             <img class="w-100"
-                                                style="padding:6px;border:1px solid;border-radius: 4px;"
+                                                style="border:1px solid #ddd;border-radius: 4px;"
                                                 src="{{ asset($productdetails->ProductImage) }}" alt="">
                                         </div>
                                         @forelse (json_decode($productdetails->PostImage) as $image)
                                             <div class="items">
                                                 <img class="w-100"
-                                                    style="padding:6px;border:1px solid;border-radius: 4px;"
+                                                    style="border:1px solid #ddd;border-radius: 4px;"
                                                     src="{{ asset('images/product/slider/' . $image) }}" alt="">
                                             </div>
                                         @empty
@@ -324,7 +341,7 @@
                             <!-- /.single-product-gallery -->
                         </div>
                         <!-- /.gallery-holder -->
-                        <div class="col-12 col-md-7 col-lg-7 product-info-block" id="paddingnone">
+                        <div class="col-12 col-md-8 col-lg-8 product-info-block ps-2 ps-md-3 pe-2 pe-md-0" id="paddingnone">
                             <div class="product-info" id="productinfo">
                                 <h1 class="name" style="margin-top:16px !important;padding-bottom: 6px;font-size: 20px !important; line-height: 25px;"> {{ $productdetails->ProductName }}</h1>
                                 
@@ -664,7 +681,7 @@
                         sync2.find(".owl-item").eq(0).addClass("current");
                     })
                     .owlCarousel({
-                        margin: 6,
+                        margin: 4,
                         items: slidesPerPage,
                         dots: false,
                         nav: true,
