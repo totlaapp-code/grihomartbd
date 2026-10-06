@@ -99,22 +99,36 @@
 
 <div class="fc-wrap">
 
-    {{-- 4 Summary Cards --}}
+    {{-- Summary Cards --}}
     <div class="fc-cards">
         <div class="fc-card">
-            <div class="fc-val dark">{{ $summary['total_parcels'] }}</div>
-            <div class="fc-label">Total Parcels</div>
+            @if($summary['delivery_ratio'] === null)
+                <div class="fc-val dark" title="No finished parcels yet">—</div>
+            @else
+                <div class="fc-val {{ $summary['delivery_ratio'] >= 70 ? 'success' : ($summary['delivery_ratio'] >= 40 ? 'warning' : 'danger') }}">
+                    {{ $summary['delivery_ratio'] }}%
+                </div>
+            @endif
+            <div class="fc-label">Delivery Rate</div>
         </div>
         <div class="fc-card">
-            <div class="fc-val success">{{ $summary['total_delivered'] }}</div>
-            <div class="fc-label">Delivered</div>
+            @if($summary['cancel_ratio'] === null)
+                <div class="fc-val dark" title="No finished parcels yet">—</div>
+            @else
+                <div class="fc-val {{ $summary['cancel_ratio'] <= 10 ? 'success' : ($summary['cancel_ratio'] <= 30 ? 'warning' : 'danger') }}">
+                    {{ $summary['cancel_ratio'] }}%
+                </div>
+            @endif
+            <div class="fc-label">Cancel Rate</div>
         </div>
         <div class="fc-card">
-            <div class="fc-val danger">{{ $summary['total_cancelled'] }}</div>
-            <div class="fc-label">Cancelled</div>
+            <div class="fc-val dark">{{ $summary['volume_range'] ?? '—' }}</div>
+            <div class="fc-label">Volume ({{ ucfirst(str_replace('_', ' ', $summary['volume_band'])) }})</div>
         </div>
         <div class="fc-card">
-            <div class="fc-val warning">{{ $summary['total_frauds'] }}</div>
+            <div class="fc-val {{ $summary['total_reports'] > 0 ? 'danger' : 'dark' }}">
+                {{ $summary['total_reports'] }}
+            </div>
             <div class="fc-label">Fraud Reports</div>
         </div>
     </div>
@@ -122,19 +136,19 @@
     {{-- Progress Bars --}}
     <div class="fc-progress-wrap">
         <div class="fc-progress-label">
-            <span>Success Rate</span>
-            <span>{{ $summary['success_rate'] }}%</span>
+            <span>Delivery Rate</span>
+            <span>{{ $summary['delivery_ratio'] !== null ? $summary['delivery_ratio'].'%' : 'No data' }}</span>
         </div>
         <div class="fc-bar">
-            <div class="fc-bar-fill green" style="width: {{ $summary['success_rate'] }}%"></div>
+            <div class="fc-bar-fill green" style="width: {{ $summary['delivery_ratio'] ?? 0 }}%"></div>
         </div>
 
         <div class="fc-progress-label">
             <span>Cancel Rate</span>
-            <span>{{ $summary['cancel_rate'] }}%</span>
+            <span>{{ $summary['cancel_ratio'] !== null ? $summary['cancel_ratio'].'%' : 'No data' }}</span>
         </div>
         <div class="fc-bar">
-            <div class="fc-bar-fill red" style="width: {{ $summary['cancel_rate'] }}%"></div>
+            <div class="fc-bar-fill red" style="width: {{ $summary['cancel_ratio'] ?? 0 }}%"></div>
         </div>
     </div>
 
@@ -143,11 +157,10 @@
         <thead>
             <tr>
                 <th>Courier</th>
-                <th>Total</th>
-                <th>Delivered</th>
-                <th>Cancelled</th>
-                <th>Fraud</th>
-                <th>Success</th>
+                <th>Delivery %</th>
+                <th>Cancel %</th>
+                <th>Volume</th>
+                <th>Reports</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -156,13 +169,16 @@
             <tr>
                 <td>{{ $row['courier'] }}</td>
                 @if ($row['error'])
-                    <td colspan="6" class="fc-error">⚠️ {{ $row['error'] }}</td>
+                    <td colspan="5" class="fc-error">⚠️ {{ $row['error'] }}</td>
                 @else
-                    <td>{{ $row['total'] }}</td>
-                    <td class="t-green">{{ $row['delivered'] }}</td>
-                    <td class="t-red">{{ $row['cancelled'] }}</td>
-                    <td>{{ $row['fraud_reports'] }}</td>
-                    <td>{{ $row['success_rate'] }}%</td>
+                    <td class="{{ $row['delivery_ratio'] !== null ? ($row['delivery_ratio'] >= 70 ? 't-green' : ($row['delivery_ratio'] >= 40 ? '' : 't-red')) : '' }}">
+                        {{ $row['delivery_ratio'] !== null ? $row['delivery_ratio'].'%' : '—' }}
+                    </td>
+                    <td class="{{ $row['cancel_ratio'] !== null ? ($row['cancel_ratio'] <= 10 ? 't-green' : ($row['cancel_ratio'] <= 30 ? '' : 't-red')) : '' }}">
+                        {{ $row['cancel_ratio'] !== null ? $row['cancel_ratio'].'%' : '—' }}
+                    </td>
+                    <td>{{ $row['volume_range'] ?? '—' }}</td>
+                    <td>{{ $row['total_reports'] }}</td>
                     <td>
                         @if ($row['status'] === 'good')
                             <span class="fc-badge good">Good</span>
@@ -171,7 +187,7 @@
                         @elseif ($row['status'] === 'danger')
                             <span class="fc-badge danger">High Risk</span>
                         @else
-                            <span class="fc-badge unknown">—</span>
+                            <span class="fc-badge unknown">No Data</span>
                         @endif
                     </td>
                 @endif
@@ -182,23 +198,42 @@
             @if(count($results) > 1)
             <tr>
                 <td>Total</td>
-                <td>{{ $summary['total_parcels'] }}</td>
-                <td class="t-green">{{ $summary['total_delivered'] }}</td>
-                <td class="t-red">{{ $summary['total_cancelled'] }}</td>
-                <td>{{ $summary['total_frauds'] }}</td>
-                <td>{{ $summary['success_rate'] }}%</td>
+                <td class="{{ $summary['delivery_ratio'] !== null ? ($summary['delivery_ratio'] >= 70 ? 't-green' : ($summary['delivery_ratio'] >= 40 ? '' : 't-red')) : '' }}">
+                    {{ $summary['delivery_ratio'] !== null ? $summary['delivery_ratio'].'%' : '—' }}
+                </td>
+                <td class="{{ $summary['cancel_ratio'] !== null ? ($summary['cancel_ratio'] <= 10 ? 't-green' : ($summary['cancel_ratio'] <= 30 ? '' : 't-red')) : '' }}">
+                    {{ $summary['cancel_ratio'] !== null ? $summary['cancel_ratio'].'%' : '—' }}
+                </td>
+                <td>{{ $summary['volume_range'] ?? '—' }}</td>
+                <td>{{ $summary['total_reports'] }}</td>
                 <td>
                     @if ($summary['overall_status'] === 'good')
                         <span class="fc-badge good">Good</span>
                     @elseif ($summary['overall_status'] === 'warning')
                         <span class="fc-badge warning">Warning</span>
-                    @else
+                    @elseif ($summary['overall_status'] === 'danger')
                         <span class="fc-badge danger">High Risk</span>
+                    @else
+                        <span class="fc-badge unknown">No Data</span>
                     @endif
                 </td>
             </tr>
             @endif
         </tbody>
     </table>
+
+    {{-- Fraud category breakdown (only when reports exist) --}}
+    @if(!empty($summary['fraud_categories']))
+    <div style="margin-top:12px;">
+        <div style="font-size:0.72rem;font-weight:700;color:#495057;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Report Categories</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            @foreach($summary['fraud_categories'] as $code => $count)
+                <span style="background:#f8d7da;color:#721c24;border-radius:20px;padding:3px 10px;font-size:0.72rem;font-weight:700;">
+                    {{ str_replace('_', ' ', $code) }}: {{ $count }}
+                </span>
+            @endforeach
+        </div>
+    </div>
+    @endif
 
 </div>
